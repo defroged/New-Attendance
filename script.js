@@ -1,13 +1,7 @@
-// Import the calendar CSS and JS from the installed node_modules
-import 'tui-calendar/dist/tui-calendar.css';
-import Calendar from 'tui-calendar';
-
-// If you use the default popups, import the default theme CSS
-import 'tui-date-picker/dist/tui-date-picker.css';
-import 'tui-time-picker/dist/tui-time-picker.css';
+// No import statements needed, as the necessary scripts and styles are loaded via CDN in your HTML file.
 
 // Create the calendar instance
-var calendar = new Calendar('#calendar', {
+var calendar = new tui.Calendar('#calendar', {
   defaultView: 'week', // You can also set this to 'day' or 'month'
   taskView: true,  // Enable the task view
   scheduleView: true,  // Enable the schedule view
@@ -28,5 +22,4 @@ calendar.createSchedules([
   }
 ]);
 
-// Assuming your project is set up to transpile or handle module imports,
-// this script should work when included in your HTML file and served in a browser.
+// The rest of your script here...
