@@ -3,25 +3,27 @@
 <head>
     <meta charset="utf-8">
     <title>TOAST UI Calendar</title>
+    <!-- Include the Calendar's main CSS file -->
     <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
+    <!-- Include the DatePicker and TimePicker CSS files for the pop-ups -->
+    <!-- Please ensure that the URLs provided below are accessible or update them with the correct path if necessary -->
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-date-picker/latest/tui-date-picker.css" />
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-time-picker/latest/tui-time-picker.css" />
 </head>
 <body>
     <div id="calendar" style="height: 600px;"></div>
     <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
     <script>
-        // Container where the calendar will be created
         const container = document.getElementById('calendar');
 
-        // Options for the calendar
         const options = {
           defaultView: 'week',
-          // Include other options you need
+          useFormPopup: true,  // Enable the form pop-up for creating events
+          useDetailPopup: true // Enable the detail pop-up for viewing event details
         };
 
-        // Creating the calendar instance
         const calendar = new tui.Calendar(container, options);
 
-        // Add your event data here
         const eventData = [
           {
             id: 'event1',
@@ -30,10 +32,9 @@
             start: '2023-11-08T09:00:00',
             end: '2023-11-08T10:00:00',
           },
-          
+          // ... other events ...
         ];
 
-        // Creating the events in the calendar
         calendar.createEvents(eventData);
     </script>
 </body>
