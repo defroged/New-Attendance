@@ -1,24 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" />
-<!-- If you use the default popups, use this. -->
-<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-date-picker/latest/tui-date-picker.css" />
-<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-time-picker/latest/tui-time-picker.css" />
-    
+    <meta charset="utf-8">
+    <title>TOAST UI Calendar</title>
+    <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
 </head>
 <body>
-   
-<div id="calendar" style="height: 800px;"></div>
-
-<!-- Add crossorigin attribute to external script tags -->
-<script src="https://uicdn.toast.com/tui-code-snippet/latest/tui-code-snippet.min.js" crossorigin="anonymous"></script>
-<script src="https://uicdn.toast.com/tui-dom/v3.0.0/tui-dom.min.js" crossorigin="anonymous"></script>
-<script src="https://uicdn.toast.com/tui-time-picker/latest/tui-time-picker.min.js" crossorigin="anonymous"></script>
-<script src="https://uicdn.toast.com/tui-date-picker/latest/tui-date-picker.min.js" crossorigin="anonymous"></script>
-<script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js" crossorigin="anonymous"></script>
-<script src="script.js"></script>
-
+    <div id="calendar" style="height: 600px;"></div>
+    <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
+    <script>
+        // Assuming you have your other calendar setup code here
+        const container = document.getElementById('calendar');
+        const options = { /* your options here */ };
+        const calendar = new tui.Calendar(container, options);
+    </script>
 </body>
 </html>
