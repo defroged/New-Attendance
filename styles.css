@@ -6,24 +6,53 @@ body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
+    gap: 10px; /* Adds space between the days */
 }
 
 .day {
     border: 1px solid #ccc;
-    padding: 20px;
+    padding: 10px;
     box-sizing: border-box;
-	display: flex;
+    display: flex;
     flex-direction: column;
 }
 
-.hour {
-    border-top: 1px solid #ccc;
-    padding: 10px;
-    box-sizing: border-box;
+.date {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.time-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* Adds space between time slots */
+}
+
+.time-slot {
+    border: 1px solid #ccc;
+    padding: 5px;
+    min-height: 50px; /* Ensures consistent height for empty slots */
+    display: flex; /* Enables flex layout for event positioning */
+    flex-direction: column;
+    align-items: flex-start; /* Aligns events to the top of the slot */
+    overflow: hidden; /* Prevents content from overflowing */
+}
+
+.event {
+    background-color: #add8e6;
+    padding: 5px;
+    margin-bottom: 2px; /* Adds space between events */
+    border-radius: 4px;
+    font-size: 0.8em;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
 }
 
 .current-day {
-    background-color: #add8e6;
+    background-color: #e6f7ff; /* Lighter blue to highlight the current day */
 }
 
 button {
@@ -33,38 +62,19 @@ button {
     cursor: pointer;
 }
 
-.time-slots {
-    display: grid;
-    grid-template-rows: repeat(12, 1fr); /* Adjust the number of rows based on the number of hours you're displaying */
-    gap: 2px; /* Optional: adds space between slots */
+/* Hover effect on time slots */
+.time-slot:hover {
+    background-color: #f0f0f0; /* Light grey for hovered slot */
 }
 
-.time-slot {
-    border: 1px solid #ccc; /* or any other styling you prefer */
-    padding: 5px;
-    height: 50px; /* or any other fixed height */
+/* Hover effect on events */
+.event:hover {
+    background-color: #9ec9f7; /* Lighter blue when hovering over events */
 }
 
-.event {
-    background-color: #add8e6; /* Example color for the event */
-    padding: 5px;
-    margin: 2px 0; /* Add some space between events */
-    border-radius: 4px;
-    font-size: 0.8em; /* Smaller font size for event text */
-    text-align: left; /* Align text to the left */
-    overflow: hidden; /* Hide overflow text */
-    text-overflow: ellipsis; /* Show ellipsis for overflow text */
-    white-space: nowrap; /* No wrapping of text to keep event in single line */
-    cursor: pointer; /* Change cursor to pointer to indicate clickable */
-}
-
-.time-slot:hover .event {
-    background-color: #9ec9f7; /* Slightly lighter color on hover */
-}
-
-/* You may also want to add some responsiveness to your calendar */
+/* Responsive layout for smaller screens */
 @media (max-width: 768px) {
     .calendar {
-        grid-template-columns: repeat(1, 1fr); /* Stack days vertically on smaller screens */
+        grid-template-columns: repeat(1, 1fr);
     }
 }
