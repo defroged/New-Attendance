@@ -22,19 +22,47 @@ window.onload = function() {
     function fetchEvents() {
         const apiKey = 'AIzaSyBTp54-gKed7hQWoqSxWT2vaz5vrUMQOvc';
         const calendarId = 'ronward.english@gmail.com';
-        const timeMin = new Date().toISOString(); // Start from the current date
-        const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}`;
+        const timeMin = new Date(currentWeekStart).toISOString(); // Start of the current week
+    const timeMax = new Date(currentWeekStart.getFullYear(), currentWeekStart.getMonth(), currentWeekStart.getDate() + 7).toISOString(); // End of the current week
 
-        fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            console.log('Events:', data.items);
-            // TODO: Process and display the events in your calendar here
-        })
-        .catch(error => {
-            console.error('Error fetching events:', error);
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
+
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+        displayEvents(data.items);
+    })
+    .catch(error => {
+        console.error('Error fetching events:', error);
+    });
+}
+
+function displayEvents(events) {
+    // Clear previous events
+    document.querySelectorAll('.events').forEach(eventContainer => {
+        eventContainer.innerHTML = '';
+    });
+
+    // Insert new events into the calendar
+    events.forEach(event => {
+        const eventElement = document.createElement('div');
+        eventElement.classList.add('event');
+        eventElement.innerText = event.summary; // Use the summary as the content of the event
+
+        // Parse the start date of the event
+        const eventStartDate = event.start.dateTime || event.start.date; // Use dateTime for timed events and date for all-day events
+        const eventDate = new Date(eventStartDate);
+        const eventDay = eventDate.toDateString();
+
+        // Find the matching day container
+        days.forEach(day => {
+            const dayDate = day.querySelector('.date').innerText;
+            if (new Date(dayDate).toDateString() === eventDay) {
+                day.querySelector('.events').appendChild(eventElement);
+            }
         });
-    }
+    });
+}
 
     document.getElementById('prevWeek').addEventListener('click', function() {
         currentWeekStart.setDate(currentWeekStart.getDate() - 7);
