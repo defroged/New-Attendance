@@ -20,14 +20,8 @@ window.onload = function() {
     }
 
     function fetchEvents() {
-        const apiKey = 'AIzaSyBTp54-gKed7hQWoqSxWT2vaz5vrUMQOvc';
-        const calendarId = 'ronward.english@gmail.com';
-        const timeMin = new Date(currentWeekStart).toISOString(); // Start of the current week
-    const timeMax = new Date(currentWeekStart.getFullYear(), currentWeekStart.getMonth(), currentWeekStart.getDate() + 7).toISOString(); // End of the current week
-
-    const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
-
-    fetch(url)
+    // Now calling the serverless function instead of the Google API directly
+    fetch('/api/calendar-events')
     .then(response => response.json())
     .then(data => {
         displayEvents(data.items);
@@ -36,6 +30,7 @@ window.onload = function() {
         console.error('Error fetching events:', error);
     });
 }
+
 
 function displayEvents(events) {
     // Clear previous events
