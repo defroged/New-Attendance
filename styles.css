@@ -33,12 +33,14 @@ button {
     cursor: pointer;
 }
 
-.event {
-    padding: 5px;
-    margin-top: 5px;
-    background-color: #add8e6; /* Light blue background */
-    border-radius: 4px;
-    font-size: 0.8em;
-    text-align: left;
+.time-slots {
+    display: grid;
+    grid-template-rows: repeat(12, 1fr); /* Adjust the number of rows based on the number of hours you're displaying */
+    gap: 2px; /* Optional: adds space between slots */
 }
 
+.time-slot {
+    border: 1px solid #ccc; /* or any other styling you prefer */
+    padding: 5px;
+    height: 50px; /* or any other fixed height */
+}

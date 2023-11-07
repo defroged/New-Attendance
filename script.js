@@ -34,30 +34,32 @@ window.onload = function() {
 
 function displayEvents(events) {
     // Clear previous events
-    document.querySelectorAll('.events').forEach(eventContainer => {
-        eventContainer.innerHTML = '';
+    document.querySelectorAll('.time-slot').forEach(slot => {
+        slot.innerHTML = ''; // Clear the previous events
     });
 
-    // Insert new events into the calendar
+    // Insert new events into the correct time slots
     events.forEach(event => {
+        // Create an event element
         const eventElement = document.createElement('div');
         eventElement.classList.add('event');
-        eventElement.innerText = event.summary; // Use the summary as the content of the event
+        eventElement.innerText = event.summary;
 
-        // Parse the start date of the event
-        const eventStartDate = event.start.dateTime || event.start.date; // Use dateTime for timed events and date for all-day events
-        const eventDate = new Date(eventStartDate);
-        const eventDay = eventDate.toDateString();
+        // Parse the start and end times of the event
+        const startTime = event.start.dateTime || event.start.date; // dateTime for specific times, date for all-day events
+        const endTime = event.end.dateTime || event.end.date;
 
-        // Find the matching day container
-        days.forEach(day => {
-            const dayDate = day.querySelector('.date').innerText;
-            if (new Date(dayDate).toDateString() === eventDay) {
-                day.querySelector('.events').appendChild(eventElement);
-            }
-        });
+        // Convert start time to an hour and find the corresponding time slot
+        const startHour = new Date(startTime).getHours();
+        const timeSlot = document.querySelector(`.time-slot[data-hour="${startHour}"]`);
+        if (timeSlot) {
+            timeSlot.appendChild(eventElement); // Append the event to the time slot
+        } else {
+            console.error('No time slot found for event:', event);
+        }
     });
 }
+
 
     document.getElementById('prevWeek').addEventListener('click', function() {
         currentWeekStart.setDate(currentWeekStart.getDate() - 7);
