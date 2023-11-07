@@ -38,6 +38,7 @@ window.onload = function() {
 
 
 function displayEvents(events) {
+    // Clear previous events
     document.querySelectorAll('.time-slot').forEach(slot => slot.innerHTML = '');
 
     events.forEach(event => {
@@ -52,21 +53,22 @@ function displayEvents(events) {
         const userTimezoneOffset = eventStart.getTimezoneOffset() * 60000; // Offset in milliseconds
         eventStart.setTime(eventStart.getTime() - userTimezoneOffset);
 
-        const startHour = eventStart.getHours();
+        const startHour = eventStart.getUTCHours(); // Use UTC hours to avoid timezone issues
         const eventDateISO = eventStart.toISOString().split('T')[0];
 
-        days.forEach(day => {
-            if (day.getAttribute('data-date') === eventDateISO) {
-                const timeSlot = day.querySelector(`.time-slot[data-hour="${startHour}"]`);
-                if (timeSlot) {
-                    timeSlot.appendChild(eventElement);
-                } else {
-                    console.error('No time slot found for event:', event);
-                }
+        // Find the .day element that matches the event date
+        const matchingDay = Array.from(days).find(day => day.getAttribute('data-date') === eventDateISO);
+        if (matchingDay) {
+            const timeSlot = matchingDay.querySelector(`.time-slot[data-hour="${startHour}"]`);
+            if (timeSlot) {
+                timeSlot.appendChild(eventElement);
+            } else {
+                console.error('No time slot found for event:', event);
             }
-        });
+        }
     });
 }
+
 
 
 
