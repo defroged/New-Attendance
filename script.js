@@ -19,8 +19,13 @@ window.onload = function() {
         }
     }
 
-    function fetchEvents() {
-    fetch('/api/calendar-events')
+    function fetchEvents(weekStart) {
+    const timeMin = new Date(weekStart).toISOString();
+    const threeMonthsLater = new Date(weekStart);
+    threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+    const timeMax = threeMonthsLater.toISOString();
+
+    fetch(`/api/calendar-events?timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}`)
     .then(response => response.json())
     .then(data => {
         displayEvents(data.items);
@@ -29,6 +34,7 @@ window.onload = function() {
         console.error('Error fetching events:', error);
     });
 }
+
 
 function displayEvents(events) {
     // Clear previous events
@@ -60,18 +66,21 @@ function displayEvents(events) {
 }
 
 
-    document.getElementById('prevWeek').addEventListener('click', function() {
-        currentWeekStart.setDate(currentWeekStart.getDate() - 7);
-        updateCalendar(currentWeekStart);
-        fetchEvents(); 
-    });
+    // When you update the calendar for the current week:
+updateCalendar(currentWeekStart);
+fetchEvents(currentWeekStart);
 
-    document.getElementById('nextWeek').addEventListener('click', function() {
-        currentWeekStart.setDate(currentWeekStart.getDate() + 7);
-        updateCalendar(currentWeekStart);
-        fetchEvents(); 
-    });
+// When navigating weeks:
+document.getElementById('prevWeek').addEventListener('click', function() {
+    currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+    updateCalendar(currentWeekStart);
+    fetchEvents(currentWeekStart);
+});
 
-    updateCalendar(currentWeekStart); 
-    fetchEvents(); 
+document.getElementById('nextWeek').addEventListener('click', function() {
+    currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+    updateCalendar(currentWeekStart);
+    fetchEvents(currentWeekStart);
+});
+ 
 };
