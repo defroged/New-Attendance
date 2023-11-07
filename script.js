@@ -20,7 +20,6 @@ window.onload = function() {
     }
 
     function fetchEvents() {
-    // Now calling the serverless function instead of the Google API directly
     fetch('/api/calendar-events')
     .then(response => response.json())
     .then(data => {
@@ -31,29 +30,29 @@ window.onload = function() {
     });
 }
 
-
 function displayEvents(events) {
     // Clear previous events
     document.querySelectorAll('.time-slot').forEach(slot => {
-        slot.innerHTML = ''; // Clear the previous events
+        slot.innerHTML = ''; 
     });
 
-    // Insert new events into the correct time slots
     events.forEach(event => {
         // Create an event element
         const eventElement = document.createElement('div');
         eventElement.classList.add('event');
         eventElement.innerText = event.summary;
 
-        // Parse the start and end times of the event
-        const startTime = event.start.dateTime || event.start.date; // dateTime for specific times, date for all-day events
-        const endTime = event.end.dateTime || event.end.date;
+        // Parse the start time of the event
+        const eventStart = new Date(event.start.dateTime || event.start.date);
+        const startHour = eventStart.getHours();
+        const eventDay = eventStart.getDay(); // This gets the day of the week (0 is Sunday, 1 is Monday, etc.)
 
-        // Convert start time to an hour and find the corresponding time slot
-        const startHour = new Date(startTime).getHours();
-        const timeSlot = document.querySelector(`.time-slot[data-hour="${startHour}"]`);
+        // Find the matching day and time slot
+        const dayElement = days[eventDay]; // This assumes that the days NodeList is in the correct order (Sunday to Saturday)
+        const timeSlot = dayElement.querySelector(`.time-slot[data-hour="${startHour}"]`);
+
         if (timeSlot) {
-            timeSlot.appendChild(eventElement); // Append the event to the time slot
+            timeSlot.appendChild(eventElement);
         } else {
             console.error('No time slot found for event:', event);
         }
@@ -64,15 +63,15 @@ function displayEvents(events) {
     document.getElementById('prevWeek').addEventListener('click', function() {
         currentWeekStart.setDate(currentWeekStart.getDate() - 7);
         updateCalendar(currentWeekStart);
-        fetchEvents(); // You may want to fetch events for this new week
+        fetchEvents(); 
     });
 
     document.getElementById('nextWeek').addEventListener('click', function() {
         currentWeekStart.setDate(currentWeekStart.getDate() + 7);
         updateCalendar(currentWeekStart);
-        fetchEvents(); // You may want to fetch events for this new week
+        fetchEvents(); 
     });
 
-    updateCalendar(currentWeekStart); // Initialize the calendar
-    fetchEvents(); // Fetch events for the current week
+    updateCalendar(currentWeekStart); 
+    fetchEvents(); 
 };
