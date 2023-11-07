@@ -3,21 +3,25 @@ window.onload = function() {
     let currentWeekStart = new Date();
 
     function updateCalendar(weekStart) {
-        const firstDayOfWeek = new Date(weekStart);
-        firstDayOfWeek.setDate(weekStart.getDate() - weekStart.getDay());
-        for (let i = 0; i < days.length; i++) {
-            const dayDate = new Date(firstDayOfWeek);
-            dayDate.setDate(firstDayOfWeek.getDate() + i);
+    const firstDayOfWeek = new Date(weekStart);
+    firstDayOfWeek.setDate(weekStart.getDate() - weekStart.getDay());
+    firstDayOfWeek.setHours(0, 0, 0, 0); // Normalize the date to the start of the day
 
-            const dateDiv = days[i].querySelector('.date');
-            dateDiv.innerText = dayDate.toDateString();
+    for (let i = 0; i < days.length; i++) {
+        const dayDate = new Date(firstDayOfWeek);
+        dayDate.setDate(firstDayOfWeek.getDate() + i);
 
-            days[i].classList.remove('current-day');
-            if (dayDate.toDateString() === new Date().toDateString()) {
-                days[i].classList.add('current-day');
-            }
+        const dateDiv = days[i].querySelector('.date');
+        dateDiv.innerText = dayDate.toDateString();
+        days[i].setAttribute('data-date', dayDate.toISOString().split('T')[0]); // Set ISO date
+
+        days[i].classList.remove('current-day');
+        if (dayDate.toDateString() === new Date().toDateString()) {
+            days[i].classList.add('current-day');
         }
     }
+}
+
 
     function fetchEvents(weekStart) {
     const timeMin = new Date(weekStart).toISOString();
@@ -37,33 +41,32 @@ window.onload = function() {
 
 
 function displayEvents(events) {
-    // Clear previous events
     document.querySelectorAll('.time-slot').forEach(slot => {
-        slot.innerHTML = ''; 
+        slot.innerHTML = '';
     });
 
     events.forEach(event => {
-        // Create an event element
         const eventElement = document.createElement('div');
         eventElement.classList.add('event');
         eventElement.innerText = event.summary;
 
-        // Parse the start time of the event
         const eventStart = new Date(event.start.dateTime || event.start.date);
         const startHour = eventStart.getHours();
-        const eventDay = eventStart.getDay(); // This gets the day of the week (0 is Sunday, 1 is Monday, etc.)
+        const eventDateISO = eventStart.toISOString().split('T')[0];
 
-        // Find the matching day and time slot
-        const dayElement = days[eventDay]; // This assumes that the days NodeList is in the correct order (Sunday to Saturday)
-        const timeSlot = dayElement.querySelector(`.time-slot[data-hour="${startHour}"]`);
-
-        if (timeSlot) {
-            timeSlot.appendChild(eventElement);
-        } else {
-            console.error('No time slot found for event:', event);
-        }
+        days.forEach(day => {
+            if (day.getAttribute('data-date') === eventDateISO) {
+                const timeSlot = day.querySelector(`.time-slot[data-hour="${startHour}"]`);
+                if (timeSlot) {
+                    timeSlot.appendChild(eventElement);
+                } else {
+                    console.error('No time slot found for event:', event);
+                }
+            }
+        });
     });
 }
+
 
 
     // When you update the calendar for the current week:

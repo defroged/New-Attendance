@@ -44,3 +44,27 @@ button {
     padding: 5px;
     height: 50px; /* or any other fixed height */
 }
+
+.event {
+    background-color: #add8e6; /* Example color for the event */
+    padding: 5px;
+    margin: 2px 0; /* Add some space between events */
+    border-radius: 4px;
+    font-size: 0.8em; /* Smaller font size for event text */
+    text-align: left; /* Align text to the left */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Show ellipsis for overflow text */
+    white-space: nowrap; /* No wrapping of text to keep event in single line */
+    cursor: pointer; /* Change cursor to pointer to indicate clickable */
+}
+
+.time-slot:hover .event {
+    background-color: #9ec9f7; /* Slightly lighter color on hover */
+}
+
+/* You may also want to add some responsiveness to your calendar */
+@media (max-width: 768px) {
+    .calendar {
+        grid-template-columns: repeat(1, 1fr); /* Stack days vertically on smaller screens */
+    }
+}
