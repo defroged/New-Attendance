@@ -4,23 +4,20 @@ window.onload = function() {
 
     function updateCalendar(weekStart) {
     const firstDayOfWeek = new Date(weekStart);
-    firstDayOfWeek.setDate(weekStart.getDate() - weekStart.getDay());
-    firstDayOfWeek.setHours(0, 0, 0, 0); // Normalize the date to the start of the day
+    firstDayOfWeek.setUTCHours(0, 0, 0, 0);
+    firstDayOfWeek.setUTCDate(firstDayOfWeek.getUTCDate() - firstDayOfWeek.getUTCDay());
 
     for (let i = 0; i < days.length; i++) {
         const dayDate = new Date(firstDayOfWeek);
-        dayDate.setDate(firstDayOfWeek.getDate() + i);
+        dayDate.setUTCDate(firstDayOfWeek.getUTCDate() + i);
 
         const dateDiv = days[i].querySelector('.date');
-        dateDiv.innerText = dayDate.toDateString();
-        days[i].setAttribute('data-date', dayDate.toISOString().split('T')[0]); // Set ISO date
+        dateDiv.innerText = dayDate.toUTCString().slice(0, 16); // Format to a more readable form
+        days[i].setAttribute('data-date', dayDate.toISOString().split('T')[0]); // Set ISO date without time
 
-        days[i].classList.remove('current-day');
-        if (dayDate.toDateString() === new Date().toDateString()) {
-            days[i].classList.add('current-day');
-        }
     }
 }
+
 
 
     function fetchEvents(weekStart) {
@@ -41,16 +38,20 @@ window.onload = function() {
 
 
 function displayEvents(events) {
-    document.querySelectorAll('.time-slot').forEach(slot => {
-        slot.innerHTML = '';
-    });
+    document.querySelectorAll('.time-slot').forEach(slot => slot.innerHTML = '');
 
     events.forEach(event => {
         const eventElement = document.createElement('div');
         eventElement.classList.add('event');
         eventElement.innerText = event.summary;
 
+        // Convert event start time to a Date object
         const eventStart = new Date(event.start.dateTime || event.start.date);
+        
+        // Adjust for time zone offset
+        const userTimezoneOffset = eventStart.getTimezoneOffset() * 60000; // Offset in milliseconds
+        eventStart.setTime(eventStart.getTime() - userTimezoneOffset);
+
         const startHour = eventStart.getHours();
         const eventDateISO = eventStart.toISOString().split('T')[0];
 
@@ -66,6 +67,7 @@ function displayEvents(events) {
         });
     });
 }
+
 
 
 
