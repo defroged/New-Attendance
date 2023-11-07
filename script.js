@@ -1,40 +1,75 @@
 window.onload = function() {
+    // Define the days of the calendar
     const days = document.querySelectorAll('.day');
     let currentWeekStart = new Date();
 
+    // Function to update the calendar display
     function updateCalendar(weekStart) {
-    const days = document.querySelectorAll('.day'); // Select all day containers
-    const firstDayOfWeek = new Date(weekStart); // Clone the date to avoid mutations
-    firstDayOfWeek.setDate(weekStart.getDate() - weekStart.getDay()); // Set to the first day of the week
+        const firstDayOfWeek = new Date(weekStart);
+        firstDayOfWeek.setDate(weekStart.getDate() - weekStart.getDay());
+        for (let i = 0; i < days.length; i++) {
+            const dayDate = new Date(firstDayOfWeek);
+            dayDate.setDate(firstDayOfWeek.getDate() + i);
 
-    for (let i = 0; i < days.length; i++) {
-        // Calculate the date for this day of the week
-        const dayDate = new Date(firstDayOfWeek);
-        dayDate.setDate(firstDayOfWeek.getDate() + i);
+            const dateDiv = days[i].querySelector('.date');
+            dateDiv.innerText = dayDate.toDateString();
 
-        // Select the .date div for this day and update its content
-        const dateDiv = days[i].querySelector('.date');
-        dateDiv.innerText = dayDate.toDateString();
-
-        // Clear current-day class from all days
-        days[i].classList.remove('current-day');
-
-        // If this day is today, add the current-day class
-        if (dayDate.toDateString() === new Date().toDateString()) {
-            days[i].classList.add('current-day');
-        }
-
-        // Now let's populate the hourly blocks
-        const hours = days[i].querySelectorAll('.hour');
-        for (let j = 0; j < hours.length; j++) {
-            // Assuming you want to do something with these blocks
-            // Otherwise, this inner loop might be unnecessary
-            // For instance, you could add event listeners or dynamic content here
+            days[i].classList.remove('current-day');
+            if (dayDate.toDateString() === new Date().toDateString()) {
+                days[i].classList.add('current-day');
+            }
         }
     }
-}
 
+    // Function to handle the OAuth 2.0 redirect and extract the access token
+    function handleAuthRedirect() {
+        if (window.location.hash) {
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const accessToken = params.get('access_token');
 
+            if (accessToken) {
+                console.log('Access Token:', accessToken);
+                document.getElementById('authorize_button').style.display = 'none';
+                fetchEvents(accessToken); // Fetch events after getting the access token
+            }
+        } else {
+            document.getElementById('authorize_button').style.display = 'block';
+        }
+    }
+
+    // Attach the click event to the authorization button
+    document.getElementById('authorize_button').onclick = function() {
+        const client_id = '995403920982-a2hj9cvj8ngmk91q5pr22eo05gfsmc0d.apps.googleusercontent.com';
+        const redirect_uri = 'https://new-attendance.vercel.app/oauth2callback';
+        const scope = 'https://www.googleapis.com/auth/calendar.events.readonly';
+        const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=token&scope=${scope}`;
+
+        window.location = url;
+    };
+
+    // Function to fetch events from Google Calendar
+    function fetchEvents(accessToken) {
+        const calendarId = 'primary';
+        const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`;
+
+        fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Events:', data.items);
+            // TODO: Process and display the events in your calendar here
+        })
+        .catch(error => {
+            console.error('Error fetching events:', error);
+        });
+    }
+
+    // Event listeners for navigating weeks
     document.getElementById('prevWeek').addEventListener('click', function() {
         currentWeekStart.setDate(currentWeekStart.getDate() - 7);
         updateCalendar(currentWeekStart);
@@ -45,5 +80,9 @@ window.onload = function() {
         updateCalendar(currentWeekStart);
     });
 
+    // Call the function to check for OAuth redirection
+    handleAuthRedirect();
+
+    // Initialize the calendar display for the current week
     updateCalendar(currentWeekStart);
 };
