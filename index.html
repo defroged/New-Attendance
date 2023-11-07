@@ -3,10 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>TOAST UI Calendar</title>
-    <!-- Include the Calendar's main CSS file -->
     <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
-    <!-- Include the DatePicker and TimePicker CSS files for the pop-ups -->
-    <!-- Please ensure that the URLs provided below are accessible or update them with the correct path if necessary -->
     <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-date-picker/latest/tui-date-picker.css" />
     <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-time-picker/latest/tui-time-picker.css" />
 </head>
@@ -15,14 +12,25 @@
     <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
     <script>
         const container = document.getElementById('calendar');
-
         const options = {
           defaultView: 'week',
-          useFormPopup: true,  // Enable the form pop-up for creating events
-          useDetailPopup: true // Enable the detail pop-up for viewing event details
+          useFormPopup: true,
+          useDetailPopup: true 
         };
 
         const calendar = new tui.Calendar(container, options);
+
+        // Apply the custom theme
+        calendar.setTheme({
+          common: {
+            gridSelection: {
+              backgroundColor: 'rgba(81, 230, 92, 0.05)',
+              border: '1px dotted #515ce6',
+            },
+            // Add more custom styles here as needed
+          },
+          // You can specify additional theme settings for various parts of the calendar
+        });
 
         const eventData = [
           {
