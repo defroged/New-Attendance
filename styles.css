@@ -14,6 +14,15 @@ body {
     gap: 0; /* Remove gap between days */
 }
 
+.calendar-container {
+    max-width: 600px; /* Adjust this value to make the calendar smaller */
+    margin: 0 auto; /* Centers the div */
+    padding: 20px; /* Add some padding around the calendar */
+    background-color: #fff; /* Optional: Sets a background color */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+    border-radius: 8px; /* Optional: Rounds the corners */
+}
+
 .day {
     padding: 5px; /* Reduced padding */
     box-sizing: border-box;
@@ -53,18 +62,6 @@ button {
     justify-content: center;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .calendar {
-        grid-template-columns: repeat(1, 1fr); /* Stack days on small screens */
-    }
-
-    button {
-        width: 100%; /* Full width buttons on small screens */
-        margin-top: 10px; /* Reduced margin */
-    }
-}
-
 .event {
     border: 1px solid #00bcd4; /* Use the primary color for the border */
     padding: 4px;
@@ -78,3 +75,19 @@ button {
     white-space: nowrap; /* Prevents the text from wrapping to a new line */
 }
 
+/* Responsive Design */
+@media (max-width: 768px) {
+    .calendar {
+        grid-template-columns: repeat(1, 1fr); /* Stack days on small screens */
+    }
+
+    button {
+        width: 100%; /* Full width buttons on small screens */
+        margin-top: 10px; /* Reduced margin */
+    }
+	
+	.calendar-container {
+        max-width: 90%; /* Takes up most of the screen on small devices */
+        padding: 10px; /* Smaller padding on small devices */
+    }
+}
