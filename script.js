@@ -33,6 +33,18 @@ window.onload = function() {
     fetch(`/api/calendar-events?timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}`)
     .then(response => response.json())
     .then(data => {
+        // Log the raw data from the API
+        console.log('Raw event data:', data);
+
+        // Check if the items array exists and log its contents
+        if (data.items && Array.isArray(data.items)) {
+            data.items.forEach((event, index) => {
+                console.log(`Event ${index}:`, event);
+                console.log('Start time:', event.start.dateTime || event.start.date);
+                console.log('End time:', event.end.dateTime || event.end.date);
+            });
+        }
+
         displayEvents(data.items);
     })
     .catch(error => {
