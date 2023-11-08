@@ -69,9 +69,12 @@ function displayEvents(events) {
         const eventDateISO = event.start.dateTime.split('T')[0]; // Extract the date part
 
         // Find the .day element that matches the event date
+		console.log(`Event date: ${eventDateISO}`);
         const matchingDay = Array.from(days).find(day => day.getAttribute('data-date') === eventDateISO);
+		console.log(`Matching day attribute: ${matchingDay.getAttribute('data-date')}`);
         if (matchingDay) {
             const timeSlot = matchingDay.querySelector(`.time-slot[data-hour="${startHour}"]`);
+			console.log(`Looking for time slot at hour: ${startHour}, found:`, timeSlot);
             if (timeSlot) {
                 timeSlot.appendChild(eventElement);
             } else {
