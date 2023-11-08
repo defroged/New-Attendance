@@ -38,11 +38,28 @@ function displayEvents(events) {
     events.forEach(event => {
         const eventElement = document.createElement('div');
         eventElement.classList.add('event');
-        eventElement.innerText = event.summary;
 
-        const eventStart = new Date(event.start.dateTime || event.start.date);
-        const startHour = eventStart.getHours();
-        const eventDay = eventStart.getDay(); 
+        const startTime = new Date(event.start.dateTime || event.start.date);
+        const endTime = new Date(event.end.dateTime || event.end.date);
+
+        // Format times to HH:MM format
+        const formattedStartTime = startTime.getHours().toString().padStart(2, '0') + ':' + startTime.getMinutes().toString().padStart(2, '0');
+        const formattedEndTime = endTime.getHours().toString().padStart(2, '0') + ':' + endTime.getMinutes().toString().padStart(2, '0');
+
+        const timeSpan = document.createElement('div');
+        timeSpan.classList.add('event-time');
+        timeSpan.innerText = `${formattedStartTime}-${formattedEndTime}`;
+
+        const titleSpan = document.createElement('div');
+        titleSpan.classList.add('event-title');
+        titleSpan.innerText = event.summary;
+
+        // Append timeSpan and titleSpan to eventElement
+        eventElement.appendChild(timeSpan);
+        eventElement.appendChild(titleSpan);
+
+        const startHour = startTime.getHours();
+        const eventDay = startTime.getDay(); 
 
         const dayElement = days[eventDay]; 
         const timeSlot = dayElement.querySelector(`.time-slot[data-hour="${startHour}"]`);
@@ -54,6 +71,7 @@ function displayEvents(events) {
         }
     });
 }
+
 
     document.getElementById('prevWeek').addEventListener('click', function() {
         currentWeekStart.setDate(currentWeekStart.getDate() - 7);
