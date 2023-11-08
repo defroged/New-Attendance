@@ -63,19 +63,15 @@ function displayEvents(events) {
         eventElement.classList.add('event');
         eventElement.innerText = event.summary;
 
-        // Convert event start time to a Date object
-        const eventStartUTC = new Date(event.start.dateTime || event.start.date);
-
-        // Convert UTC time to Japan time by adding 9 hours
-        const eventStartJapan = new Date(eventStartUTC.getTime() + (9 * 60 * 60 * 1000));
-
-        const startHourJapan = eventStartJapan.getHours();
-        const eventDateJapanISO = eventStartJapan.toISOString().split('T')[0];
+        // Parse the event start time directly without timezone adjustment
+        const eventStart = new Date(event.start.dateTime || event.start.date);
+        const startHour = eventStart.getHours(); // This should already be in JST
+        const eventDateISO = event.start.dateTime.split('T')[0]; // Extract the date part
 
         // Find the .day element that matches the event date
-        const matchingDay = Array.from(days).find(day => day.getAttribute('data-date') === eventDateJapanISO);
+        const matchingDay = Array.from(days).find(day => day.getAttribute('data-date') === eventDateISO);
         if (matchingDay) {
-            const timeSlot = matchingDay.querySelector(`.time-slot[data-hour="${startHourJapan}"]`);
+            const timeSlot = matchingDay.querySelector(`.time-slot[data-hour="${startHour}"]`);
             if (timeSlot) {
                 timeSlot.appendChild(eventElement);
             } else {
@@ -84,6 +80,7 @@ function displayEvents(events) {
         }
     });
 }
+
 
 
 
