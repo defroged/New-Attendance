@@ -55,8 +55,17 @@ body {
     background-color: #e0f7fa;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     text-align: left; /* Align text to the left for time and title */
+	position: absolute; /* Events will now be absolutely positioned */
+    width: 100%; /* Events will take the full width of the time slot */
+    /* Remove margins since we're absolutely positioning events */
+    box-sizing: border-box; /* Include padding and border in the event's dimensions */
 }
 
+}
+
+.time-slots {
+    position: relative;
+}
 
 button {
     padding: 10px 20px;
