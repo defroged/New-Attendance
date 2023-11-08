@@ -21,7 +21,11 @@ window.onload = function() {
 
 
     function fetchEvents(weekStart) {
-    const timeMin = new Date(weekStart).toISOString();
+    // Adjust weekStart to the beginning of the day in Japan time zone
+    weekStart.setHours(0 - (weekStart.getTimezoneOffset() / 60) + 9, 0, 0, 0);
+    const timeMin = weekStart.toISOString();
+
+    // Calculate three months later in Japan time zone
     const threeMonthsLater = new Date(weekStart);
     threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
     const timeMax = threeMonthsLater.toISOString();
@@ -35,6 +39,7 @@ window.onload = function() {
         console.error('Error fetching events:', error);
     });
 }
+
 
 
 function displayEvents(events) {
