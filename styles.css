@@ -64,3 +64,17 @@ button {
         margin-top: 10px; /* Reduced margin */
     }
 }
+
+.event {
+    border: 1px solid #00bcd4; /* Use the primary color for the border */
+    padding: 5px;
+    margin: 2px 0; /* Add some space between events */
+    border-radius: 4px; /* Optional: rounded corners for the events */
+    background-color: #e0f7fa; /* A light background color */
+    font-size: 0.8em; /* Smaller font size if needed */
+    text-align: left; /* Align text to the left */
+    overflow: hidden; /* Ensures the content fits in the event box */
+    text-overflow: ellipsis; /* Adds an ellipsis if the text is too long */
+    white-space: nowrap; /* Prevents the text from wrapping to a new line */
+}
+
