@@ -25,6 +25,8 @@ body {
     border-right: 1px solid #e0e0e0; /* Subtle border for separation */
     padding: 15px;
     box-sizing: border-box;
+	position: relative; /* Allows absolute positioning inside */
+    height: 600px; /* Set a fixed height for the day column */
 }
 
 .day:last-child {
@@ -55,9 +57,18 @@ body {
     background-color: #e0f7fa;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     text-align: left; /* Align text to the left for time and title */
+	position: absolute; /* Position based on their start time */
+    width: calc(100% - 10px); /* Full width of the time slot minus any padding/margin */
+    box-sizing: border-box;
+    /* You may want to set a min-height or padding to ensure visibility */
 }
 
-
+.time-slot {
+    /* ... existing styles ... */
+    position: absolute;
+    width: 100%;
+    height: calc(100% / 12); /* If there are 12 time slots */
+}
 
 button {
     padding: 10px 20px;

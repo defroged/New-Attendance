@@ -31,69 +31,58 @@ window.onload = function() {
 }
 
 function displayEvents(events) {
-    // Clear existing events
-    document.querySelectorAll('.time-slot').forEach(slot => {
-        slot.innerHTML = ''; 
+    // Clear previous events
+    document.querySelectorAll('.day').forEach(day => {
+        // This query selector should be specific to event elements within the day.
+        day.querySelectorAll('.event').forEach(event => event.remove());
     });
 
-    // Loop over each event and create its element
     events.forEach(event => {
-        // Create the event element and add 'event' class
+        // Create the event element
         const eventElement = document.createElement('div');
         eventElement.classList.add('event');
 
-        // Extract the start and end times
+        // Parse the start and end times of the event
         const eventStart = new Date(event.start.dateTime || event.start.date);
         const eventEnd = new Date(event.end.dateTime || event.end.date);
 
-        // Format the start and end times into HH:MM format
+        // Format the start and end times to HH:MM
         const formattedStartTime = eventStart.getHours().toString().padStart(2, '0') + ':' + eventStart.getMinutes().toString().padStart(2, '0');
         const formattedEndTime = eventEnd.getHours().toString().padStart(2, '0') + ':' + eventEnd.getMinutes().toString().padStart(2, '0');
 
-        // Create and style the time span
+        // Create and add the time span element
         const timeSpan = document.createElement('div');
         timeSpan.classList.add('event-time');
         timeSpan.innerText = `${formattedStartTime}-${formattedEndTime}`;
+        eventElement.appendChild(timeSpan);
 
-        // Create and style the title span
+        // Create and add the title span element
         const titleSpan = document.createElement('div');
         titleSpan.classList.add('event-title');
         titleSpan.innerText = event.summary;
-
-        // Append timeSpan and titleSpan to the eventElement
-        eventElement.appendChild(timeSpan);
         eventElement.appendChild(titleSpan);
 
-        // Calculate the top offset and height for the event
-        const startHour = eventStart.getHours();
-        const startMinutes = eventStart.getMinutes();
-        const endHour = eventEnd.getHours();
-        const endMinutes = eventEnd.getMinutes();
-        const topOffset = (startHour * 60) + startMinutes; // This assumes 1 minute = 1px.
-        const eventDuration = ((endHour - startHour) * 60) + (endMinutes - startMinutes);
+        // Calculate the top offset and height based on the event's start time and duration
+        const openingHour = 9; // Calendar starts at 9 AM
+        const pixelsPerMinute = 2; // Define how many pixels represent one minute
+        const startMinutesFromOpening = (eventStart.getHours() - openingHour) * 60 + eventStart.getMinutes();
+        const eventDurationMinutes = (eventEnd - eventStart) / (1000 * 60);
 
-        // Set style to position the event at the calculated offset
         eventElement.style.position = 'absolute';
-        eventElement.style.top = `${topOffset}px`;
-        eventElement.style.height = `${eventDuration}px`; // Height based on event duration
+        eventElement.style.top = `${startMinutesFromOpening * pixelsPerMinute}px`;
+        eventElement.style.height = `${eventDurationMinutes * pixelsPerMinute}px`;
 
-        // Find the corresponding day column and time slot
-        const eventDay = eventStart.getDay();
-        const dayElement = days[eventDay];
+        // Append the event to the correct day column based on the day of the week
+        const eventDayIndex = eventStart.getDay(); // getDay() returns 0 for Sunday, 1 for Monday, etc.
+        const dayElement = days[eventDayIndex]; // Make sure 'days' is an array of .day elements
 
-        // If you're not using full-day time slots, find the specific time slot
-        // const timeSlot = dayElement.querySelector(`.time-slot[data-hour="${startHour}"]`);
-
-        // If dayElement itself is the time slot container
         if (dayElement) {
             dayElement.appendChild(eventElement);
         } else {
-            console.error('No day column found for event:', event);
+            console.error('No day element found for the event date:', eventStart.toDateString());
         }
     });
 }
-
-
 
     document.getElementById('prevWeek').addEventListener('click', function() {
         currentWeekStart.setDate(currentWeekStart.getDate() - 7);
