@@ -31,24 +31,20 @@ window.onload = function() {
 }
 
 function displayEvents(events) {
-    // Clear previous events
     document.querySelectorAll('.time-slot').forEach(slot => {
         slot.innerHTML = ''; 
     });
 
     events.forEach(event => {
-        // Create an event element
         const eventElement = document.createElement('div');
         eventElement.classList.add('event');
         eventElement.innerText = event.summary;
 
-        // Parse the start time of the event
         const eventStart = new Date(event.start.dateTime || event.start.date);
         const startHour = eventStart.getHours();
-        const eventDay = eventStart.getDay(); // This gets the day of the week (0 is Sunday, 1 is Monday, etc.)
+        const eventDay = eventStart.getDay(); 
 
-        // Find the matching day and time slot
-        const dayElement = days[eventDay]; // This assumes that the days NodeList is in the correct order (Sunday to Saturday)
+        const dayElement = days[eventDay]; 
         const timeSlot = dayElement.querySelector(`.time-slot[data-hour="${startHour}"]`);
 
         if (timeSlot) {
@@ -58,7 +54,6 @@ function displayEvents(events) {
         }
     });
 }
-
 
     document.getElementById('prevWeek').addEventListener('click', function() {
         currentWeekStart.setDate(currentWeekStart.getDate() - 7);
