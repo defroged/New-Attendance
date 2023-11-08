@@ -47,19 +47,18 @@ function displayEvents(events) {
         eventElement.innerText = event.summary;
 
         // Convert event start time to a Date object
-        const eventStart = new Date(event.start.dateTime || event.start.date);
-        
-        // Adjust for time zone offset
-        const userTimezoneOffset = eventStart.getTimezoneOffset() * 60000; // Offset in milliseconds
-        eventStart.setTime(eventStart.getTime() - userTimezoneOffset);
+        const eventStartUTC = new Date(event.start.dateTime || event.start.date);
 
-        const startHour = eventStart.getUTCHours(); // Use UTC hours to avoid timezone issues
-        const eventDateISO = eventStart.toISOString().split('T')[0];
+        // Convert UTC time to Japan time by adding 9 hours
+        const eventStartJapan = new Date(eventStartUTC.getTime() + (9 * 60 * 60 * 1000));
+
+        const startHourJapan = eventStartJapan.getHours();
+        const eventDateJapanISO = eventStartJapan.toISOString().split('T')[0];
 
         // Find the .day element that matches the event date
-        const matchingDay = Array.from(days).find(day => day.getAttribute('data-date') === eventDateISO);
+        const matchingDay = Array.from(days).find(day => day.getAttribute('data-date') === eventDateJapanISO);
         if (matchingDay) {
-            const timeSlot = matchingDay.querySelector(`.time-slot[data-hour="${startHour}"]`);
+            const timeSlot = matchingDay.querySelector(`.time-slot[data-hour="${startHourJapan}"]`);
             if (timeSlot) {
                 timeSlot.appendChild(eventElement);
             } else {
@@ -68,6 +67,7 @@ function displayEvents(events) {
         }
     });
 }
+
 
 
 
