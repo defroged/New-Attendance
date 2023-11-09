@@ -23,12 +23,9 @@ body {
 }
 
 .day {
-    padding: 5px; /* Reduced padding */
+    border-right: 1px solid #e0e0e0; /* Subtle border for separation */
+    padding: 15px;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    background-color: #ffffff;
-    border-radius: 0; /* Remove rounded corners */
 }
 
 .current-day {
