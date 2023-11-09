@@ -38,13 +38,18 @@ body {
 }
 
 button {
-    margin: 5px; /* Smaller margins */
-    padding: 5px 10px; /* Smaller padding */
-    font-size: 14px; /* Smaller font size */
-    background-color: #00bcd4; /* Primary color for highlights */
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #00bcd4;
     color: white;
     border: none;
-    border-radius: 0; /* Remove rounded corners for buttons */
+    border-radius: 4px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+button:hover {
+    background-color: #0097a7;
 }
 
 .time-slots {
