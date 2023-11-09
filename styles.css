@@ -32,6 +32,11 @@ body {
     background-color: #e0f7fa;
 }
 
+.date {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
 button {
     margin: 5px; /* Smaller margins */
     padding: 5px 10px; /* Smaller padding */
