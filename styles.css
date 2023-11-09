@@ -14,12 +14,12 @@ body {
 }
 
 .calendar-container {
-    max-width: 600px; /* Adjust this value to make the calendar smaller */
-    margin: 0 auto; /* Centers the div */
-    padding: 20px; /* Add some padding around the calendar */
-    background-color: #fff; /* Optional: Sets a background color */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
-    border-radius: 8px; /* Optional: Rounds the corners */
+    max-width: 80%; /* Adjust this value to make the calendar smaller */
+    margin: 20px auto; /* Centers the div and adds vertical space */
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    overflow: hidden; /* Ensures shadows and borders stay within the rounded corners */
 }
 
 .day {
