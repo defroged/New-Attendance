@@ -29,6 +29,7 @@ body {
 }
 
 .current-day {
+	border-left: 4px solid #00bcd4;
     background-color: #e0f7fa;
 }
 
