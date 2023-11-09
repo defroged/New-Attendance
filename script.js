@@ -31,55 +31,26 @@ window.onload = function() {
 }
 
 function displayEvents(events) {
-    // Clear previous events
-    document.querySelectorAll('.day').forEach(day => {
-        // This query selector should be specific to event elements within the day.
-        day.querySelectorAll('.event').forEach(event => event.remove());
+    document.querySelectorAll('.time-slot').forEach(slot => {
+        slot.innerHTML = ''; 
     });
 
     events.forEach(event => {
-        // Create the event element
         const eventElement = document.createElement('div');
         eventElement.classList.add('event');
+        eventElement.innerText = event.summary;
 
-        // Parse the start and end times of the event
         const eventStart = new Date(event.start.dateTime || event.start.date);
-        const eventEnd = new Date(event.end.dateTime || event.end.date);
+        const startHour = eventStart.getHours();
+        const eventDay = eventStart.getDay(); 
 
-        // Format the start and end times to HH:MM
-        const formattedStartTime = eventStart.getHours().toString().padStart(2, '0') + ':' + eventStart.getMinutes().toString().padStart(2, '0');
-        const formattedEndTime = eventEnd.getHours().toString().padStart(2, '0') + ':' + eventEnd.getMinutes().toString().padStart(2, '0');
+        const dayElement = days[eventDay]; 
+        const timeSlot = dayElement.querySelector(`.time-slot[data-hour="${startHour}"]`);
 
-        // Create and add the time span element
-        const timeSpan = document.createElement('div');
-        timeSpan.classList.add('event-time');
-        timeSpan.innerText = `${formattedStartTime}-${formattedEndTime}`;
-        eventElement.appendChild(timeSpan);
-
-        // Create and add the title span element
-        const titleSpan = document.createElement('div');
-        titleSpan.classList.add('event-title');
-        titleSpan.innerText = event.summary;
-        eventElement.appendChild(titleSpan);
-
-        // Calculate the top offset and height based on the event's start time and duration
-        const openingHour = 9; // Calendar starts at 9 AM
-        const pixelsPerMinute = 2; // Define how many pixels represent one minute
-        const startMinutesFromOpening = (eventStart.getHours() - openingHour) * 60 + eventStart.getMinutes();
-        const eventDurationMinutes = (eventEnd - eventStart) / (1000 * 60);
-
-        eventElement.style.position = 'absolute';
-        eventElement.style.top = `${startMinutesFromOpening * pixelsPerMinute}px`;
-        eventElement.style.height = `${eventDurationMinutes * pixelsPerMinute}px`;
-
-        // Append the event to the correct day column based on the day of the week
-        const eventDayIndex = eventStart.getDay(); // getDay() returns 0 for Sunday, 1 for Monday, etc.
-        const dayElement = days[eventDayIndex]; // Make sure 'days' is an array of .day elements
-
-        if (dayElement) {
-            dayElement.appendChild(eventElement);
+        if (timeSlot) {
+            timeSlot.appendChild(eventElement);
         } else {
-            console.error('No day element found for the event date:', eventStart.toDateString());
+            console.error('No time slot found for event:', event);
         }
     });
 }
