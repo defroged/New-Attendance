@@ -21,6 +21,10 @@ body {
     border-radius: 10px;
     overflow: hidden;
 }
+.day-of-week {
+    font-size: 1.5em; /* Larger font size for the day of the week */
+    text-align: center;
+}
 
 .day {
     border-right: 1px solid #e0e0e0;
@@ -36,6 +40,8 @@ body {
 .date {
     font-weight: bold;
     margin-bottom: 10px;
+	font-size: 1em; /* Regular size for the date */
+    text-align: center;
 }
 
 button {

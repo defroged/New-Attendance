@@ -5,18 +5,34 @@ window.onload = function() {
     function updateCalendar(weekStart) {
         const firstDayOfWeek = new Date(weekStart);
         firstDayOfWeek.setDate(weekStart.getDate() - weekStart.getDay());
+
         for (let i = 0; i < days.length; i++) {
             const dayDate = new Date(firstDayOfWeek);
             dayDate.setDate(firstDayOfWeek.getDate() + i);
 
+            const dayOfWeekDiv = days[i].querySelector('.day-of-week');
             const dateDiv = days[i].querySelector('.date');
-            dateDiv.innerText = dayDate.toDateString();
+
+            dayOfWeekDiv.innerText = getJapaneseDayOfWeek(dayDate.getDay());
+            dateDiv.innerText = formatDate(dayDate);
 
             days[i].classList.remove('current-day');
             if (dayDate.toDateString() === new Date().toDateString()) {
                 days[i].classList.add('current-day');
             }
         }
+    }
+
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}/${month}/${day}`;
+    }
+
+    function getJapaneseDayOfWeek(dayIndex) {
+        const daysInJapanese = ['日', '月', '火', '水', '木', '金', '土'];
+        return daysInJapanese[dayIndex];
     }
 
     function fetchEvents() {
