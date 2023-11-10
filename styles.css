@@ -82,6 +82,17 @@ button:hover {
     white-space: nowrap; /* Prevents the text from wrapping to a new line */
 }
 
+.event-time {
+    font-size: 0.75em; /* smaller font size for the time */
+    color: #555; /* a darker shade for the time text */
+    margin-bottom: 5px; /* space between time and summary */
+}
+
+.event-summary {
+    font-size: 0.85em; /* size of the event summary text */
+    color: #333; /* color for the event summary text */
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .calendar {
