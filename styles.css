@@ -20,6 +20,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
     border-radius: 10px;
     overflow: hidden; /* Ensures shadows and borders stay within the rounded corners */
+	padding: 10px;
 }
 
 .day {
@@ -29,8 +30,9 @@ body {
 }
 
 .current-day {
-	border-left: 4px solid #00bcd4;
-    background-color: #e0f7fa;
+    background-color: #e3f2fd; /* A gentle highlight color */
+    border-left: 4px solid #1e88e5; /* A distinct border to the left */
+    font-weight: bold; /* Make the date bold */
 }
 
 .date {
@@ -70,27 +72,25 @@ button:hover {
 }
 
 .event {
-    border: 1px solid #00bcd4; /* Use the primary color for the border */
-    padding: 4px;
-    margin: 1px 0; /* Add some space between events */
-    border-radius: 4px; /* Optional: rounded corners for the events */
-    background-color: #e0f7fa; /* A light background color */
-    font-size: 0.9em; /* Smaller font size if needed */
-    text-align: left; /* Align text to the left */
-    overflow: hidden; /* Ensures the content fits in the event box */
-    text-overflow: ellipsis; /* Adds an ellipsis if the text is too long */
-    white-space: nowrap; /* Prevents the text from wrapping to a new line */
+    border: 1px solid #c5e1a5; /* Softer color for the border */
+    padding: 8px;
+    margin-bottom: 10px; /* Space between events */
+    border-radius: 4px; /* Keeps rounded corners */
+    background-color: #f1f8e9; /* Lighter background for less visual clutter */
+    text-align: left; /* Align text to the left for readability */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
 }
 
 .event-time {
-    font-size: 0.75em; /* smaller font size for the time */
-    color: #555; /* a darker shade for the time text */
-    margin-bottom: 5px; /* space between time and summary */
+    font-size: 0.75em; /* Smaller font size for the event time */
+    color: #78909c; /* Muted color for time text */
+    margin-bottom: 4px; /* Space between time and summary */
+    font-weight: bold; /* Make the time bold to differentiate from the event title */
 }
 
 .event-summary {
-    font-size: 0.85em; /* size of the event summary text */
-    color: #333; /* color for the event summary text */
+    font-size: 0.85em; /* Adjusted size for the event summary text */
+    color: #333; /* Color for the event summary text */
 }
 
 /* Responsive Design */
@@ -102,10 +102,15 @@ button:hover {
     button {
         width: 100%; /* Full width buttons on small screens */
         margin-top: 10px; /* Reduced margin */
+		padding: 8px 16px;
     }
 	
 	.calendar-container {
-        max-width: 90%; /* Takes up most of the screen on small devices */
-        padding: 10px; /* Smaller padding on small devices */
+        max-width: 95%;
+        padding: 5px;
+    }
+	
+	.event-time, .event-summary {
+        font-size: 0.7em;
     }
 }
