@@ -92,8 +92,8 @@ button:hover {
     background-color: #e0f7fa;
     font-size: 1.2em;
     text-align: left;
-    /*overflow: hidden;
-    text-overflow: ellipsis;*/
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
