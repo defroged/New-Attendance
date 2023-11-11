@@ -1,6 +1,17 @@
 window.onload = function() {
     const days = document.querySelectorAll('.day');
     let currentWeekStart = new Date();
+	
+	days.forEach(day => {
+        const timeSlotsContainer = day.querySelector('.time-slots');
+        for (let hour = 0; hour < 24; hour++) {
+            const timeSlot = document.createElement('div');
+            timeSlot.classList.add('time-slot');
+            timeSlot.dataset.hour = hour;
+            timeSlotsContainer.appendChild(timeSlot);
+        }
+    });
+	
 
     function updateCalendar(weekStart) {
         const firstDayOfWeek = new Date(weekStart);
