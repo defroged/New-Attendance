@@ -26,6 +26,14 @@ body {
     text-align: center;
 }
 
+.time-slot[data-hour="0"], .time-slot[data-hour="1"], .time-slot[data-hour="2"], 
+.time-slot[data-hour="3"], .time-slot[data-hour="4"], .time-slot[data-hour="5"],
+.time-slot[data-hour="6"], .time-slot[data-hour="7"], .time-slot[data-hour="8"],
+.time-slot[data-hour="20"], .time-slot[data-hour="21"], .time-slot[data-hour="22"],
+.time-slot[data-hour="23"] {
+    display: none;
+}
+
 .day {
     border-right: 1px solid #e0e0e0;
     padding: 15px;
