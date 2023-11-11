@@ -1,7 +1,6 @@
 window.onload = function() {
     const days = document.querySelectorAll('.day');
-    const currentWeekStart = new Date(); // Stores the current week's start date
-    let selectedWeekStart = new Date();  // Used to track the week currently displayed
+    let currentWeekStart = new Date();
 
     function updateCalendar(weekStart) {
         const firstDayOfWeek = new Date(weekStart);
@@ -10,6 +9,7 @@ window.onload = function() {
         for (let i = 0; i < days.length; i++) {
             const dayDate = new Date(firstDayOfWeek);
             dayDate.setDate(firstDayOfWeek.getDate() + i);
+
             const dayOfWeekDiv = days[i].querySelector('.day-of-week');
             const dateDiv = days[i].querySelector('.date');
 
@@ -36,19 +36,7 @@ window.onload = function() {
     }
 
     function fetchEvents() {
-    const startOfWeek = new Date(selectedWeekStart);
-    startOfWeek.setHours(0, 0, 0, 0); // Set to the beginning of the day
-
-    // Calculate the end of the week
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 7);
-    endOfWeek.setHours(0, 0, 0, 0);
-
-    // Convert to ISO string for the API
-    const timeMin = startOfWeek.toISOString();
-    const timeMax = endOfWeek.toISOString();
-
-    fetch(`/api/calendar-events?timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}`)
+    fetch('/api/calendar-events')
     .then(response => response.json())
     .then(data => {
         displayEvents(data.items);
@@ -58,37 +46,66 @@ window.onload = function() {
     });
 }
 
+function displayEvents(events) {
+    document.querySelectorAll('.time-slot').forEach(slot => {
+        slot.innerHTML = ''; 
+    });
 
-    function displayEvents(events) {
-        document.querySelectorAll('.time-slot').forEach(slot => {
-            slot.innerHTML = ''; 
-        });
+    events.forEach(event => {
+        const eventElement = document.createElement('div');
+        eventElement.classList.add('event');
 
-        events.forEach(event => {
-            // ... [rest of the displayEvents function]
-        });
-    }
+        // Create a time element
+        const timeElement = document.createElement('div');
+        timeElement.classList.add('event-time');
 
-    function goToCurrentWeek() {
-        selectedWeekStart = new Date(currentWeekStart);
-        updateCalendar(selectedWeekStart);
-        fetchEvents();
-    }
+        const eventStart = new Date(event.start.dateTime || event.start.date);
+        const eventEnd = new Date(event.end.dateTime || event.end.date);
+        
+        // Format the start and end time in HH:MM format
+        const startTime = eventStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        const endTime = eventEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+
+        // Set the time text
+        timeElement.innerText = `${startTime}-${endTime}`;
+        
+        // Append the time element to the event element
+        eventElement.appendChild(timeElement);
+
+        // Create a summary element
+        const summaryElement = document.createElement('div');
+        summaryElement.classList.add('event-summary');
+        summaryElement.innerText = event.summary;
+
+        // Append the summary to the event element
+        eventElement.appendChild(summaryElement);
+
+        const startHour = eventStart.getHours();
+        const eventDay = eventStart.getDay(); 
+
+        const dayElement = days[eventDay]; 
+        const timeSlot = dayElement.querySelector(`.time-slot[data-hour="${startHour}"]`);
+
+        if (timeSlot) {
+            timeSlot.appendChild(eventElement);
+        } else {
+            console.error('No time slot found for event:', event);
+        }
+    });
+}
 
     document.getElementById('prevWeek').addEventListener('click', function() {
-        selectedWeekStart.setDate(selectedWeekStart.getDate() - 7);
-        updateCalendar(selectedWeekStart);
-        fetchEvents();
+        currentWeekStart.setDate(currentWeekStart.getDate() - 7);
+        updateCalendar(currentWeekStart);
+        fetchEvents(); 
     });
 
     document.getElementById('nextWeek').addEventListener('click', function() {
-        selectedWeekStart.setDate(selectedWeekStart.getDate() + 7);
-        updateCalendar(selectedWeekStart);
-        fetchEvents();
+        currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+        updateCalendar(currentWeekStart);
+        fetchEvents(); 
     });
 
-    document.getElementById('currentWeek').addEventListener('click', goToCurrentWeek);
-
-    updateCalendar(selectedWeekStart);
-    fetchEvents();
+    updateCalendar(currentWeekStart); 
+    fetchEvents(); 
 };
