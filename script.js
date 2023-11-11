@@ -1,6 +1,7 @@
 window.onload = function() {
     const days = document.querySelectorAll('.day');
-    let currentWeekStart = new Date();
+    const currentWeekStart = new Date(); // Stores the current week's start date
+    let selectedWeekStart = new Date();  // Used to track the week currently displayed
 
     function updateCalendar(weekStart) {
         const firstDayOfWeek = new Date(weekStart);
@@ -30,6 +31,7 @@ window.onload = function() {
         return `${year}/${month}/${day}`;
     }
 
+
     function getJapaneseDayOfWeek(dayIndex) {
         const daysInJapanese = ['日', '月', '火', '水', '木', '金', '土'];
         return daysInJapanese[dayIndex];
@@ -45,6 +47,30 @@ window.onload = function() {
         console.error('Error fetching events:', error);
     });
 }
+
+function goToCurrentWeek() {
+        selectedWeekStart = new Date(currentWeekStart);
+        updateCalendar(selectedWeekStart);
+        fetchEvents();
+    }
+
+    document.getElementById('prevWeek').addEventListener('click', function() {
+        selectedWeekStart.setDate(selectedWeekStart.getDate() - 7);
+        updateCalendar(selectedWeekStart);
+        fetchEvents();
+    });
+
+    document.getElementById('nextWeek').addEventListener('click', function() {
+        selectedWeekStart.setDate(selectedWeekStart.getDate() + 7);
+        updateCalendar(selectedWeekStart);
+        fetchEvents();
+    });
+
+    document.getElementById('currentWeek').addEventListener('click', goToCurrentWeek);
+
+    updateCalendar(selectedWeekStart);
+    fetchEvents();
+};
 
 function displayEvents(events) {
     document.querySelectorAll('.time-slot').forEach(slot => {
