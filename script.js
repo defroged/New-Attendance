@@ -10,7 +10,6 @@ window.onload = function() {
         for (let i = 0; i < days.length; i++) {
             const dayDate = new Date(firstDayOfWeek);
             dayDate.setDate(firstDayOfWeek.getDate() + i);
-
             const dayOfWeekDiv = days[i].querySelector('.day-of-week');
             const dateDiv = days[i].querySelector('.date');
 
@@ -37,15 +36,28 @@ window.onload = function() {
     }
 
     function fetchEvents() {
-        fetch('/api/calendar-events')
-        .then(response => response.json())
-        .then(data => {
-            displayEvents(data.items);
-        })
-        .catch(error => {
-            console.error('Error fetching events:', error);
-        });
-    }
+    const startOfWeek = new Date(selectedWeekStart);
+    startOfWeek.setHours(0, 0, 0, 0); // Set to the beginning of the day
+
+    // Calculate the end of the week
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 7);
+    endOfWeek.setHours(0, 0, 0, 0);
+
+    // Convert to ISO string for the API
+    const timeMin = startOfWeek.toISOString();
+    const timeMax = endOfWeek.toISOString();
+
+    fetch(`/api/calendar-events?timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}`)
+    .then(response => response.json())
+    .then(data => {
+        displayEvents(data.items);
+    })
+    .catch(error => {
+        console.error('Error fetching events:', error);
+    });
+}
+
 
     function displayEvents(events) {
         document.querySelectorAll('.time-slot').forEach(slot => {
