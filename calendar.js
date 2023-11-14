@@ -143,7 +143,12 @@ function displayEvents(events) {
 
 	document.getElementById('resetWeek').addEventListener('click', function() {
     const today = new Date();
-    currentWeekStart.setDate(today.getDate() - today.getDay());
+    const currentDay = today.getDay();
+
+    // Get the start of the current week
+    const startOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - currentDay);
+
+    currentWeekStart = startOfWeek;
     updateCalendar(currentWeekStart);
     fetchEvents();
 });
