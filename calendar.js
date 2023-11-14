@@ -141,6 +141,14 @@ function displayEvents(events) {
         fetchEvents(); 
     });
 
+	document.getElementById('resetWeek').addEventListener('click', function() {
+    const today = new Date();
+    currentWeekStart.setDate(today.getDate() - today.getDay());
+    updateCalendar(currentWeekStart);
+    fetchEvents();
+});
+	
+
     updateCalendar(currentWeekStart); 
     fetchEvents(); 
 };
