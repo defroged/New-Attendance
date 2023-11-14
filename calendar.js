@@ -46,14 +46,23 @@ window.onload = function() {
     }
 
     function fetchEvents() {
-    fetch('/api/calendar-events')
-    .then(response => response.json())
-    .then(data => {
-        displayEvents(data.items);
-    })
-    .catch(error => {
-        console.error('Error fetching events:', error);
-    });
+    const weekStartDate = new Date(currentWeekStart);
+    weekStartDate.setHours(0, 0, 0, 0);
+    
+    const weekEndDate = new Date(weekStartDate);
+    weekEndDate.setDate(weekStartDate.getDate() + 7);
+
+    const timeMin = encodeURIComponent(weekStartDate.toISOString());
+    const timeMax = encodeURIComponent(weekEndDate.toISOString());
+    
+    fetch(`/api/calendar-events?timeMin=${timeMin}&timeMax=${timeMax}`)
+        .then(response => response.json())
+        .then(data => {
+            displayEvents(data.items);
+        })
+        .catch(error => {
+            console.error('Error fetching events:', error);
+        });
 }
 
 function displayEvents(events) {
