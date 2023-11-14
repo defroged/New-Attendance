@@ -1,6 +1,8 @@
 window.onload = function() {
-    const days = document.querySelectorAll('.day');
-    let currentWeekStart = new Date();
+     const days = document.querySelectorAll('.day');
+    const today = new Date();
+    let currentWeekStart = new Date(today);
+    currentWeekStart.setDate(today.getDate() - today.getDay());
 	
 	days.forEach(day => {
         const timeSlotsContainer = day.querySelector('.time-slots');
@@ -14,8 +16,7 @@ window.onload = function() {
 
     function updateCalendar(weekStart) {
     const firstDayOfWeek = new Date(weekStart);
-    const dayOffset = firstDayOfWeek.getDay() === 0 ? 0 : 7 - firstDayOfWeek.getDay();
-    firstDayOfWeek.setDate(weekStart.getDate() + dayOffset);
+    firstDayOfWeek.setDate(weekStart.getDate() - weekStart.getDay());
 
     for (let i = 0; i < days.length; i++) {
         const dayDate = new Date(firstDayOfWeek);
