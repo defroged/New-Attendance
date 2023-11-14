@@ -13,25 +13,26 @@ window.onload = function() {
     });
 
     function updateCalendar(weekStart) {
-        const firstDayOfWeek = new Date(weekStart);
-        firstDayOfWeek.setDate(weekStart.getDate() - weekStart.getDay());
+    const firstDayOfWeek = new Date(weekStart);
+    const dayOffset = firstDayOfWeek.getDay() === 0 ? 0 : 7 - firstDayOfWeek.getDay();
+    firstDayOfWeek.setDate(weekStart.getDate() + dayOffset);
 
-        for (let i = 0; i < days.length; i++) {
-            const dayDate = new Date(firstDayOfWeek);
-            dayDate.setDate(firstDayOfWeek.getDate() + i);
+    for (let i = 0; i < days.length; i++) {
+        const dayDate = new Date(firstDayOfWeek);
+        dayDate.setDate(firstDayOfWeek.getDate() + i);
 
-            const dayOfWeekDiv = days[i].querySelector('.day-of-week');
-            const dateDiv = days[i].querySelector('.date');
+        const dayOfWeekDiv = days[i].querySelector('.day-of-week');
+        const dateDiv = days[i].querySelector('.date');
 
-            dayOfWeekDiv.innerText = getJapaneseDayOfWeek(dayDate.getDay());
-            dateDiv.innerText = formatDate(dayDate);
+        dayOfWeekDiv.innerText = getJapaneseDayOfWeek(dayDate.getDay());
+        dateDiv.innerText = formatDate(dayDate);
 
-            days[i].classList.remove('current-day');
-            if (dayDate.toDateString() === new Date().toDateString()) {
-                days[i].classList.add('current-day');
-            }
+        days[i].classList.remove('current-day');
+        if (dayDate.toDateString() === new Date().toDateString()) {
+            days[i].classList.add('current-day');
         }
     }
+}
 
     function formatDate(date) {
         const year = date.getFullYear();
