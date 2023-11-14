@@ -58,7 +58,7 @@ window.onload = function() {
 
 function displayEvents(events) {
     document.querySelectorAll('.time-slot').forEach(slot => {
-        slot.innerHTML = ''; 
+        slot.innerHTML = '';
     });
 
     events.forEach(event => {
@@ -70,59 +70,50 @@ function displayEvents(events) {
 
         const eventStart = new Date(event.start.dateTime || event.start.date);
         const eventEnd = new Date(event.end.dateTime || event.end.date);
-        
-        const startTime = eventStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-        const endTime = eventEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+
+        const startTime = eventStart.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        });
+        const endTime = eventEnd.toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        });
 
         timeElement.innerText = `${startTime}-${endTime}`;
-        
         eventElement.appendChild(timeElement);
 
         const summaryElement = document.createElement('div');
         summaryElement.classList.add('event-summary');
         summaryElement.innerText = event.summary;
-
         eventElement.appendChild(summaryElement);
 
         function displayEventForDay(eventStart, eventEnd, eventElement) {
-  function displayEventForDay(eventStart, eventEnd, eventElement) {
-    const startHour = eventStart.getHours();
-    const eventDay = eventStart.getDay();
-    const dayElement = days[eventDay];
-    const timeSlot = dayElement.querySelector(`.time-slot[data-hour="${startHour}"]`);
+            const startHour = eventStart.getHours();
+            const eventDay = eventStart.getDay();
+            const dayElement = days[eventDay];
+            const timeSlot = dayElement.querySelector(
+                `.time-slot[data-hour="${startHour}"]`
+            );
 
-    if (timeSlot) {
-        timeSlot.appendChild(eventElement.cloneNode(true));
-    } else {
-        console.error('No time slot found for event:', event);
-    }
-}
+            if (timeSlot) {
+                timeSlot.appendChild(eventElement.cloneNode(true));
+            } else {
+                console.error('No time slot found for event:', event);
+            }
+        }
 
-const today = new Date();
-today.setHours(0, 0, 0, 0); // Start of the current day
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Start of the current day
 
-while (eventStart < eventEnd) {
-    if (eventStart >= today) {
-        displayEventForDay(eventStart, eventEnd, eventElement);
-    }
-    eventStart.setDate(eventStart.getDate() + 1);
-    eventStart.setHours(0, 0, 0, 0); // Reset to the start of the next day
-}
-
-  if (timeSlot) {
-    timeSlot.appendChild(eventElement);
-  } else {
-    console.error('No time slot found for event:', event);
-  }
-}
-
-const today = new Date();
-today.setHours(0, 0, 0, 0); // Start of the current day
-
-        if (timeSlot) {
-            timeSlot.appendChild(eventElement);
-        } else {
-            console.error('No time slot found for event:', event);
+        while (eventStart < eventEnd) {
+            if (eventStart >= today) {
+                displayEventForDay(eventStart, eventEnd, eventElement);
+            }
+            eventStart.setDate(eventStart.getDate() + 1);
+            eventStart.setHours(0, 0, 0, 0); // Reset to the start of the next day
         }
     });
 }
