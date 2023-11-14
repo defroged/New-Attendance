@@ -85,10 +85,29 @@ function displayEvents(events) {
         eventElement.appendChild(summaryElement);
 
         function displayEventForDay(eventStart, eventEnd, eventElement) {
-  const startHour = eventStart.getHours();
-  const eventDay = eventStart.getDay();
-  const dayElement = days[eventDay];
-  const timeSlot = dayElement.querySelector(`.time-slot[data-hour="${startHour}"]`);
+  function displayEventForDay(eventStart, eventEnd, eventElement) {
+    const startHour = eventStart.getHours();
+    const eventDay = eventStart.getDay();
+    const dayElement = days[eventDay];
+    const timeSlot = dayElement.querySelector(`.time-slot[data-hour="${startHour}"]`);
+
+    if (timeSlot) {
+        timeSlot.appendChild(eventElement.cloneNode(true));
+    } else {
+        console.error('No time slot found for event:', event);
+    }
+}
+
+const today = new Date();
+today.setHours(0, 0, 0, 0); // Start of the current day
+
+while (eventStart < eventEnd) {
+    if (eventStart >= today) {
+        displayEventForDay(eventStart, eventEnd, eventElement);
+    }
+    eventStart.setDate(eventStart.getDate() + 1);
+    eventStart.setHours(0, 0, 0, 0); // Reset to the start of the next day
+}
 
   if (timeSlot) {
     timeSlot.appendChild(eventElement);
