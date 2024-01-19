@@ -1,4 +1,4 @@
-const apiUrl = 'https://new-attendance.vercel.app/api/sheetHandler';
+const apiUrl = 'https://new-attendance.vercel.app/api/sheetData;
 
 function fetchClassDetails(className) {
   fetch(apiUrl)
