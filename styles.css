@@ -68,7 +68,7 @@ button:hover {
 .time-slot {
     border: none;
     padding: 9px;
-    height: 34px;
+    height: 64px;
     background-color: #f9f9f9;
     display: flex;
     align-items: center;
