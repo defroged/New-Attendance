@@ -101,24 +101,33 @@ function displayEvents(events) {
         summaryElement.innerText = event.summary;
         eventElement.appendChild(summaryElement);
 
-        function displayEventForDay(eventStart, eventEnd, eventElement) {
-            const startHour = eventStart.getHours();
-            const eventDay = eventStart.getDay();
-            const dayElement = days[eventDay];
-            const timeSlot = dayElement.querySelector(
-                `.time-slot[data-hour="${startHour}"]`
-            );
+function displayEventForDay(eventStart, eventEnd, eventElement) {
+    // Assuming your calendar displays from 9:00 to 18:00 (9 hours * 2 slots per hour)
+    const totalSlotsInDay = 18; // Adjust if your calendar has more hours
+    const firstHour = 9; // Adjust if your calendar starts at a different time
 
-            if (timeSlot) {
+    const startHour = eventStart.getHours();
+    const startMinutes = eventStart.getMinutes();
+    const endHour = eventEnd.getHours();
+    const endMinutes = eventEnd.getMinutes();
+    const eventDay = eventStart.getDay();
+    const dayElement = days[eventDay];
+
+    // Calculate the starting and ending grid rows
+    const gridRowStart = (startHour - firstHour) * 2 + (startMinutes >= 30 ? 2 : 1);
+    const gridRowEnd = (endHour - firstHour) * 2 + (endMinutes > 30 ? 2 : (endMinutes === 0 ? 1 : 2));
+
     const clonedEventElement = eventElement.cloneNode(true);
+    clonedEventElement.style.gridRowStart = gridRowStart;
+    clonedEventElement.style.gridRowEnd = gridRowEnd;
     clonedEventElement.addEventListener('click', function () {
-        fetchClassDetails(event.summary);
+        fetchClassDetails(event.summary); // Ensure event is defined and has a summary property
     });
-    timeSlot.appendChild(clonedEventElement);
-} else {
-    console.error('No time slot found for event:', event);
+
+    // Append the event to the day element instead of a specific time slot
+    dayElement.appendChild(clonedEventElement);
 }
-        }
+
 
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Start of the current day
