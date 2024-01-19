@@ -85,7 +85,6 @@ async function saveAttendance() {
     const dataWithoutHeader = updatedValues.slice(1);
 
     // Send updated data to the /api/updateAttendance endpoint
-    try {
     const updateResponse = await fetch("/api/updateAttendance", {
       method: "POST",
       headers: {
@@ -93,14 +92,12 @@ async function saveAttendance() {
       },
       body: JSON.stringify({
         spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-        range: "Sheet1!A2:C",
+        range: "Sheet1!A2:C", // Start updating data from row 2, assuming row 1 contains headers
         data: dataWithoutHeader,
       }),
     });
 
     if (!updateResponse.ok) {
-      const errorDetails = await updateResponse.json();
-      console.error('Error response details:', errorDetails);
       throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
     }
 
