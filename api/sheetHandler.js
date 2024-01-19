@@ -1,17 +1,25 @@
 const fetch = require('node-fetch');
-const {google} = require('google-auth-library-client');
+const {google} = require('googleapis');
 
-// Initialize Google Sheets API client
-const client = new google.sheets_v4.Sheets();
+// Initialize Google Sheets API client and authorize
+const sheets = google.sheets({version: 'v4'});
+const authClient = new google.auth.JWT(
+  process.env.GOOGLE_CLIENT_EMAIL,
+  null,
+  process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  ['https://www.googleapis.com/auth/spreadsheets']
+);
+sheets._options.auth = authClient;
 
 async function updateAttendance(spreadsheetId, range, data) {
   try {
-    const response = await client.spreadsheets.values.update({
+    const response = await sheets.spreadsheets.values.update({
       spreadsheetId,
       range,
       valueInputOption: 'RAW',
-      values: data,
-      auth: process.env.GOOGLE_CALENDAR_API_KEY,
+      resource: {
+        values: data,
+      },
     });
     return response.data;
   } catch (error) {
