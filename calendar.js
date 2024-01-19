@@ -102,23 +102,28 @@ function displayEvents(events) {
         eventElement.appendChild(summaryElement);
 
         function displayEventForDay(eventStart, eventEnd, eventElement) {
-            const startHour = eventStart.getHours();
-            const eventDay = eventStart.getDay();
-            const dayElement = days[eventDay];
-            const timeSlot = dayElement.querySelector(
-                `.time-slot[data-hour="${startHour}"]`
-            );
+    const startHour = eventStart.getHours();
+    const startMinutes = eventStart.getMinutes();
+    const eventDay = eventStart.getDay();
+    const dayElement = days[eventDay];
+    const timeSlot = dayElement.querySelector(`.time-slot[data-hour="${startHour}"]`);
 
-            if (timeSlot) {
-    const clonedEventElement = eventElement.cloneNode(true);
-    clonedEventElement.addEventListener('click', function () {
-        fetchClassDetails(event.summary);
-    });
-    timeSlot.appendChild(clonedEventElement);
-} else {
-    console.error('No time slot found for event:', event);
+    if (timeSlot) {
+        const clonedEventElement = eventElement.cloneNode(true);
+        clonedEventElement.addEventListener('click', function () {
+            fetchClassDetails(event.summary);
+        });
+
+        // Calculate the top position based on the event's start minutes
+        const slotHeight = timeSlot.offsetHeight;
+        const slotTop = (startMinutes * slotHeight) / 60;
+        clonedEventElement.style.top = `${slotTop}px`;
+
+        timeSlot.appendChild(clonedEventElement);
+    } else {
+        console.error('No time slot found for event:', event);
+    }
 }
-        }
 
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Start of the current day
