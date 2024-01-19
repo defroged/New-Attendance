@@ -61,7 +61,13 @@ async function saveAttendance() {
   try {
     const response = await fetch(apiUrl);
     if (!updateResponse.ok) {
-  console.error('Error response details:', await updateResponse.json()); // Add this line
+  // Use a separate try-catch block for logging error response details
+  try {
+    console.error('Error response details:', await updateResponse.json());
+  } catch (logErr) {
+    console.error('Error logging response details:', logErr);
+  }
+  
   throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
 }
     const data = await response.json();
