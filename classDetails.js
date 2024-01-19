@@ -18,10 +18,10 @@ function fetchClassDetails(className) {
 }
 
 function findStudentsByClassName(className, data) {
-  var students = [];
+  let students = [];
   data.forEach(function (row) {
-    if (row[0] === className) {
-      students.push(row[1]);
+    if (row[1] === className) { // Note the change from row[0] to row[1] to search in column B for the class name
+      students.push(row[0]); // Get the student name from column A by using row[0] instead of row[1]
     }
   });
   return students;
