@@ -30,7 +30,7 @@ function findStudentsByClassName(className, data) {
 function showModalWithClassDetails(className, students) {
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
   students.forEach(function (student) {
-    modalContent += '<li>' + student + ' <i class="fas fa-check-circle" onclick="iconClicked(event)"></i></li>';
+    modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" onclick="iconClicked(event)"></i></li>';
   });
   modalContent += '</ul>';
   
@@ -42,13 +42,13 @@ function showModalWithClassDetails(className, students) {
 function iconClicked(event) {
   const iconElement = event.target;
   if (iconElement.classList.contains("fa-check-circle")) {
-    iconElement.classList.remove("fa-check-circle");
-    iconElement.classList.add("fa-times-circle");
+    iconElement.classList.remove("fa-check-circle", "text-success");
+    iconElement.classList.add("fa-times-circle", "text-danger");
     // Call function when icon changed to "x" mark
     myPlaceholderFunction();
   } else {
-    iconElement.classList.remove("fa-times-circle");
-    iconElement.classList.add("fa-check-circle");
+    iconElement.classList.remove("fa-times-circle", "text-danger");
+    iconElement.classList.add("fa-check-circle", "text-success");
   }
 }
 
