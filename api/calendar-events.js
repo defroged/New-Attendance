@@ -25,6 +25,6 @@ module.exports = async (req, res) => {
     }
 };
 
-eventClick: function (info) {
+eventClick: (info) => {
   fetchClassDetails(info.event.title);
 }
