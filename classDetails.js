@@ -33,7 +33,9 @@ function showModalWithClassDetails(className, students) {
     modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" onclick="iconClicked(event)"></i></li>';
   });
   modalContent += '</ul>';
-  
+  // Add Save Changes button
+  modalContent += '<button class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes</button>';
+
   var modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
   document.getElementById('myModalContent').innerHTML = modalContent;
   modalInstance.show();
@@ -45,14 +47,14 @@ function iconClicked(event) {
     iconElement.classList.remove("fa-check-circle", "text-success");
     iconElement.classList.add("fa-times-circle", "text-danger");
     // Call function when icon changed to "x" mark
-    myPlaceholderFunction();
+    saveAttendance();
   } else {
     iconElement.classList.remove("fa-times-circle", "text-danger");
     iconElement.classList.add("fa-check-circle", "text-success");
   }
 }
 
-function myPlaceholderFunction() {
+function saveAttendance() {
   // Placeholder function for later implementation
   console.log("Placeholder function called");
 }
