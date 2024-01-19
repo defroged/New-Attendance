@@ -20,23 +20,39 @@ function fetchClassDetails(className) {
 function findStudentsByClassName(className, data) {
   let students = [];
   data.forEach(function (row) {
-    if (row[1] === className) { // Note the change from row[0] to row[1] to search in column B for the class name
-      students.push(row[0]); // Get the student name from column A by using row[0] instead of row[1]
+    if (row[1] === className) { 
+      students.push(row[0]); 
     }
   });
   return students;
 }
 
 function showModalWithClassDetails(className, students) {
-  // Create the modal content HTML string
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
   students.forEach(function (student) {
-    modalContent += '<li>' + student + '</li>';
+    modalContent += '<li>' + student + ' <i class="fas fa-check-circle" onclick="iconClicked(event)"></i></li>';
   });
   modalContent += '</ul>';
   
-  // Create the Bootstrap modal and show it
   var modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
   document.getElementById('myModalContent').innerHTML = modalContent;
   modalInstance.show();
+}
+
+function iconClicked(event) {
+  const iconElement = event.target;
+  if (iconElement.classList.contains("fa-check-circle")) {
+    iconElement.classList.remove("fa-check-circle");
+    iconElement.classList.add("fa-times-circle");
+    // Call function when icon changed to "x" mark
+    myPlaceholderFunction();
+  } else {
+    iconElement.classList.remove("fa-times-circle");
+    iconElement.classList.add("fa-check-circle");
+  }
+}
+
+function myPlaceholderFunction() {
+  // Placeholder function for later implementation
+  console.log("Placeholder function called");
 }
