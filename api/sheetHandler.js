@@ -1,7 +1,6 @@
 const fetch = require('node-fetch');
 const {google} = require('googleapis');
 
-// Initialize Google Sheets API client and authorize
 const authClient = new google.auth.JWT(
   process.env.GOOGLE_CLIENT_EMAIL,
   null,

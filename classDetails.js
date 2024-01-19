@@ -60,20 +60,9 @@ async function saveAttendance() {
 
   try {
     const response = await fetch(apiUrl);
-    if (!updateResponse.ok) {
-  // Use a separate try-catch block for logging error response details
-  try {
-    console.error('Error response details:', await updateResponse.json());
-  } catch (logErr) {
-    console.error('Error logging response details:', logErr);
-  }
-  
-  throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
-}
     const data = await response.json();
     const values = data.values;
 
-    // Find rows for students marked with an "x" and increment attendance count
     const updatedValues = values.map((row) => {
       if (xMarkedStudents.includes(row[0])) {
         row[2] = parseInt(row[2], 10) + 1;
@@ -81,10 +70,8 @@ async function saveAttendance() {
       return row;
     });
 
-    // Filter out the header row from the values
     const dataWithoutHeader = updatedValues.slice(1);
 
-    // Send updated data to the /api/updateAttendance endpoint
     const updateResponse = await fetch("/api/updateAttendance", {
       method: "POST",
       headers: {
@@ -92,12 +79,17 @@ async function saveAttendance() {
       },
       body: JSON.stringify({
         spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-        range: "Sheet1!A2:C", // Start updating data from row 2, assuming row 1 contains headers
+        range: "Sheet1!A2:C",
         data: dataWithoutHeader,
       }),
     });
 
     if (!updateResponse.ok) {
+      try {
+        console.error('Error response details:', await updateResponse.json());
+      } catch (logErr) {
+        console.error('Error logging response details:', logErr);
+      }
       throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
     }
 
