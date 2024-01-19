@@ -74,6 +74,9 @@ async function saveAttendance() {
       return row;
     });
 
+    // Filter out the header row from the values
+    const dataWithoutHeader = updatedValues.slice(1);
+
     // Send updated data to the /api/updateAttendance endpoint
     const updateResponse = await fetch("/api/updateAttendance", {
       method: "POST",
@@ -82,8 +85,8 @@ async function saveAttendance() {
       },
       body: JSON.stringify({
         spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-        range: "Sheet1!A:C",
-        data: updatedValues,
+        range: "Sheet1!A2:C", // Start updating data from row 2, assuming row 1 contains headers
+        data: dataWithoutHeader,
       }),
     });
 
