@@ -126,6 +126,9 @@ function displayEvents(events) {
             eventStart.setDate(eventStart.getDate() + 1);
             eventStart.setHours(0, 0, 0, 0); // Reset to the start of the next day
         }
+		eventElement.addEventListener('click', function () {
+            fetchClassDetails(event.summary);
+        });
     });
 }
 
