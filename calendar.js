@@ -110,10 +110,14 @@ function displayEvents(events) {
             );
 
             if (timeSlot) {
-                timeSlot.appendChild(eventElement.cloneNode(true));
-            } else {
-                console.error('No time slot found for event:', event);
-            }
+    const clonedEventElement = eventElement.cloneNode(true);
+    clonedEventElement.addEventListener('click', function () {
+        fetchClassDetails(event.summary);
+    });
+    timeSlot.appendChild(clonedEventElement);
+} else {
+    console.error('No time slot found for event:', event);
+}
         }
 
         const today = new Date();
