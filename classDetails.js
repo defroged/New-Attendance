@@ -30,7 +30,7 @@ function findStudentsByClassName(className, data) {
 function showModalWithClassDetails(className, students) {
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
   students.forEach(function (student) {
-    modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" onclick="iconClicked(event)"></i></li>';
+    modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
   });
   modalContent += '</ul>';
   // Add Save Changes button
@@ -46,15 +46,53 @@ function iconClicked(event) {
   if (iconElement.classList.contains("fa-check-circle")) {
     iconElement.classList.remove("fa-check-circle", "text-success");
     iconElement.classList.add("fa-times-circle", "text-danger");
-    // Call function when icon changed to "x" mark
-    saveAttendance();
   } else {
     iconElement.classList.remove("fa-times-circle", "text-danger");
     iconElement.classList.add("fa-check-circle", "text-success");
   }
 }
 
-function saveAttendance() {
-  // Placeholder function for later implementation
-  console.log("Placeholder function called");
+async function saveAttendance() {
+  let xMarkedStudents = [];
+  document.querySelectorAll(".fa-times-circle").forEach(function (icon) {
+    xMarkedStudents.push(icon.dataset.student);
+  });
+
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Google Sheet data: ${response.statusText}`);
+    }
+    const data = await response.json();
+    const values = data.values;
+
+    // Find rows for students marked with an "x" and increment attendance count
+    const updatedValues = values.map((row) => {
+      if (xMarkedStudents.includes(row[0])) {
+        row[2] = parseInt(row[2], 10) + 1;
+      }
+      return row;
+    });
+
+    // Send updated data to the /api/updateAttendance endpoint
+    const updateResponse = await fetch("/api/updateAttendance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+        range: "Sheet1!A:C",
+        data: updatedValues,
+      }),
+    });
+
+    if (!updateResponse.ok) {
+      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
+    }
+
+    console.log("Attendance updated successfully");
+  } catch (error) {
+    console.error("Error updating attendance:", error);
+  }
 }
