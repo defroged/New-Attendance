@@ -1,9 +1,9 @@
 const fetch = require('node-fetch');
 
 module.exports = async (req, res) => {
-  const spreadsheetId = '[1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U]';
-  const apiKey = process.env.GOOGLE_CALENDAR_API_KEY;
-  const sheetName = '[Sheet1]';
+  const spreadsheetId = '1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U';
+const apiKey = process.env.GOOGLE_CALENDAR_API_KEY;
+const sheetName = 'Sheet1';
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
 
   res.setHeader('Access-Control-Allow-Credentials', true);
