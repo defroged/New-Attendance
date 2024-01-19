@@ -13,12 +13,16 @@ const sheets = google.sheets({version: 'v4', auth: authClient});
 
 async function updateAttendance(spreadsheetId, range, data) {
   try {
-    const response = await sheets.spreadsheets.values.update({
+    const response = await sheets.spreadsheets.values.batchUpdate({
       spreadsheetId,
-      range,
-      valueInputOption: 'RAW',
       resource: {
-        values: data,
+        valueInputOption: 'RAW',
+        data: [
+          {
+            range: range,
+            values: data,
+          },
+        ],
       },
     });
     return response.data;
