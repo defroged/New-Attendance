@@ -35,11 +35,16 @@ body {
 
 .day {
     display: grid;
-    grid-template-rows: repeat(totalSlotsInDay, 1fr); /* The actual number of 30-minute slots */
+    grid-template-rows: auto repeat(totalSlotsInDay, 1fr); /* 'auto' for the day name row */
     border-right: 1px solid #e0e0e0;
     padding: 10px;
 }
 
+.day-of-week, .date {
+    grid-row: 1;
+    /* If you want them to span across all columns: */
+    grid-column: 1 / -1;
+}
 
 
 .current-day {
