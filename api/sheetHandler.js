@@ -12,6 +12,7 @@ const authClient = new google.auth.JWT(
 const sheets = google.sheets({version: 'v4', auth: authClient});
 
 async function updateAttendance(spreadsheetId, range, data) {
+	console.log('Input data to updateAttendance: ', { spreadsheetId, range, data }); 
   try {
     const response = await sheets.spreadsheets.values.batchUpdate({
       spreadsheetId,
