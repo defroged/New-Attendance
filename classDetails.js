@@ -69,6 +69,7 @@ async function saveAttendance() {
       }
       return row;
     });
+	  console.log('Updated values:', updatedValues);
 
     const dataWithoutHeader = updatedValues.slice(1);
 
