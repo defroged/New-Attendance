@@ -74,16 +74,21 @@ async function saveAttendance() {
     const dataWithoutHeader = updatedValues.slice(1);
 
     const updateResponse = await fetch("/api/updateAttendance", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+    range: "Sheet1!A2:C",
+    data: [
+      {
         range: "Sheet1!A2:C",
-        data: dataWithoutHeader,
-      }),
-    });
+        values: dataWithoutHeader,
+      },
+    ],
+  }),
+});
 
     if (!updateResponse.ok) {
       try {
