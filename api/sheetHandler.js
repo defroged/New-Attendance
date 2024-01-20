@@ -11,7 +11,7 @@ const authClient = new google.auth.JWT(
 const sheets = google.sheets({version: 'v4', auth: authClient});
 
 async function updateAttendance(spreadsheetId, range, data) {
-  // Check if data is undefined and set it to an empty array if necessary
+  // Check if data is undefined and set it to an empty array if necessary 2
   data = data || [];
 
   // Convert all values to strings
