@@ -15,7 +15,13 @@ async function updateAttendance(spreadsheetId, range, data) {
   data = data || [];
 
   // Convert all values to strings
-  const stringData = data.map(row => row.map(value => String(value)));
+  const stringData = data.map(row => {
+    if (!Array.isArray(row)) {
+      console.error('Unexpected data format:', row);
+      return [];
+    }
+    return row.map(value => String(value));
+  });
 
   console.log('Input data to updateAttendance:', {spreadsheetId, range, stringData});
   try {
