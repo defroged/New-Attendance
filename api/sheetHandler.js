@@ -11,7 +11,10 @@ const authClient = new google.auth.JWT(
 const sheets = google.sheets({version: 'v4', auth: authClient});
 
 async function updateAttendance(spreadsheetId, range, data) {
-	console.log('Input data to updateAttendance: ', { spreadsheetId, range, data }); 
+  // Convert all values to strings
+  const stringData = data.map(row => row.map(value => String(value)));
+
+  console.log('Input data to updateAttendance:', {spreadsheetId, range, stringData});
   try {
     const response = await sheets.spreadsheets.values.batchUpdate({
       spreadsheetId,
@@ -20,7 +23,7 @@ async function updateAttendance(spreadsheetId, range, data) {
         data: [
           {
             range: range,
-            values: data,
+            values: stringData, // Use the converted stringData
           },
         ],
       },
