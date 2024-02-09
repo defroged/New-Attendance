@@ -114,9 +114,8 @@ async function saveAttendance() {
     showCustomAlert();
 
     setTimeout(function () {
-  const modalInstance = bootstrap.Modal.getInstance(document.getElementById('myModal'));
-  modalInstance.hide();
-  resetModalContent(); // Add this line
+  $('#myModal').modal('hide'); // Update this line to close the modal in Bootstrap 4
+  resetModalContent();
 }, 2000);
 
   } catch (error) {
