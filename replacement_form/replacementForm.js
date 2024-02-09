@@ -18,3 +18,7 @@ function fetchClassNames() {
       console.error('Error fetching class names:', error);
     });
 }
+
+function initializeReplacementForm() {
+  fetchClassNames();
+}
