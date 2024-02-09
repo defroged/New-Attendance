@@ -81,12 +81,7 @@ async function saveAttendance() {
   body: JSON.stringify({
     spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
     range: "Sheet1!A2:C",
-    data: [
-      {
-        range: "Sheet1!A2:C",
-        values: dataWithoutHeader,
-      },
-    ],
+    data: [{ range: "Sheet1!A2:C", values: dataWithoutHeader }],
   }),
 });
 
