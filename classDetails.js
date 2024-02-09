@@ -118,8 +118,8 @@ setTimeout(function () {
   $('#myModal').modal('hide');
 }, 2000);
 
-// Add the event listener for 'hide.bs.modal'
-$('#myModal').on('hide.bs.modal', function () {
+// Add the event listener for 'hidden.bs.modal'
+$('#myModal').on('hidden.bs.modal', function () {
   resetModalContent();
 });
 
