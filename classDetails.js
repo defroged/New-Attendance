@@ -114,14 +114,16 @@ async function saveAttendance() {
     setTimeout(function () {
       const modalInstance = bootstrap.Modal.getInstance(document.getElementById('myModal'));
       modalInstance.hide();
-
-      // Enable the button, hide the spinner and remove the overlay
-      saveChangesBtn.disabled = false;
-      spinner.classList.add("d-none");
-      overlay.style.display = "none";
+      
+      // Reset the state
+      resetState(saveChangesBtn, spinner, overlay);
     }, 2000);
+
   } catch (error) {
     console.error("Error updating attendance:", error);
+
+    // Reset the state
+    resetState(saveChangesBtn, spinner, overlay);
   }
 }
 
@@ -137,4 +139,10 @@ function showCustomAlert() {
     customAlert.classList.remove("show");
     customAlert.classList.add("d-none");
   }, 2000);
+}
+
+function resetState(saveChangesBtn, spinner, overlay) {
+  saveChangesBtn.disabled = false;
+  spinner.classList.add("d-none");
+  overlay.style.display = "none";
 }
