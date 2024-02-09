@@ -97,3 +97,34 @@ button:hover {
     font-size: 0.85em;
     color: #333;
 }
+
+@media (max-width: 926px) {
+    .calendar {
+        grid-template-columns: repeat(3, 1fr); /* Show fewer days for smaller screens */
+        overflow-x: auto; 
+       
+    }
+    
+    .calendar-container {
+        max-width: 100%; /* Use full width */
+        margin-left: auto; /* Center the calendar horizontally */
+        margin-right: auto; /* Center the calendar horizontally */
+        padding: 0; /* Remove padding if necessary */
+    }
+
+    /* Adjustments to day, date, and other elements as needed */
+    .day {
+        padding: 5px; /* Reduce padding */
+    }
+
+    .date {
+        font-size: 1em; /* Adjust font size as needed for smaller screens */
+    }
+    
+    /* Add any other styles here to adjust the layout and visibility on small screens */
+}
+
+/* You may also want to check for any other elements that could affect the layout, such as the buttons */
+button {
+    /* Adjust button padding or margins if necessary */
+}
