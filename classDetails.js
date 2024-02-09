@@ -1,3 +1,4 @@
+let modalInstance;
 const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 
 function fetchClassDetails(className) {
@@ -36,7 +37,7 @@ function showModalWithClassDetails(className, students) {
   // Save Changes button
   modalContent += '<button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
 
-  var modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
+  modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
   document.getElementById('myModalContent').innerHTML = modalContent;
   modalInstance.show();
 }
@@ -53,15 +54,13 @@ function iconClicked(event) {
 }
 
 async function saveAttendance() {
-  // Disable the button
+
   const saveChangesBtn = document.getElementById("saveChangesBtn");
   saveChangesBtn.disabled = true;
 
-  // Show the spinner
   const spinner = document.getElementById("spinner");
   spinner.classList.remove("d-none");
 
-  // Darken the screen
   const overlay = document.getElementById("overlay");
   overlay.style.display = "block";
   let xMarkedStudents = [];
@@ -95,28 +94,29 @@ async function saveAttendance() {
   data: dataWithoutHeader,
 }),
 });
- // Reset the state inside the fetch, regardless of the response status
+
     resetState(saveChangesBtn, spinner, overlay);
     
-    // Check if the updateResponse has an error
+
     if (!updateResponse.ok) {
-      // Log the error response details and throw new error
-      try {
-        console.error('Error response details:', await updateResponse.json());
-      } catch (logErr) {
-        console.error('Error logging response details:', logErr);
-      }
-      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
+
+    try {
+      console.error('Error response details:', await updateResponse.json());
+    } catch (logErr) {
+      console.error('Error logging response details:', logErr);
     }
+    throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
+  }
 
-    // If successful, show the custom alert and hide modal after 2 seconds
-    console.log("Attendance updated successfully");
-    showCustomAlert();
+  resetState(saveChangesBtn, spinner, overlay); // Moved here
 
-    setTimeout(function () {
-  $('#myModal').modal('hide'); // Update this line to close the modal in Bootstrap 4
-  resetModalContent();
-}, 2000);
+  console.log("Attendance updated successfully");
+  showCustomAlert();
+
+  setTimeout(function () {
+    modalInstance.hide(); // Updated this line
+    resetModalContent();
+  }, 2000);
 
   } catch (error) {
     console.error("Error updating attendance:", error);
@@ -126,11 +126,9 @@ async function saveAttendance() {
 function showCustomAlert() {
   const customAlert = document.getElementById("customAlert");
 
-  // Show the alert
   customAlert.classList.remove("d-none");
   customAlert.classList.add("show");
 
-  // Auto-dismiss after 2 seconds
   setTimeout(function () {
     customAlert.classList.remove("show");
     customAlert.classList.add("d-none");
