@@ -109,14 +109,19 @@ async function saveAttendance() {
       throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
     }
 
-    // If successful, show the custom alert and hide modal after 2 seconds
-    console.log("Attendance updated successfully");
-    showCustomAlert();
+    // If successful, show the custom alert and close the modal after 2 seconds
+console.log("Attendance updated successfully");
+showCustomAlert();
 
-    setTimeout(function () {
-  $('#myModal').modal('hide'); // Update this line to close the modal in Bootstrap 4
-  resetModalContent();
+setTimeout(function () {
+  // Close the modal
+  $('#myModal').modal('hide');
 }, 2000);
+
+// Add the event listener for 'hide.bs.modal'
+$('#myModal').on('hide.bs.modal', function () {
+  resetModalContent();
+});
 
   } catch (error) {
     console.error("Error updating attendance:", error);
