@@ -1,6 +1,9 @@
 const fetch = require('node-fetch');
 const {google} = require('googleapis');
 
+console.log('GOOGLE_CLIENT_EMAIL:', process.env.GOOGLE_CLIENT_EMAIL);
+console.log('GOOGLE_PRIVATE_KEY:', JSON.stringify(process.env.GOOGLE_PRIVATE_KEY));
+
 const authClient = new google.auth.JWT(
   process.env.GOOGLE_CLIENT_EMAIL,
   null,
@@ -11,10 +14,8 @@ const authClient = new google.auth.JWT(
 const sheets = google.sheets({version: 'v4', auth: authClient});
 
 async function updateAttendance(spreadsheetId, range, data) {
-  // Check if data is undefined and set it to an empty array if necessary 2
   data = data || [];
 
-  // Convert all values to strings
   const stringData = data.map(row => {
     if (!Array.isArray(row)) {
       console.error('Unexpected data format:', row);
@@ -32,7 +33,7 @@ async function updateAttendance(spreadsheetId, range, data) {
         data: [
           {
             range: range,
-            values: stringData, // Use the converted stringData
+            values: stringData, 
           },
         ],
       },
