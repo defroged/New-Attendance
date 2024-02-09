@@ -107,18 +107,34 @@ async function saveAttendance() {
 
     console.log("Attendance updated successfully");
     
-    // Show the alert
-    alert('Attendance updated successfully');
+    // Show the custom alert
+    showCustomAlert();
 
-    // Close the modal
-    const modalInstance = bootstrap.Modal.getInstance(document.getElementById('myModal'));
-    modalInstance.hide();
+    // Close the modal and remove the overlay after 2 seconds
+    setTimeout(function () {
+      const modalInstance = bootstrap.Modal.getInstance(document.getElementById('myModal'));
+      modalInstance.hide();
 
-    // Enable the button, hide the spinner, and remove the overlay
-    saveChangesBtn.disabled = false;
-    spinner.classList.add("d-none");
-    overlay.style.display = "none";
+      // Enable the button, hide the spinner and remove the overlay
+      saveChangesBtn.disabled = false;
+      spinner.classList.add("d-none");
+      overlay.style.display = "none";
+    }, 2000);
   } catch (error) {
     console.error("Error updating attendance:", error);
   }
+}
+
+function showCustomAlert() {
+  const customAlert = document.getElementById("customAlert");
+
+  // Show the alert
+  customAlert.classList.remove("d-none");
+  customAlert.classList.add("show");
+
+  // Auto-dismiss after 2 seconds
+  setTimeout(function () {
+    customAlert.classList.remove("show");
+    customAlert.classList.add("d-none");
+  }, 2000);
 }
