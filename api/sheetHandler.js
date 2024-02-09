@@ -16,27 +16,27 @@ const sheets = google.sheets({version: 'v4', auth: authClient});
 async function updateAttendance(spreadsheetId, range, data) {
   data = data || [];
 
-  const stringData = data.map(row => {
-    if (!Array.isArray(row)) {
-      console.error('Unexpected data format:', row);
-      return [];
-    }
-    return row.map(value => String(value));
-  });
+const stringData = data.map(row => {
+  if (!Array.isArray(row)) {
+    console.error('Unexpected data format:', row);
+    return [];
+  }
+  return row.map(value => String(value));
+});
 
   console.log('Input data to updateAttendance:', {spreadsheetId, range, stringData});
   try {
     const response = await sheets.spreadsheets.values.batchUpdate({
       spreadsheetId,
       resource: {
-        valueInputOption: 'RAW',
-        data: [
-          {
-            range: range,
-            values: stringData, 
-          },
-        ],
-      },
+  valueInputOption: 'RAW',
+  data: [
+    {
+      range: range,
+      values: data,
+    },
+  ],
+},
     });
     return response.data;
   } catch (error) {
