@@ -95,8 +95,12 @@ async function saveAttendance() {
   data: dataWithoutHeader,
 }),
 });
-
+ // Reset the state inside the fetch, regardless of the response status
+    resetState(saveChangesBtn, spinner, overlay);
+    
+    // Check if the updateResponse has an error
     if (!updateResponse.ok) {
+      // Log the error response details and throw new error
       try {
         console.error('Error response details:', await updateResponse.json());
       } catch (logErr) {
@@ -105,25 +109,17 @@ async function saveAttendance() {
       throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
     }
 
+    // If successful, show the custom alert and hide modal after 2 seconds
     console.log("Attendance updated successfully");
-    
-    // Show the custom alert
     showCustomAlert();
 
-    // Close the modal and remove the overlay after 2 seconds
     setTimeout(function () {
       const modalInstance = bootstrap.Modal.getInstance(document.getElementById('myModal'));
       modalInstance.hide();
-      
-      // Reset the state
-      resetState(saveChangesBtn, spinner, overlay);
     }, 2000);
 
   } catch (error) {
     console.error("Error updating attendance:", error);
-
-    // Reset the state
-    resetState(saveChangesBtn, spinner, overlay);
   }
 }
 
