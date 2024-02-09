@@ -114,7 +114,7 @@ async function saveAttendance() {
   showCustomAlert();
 
   setTimeout(function () {
-    modalInstance.hide(); // Updated this line
+    modalInstance.hide(); 
     resetModalContent();
   }, 2000);
 
