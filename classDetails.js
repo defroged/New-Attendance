@@ -33,8 +33,8 @@ function showModalWithClassDetails(className, students) {
     modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
   });
   modalContent += '</ul>';
-  // Add Save Changes button
-  modalContent += '<button class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes</button>';
+  // Save Changes button
+  modalContent += '<button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
 
   var modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
   document.getElementById('myModalContent').innerHTML = modalContent;
@@ -53,6 +53,17 @@ function iconClicked(event) {
 }
 
 async function saveAttendance() {
+  // Disable the button
+  const saveChangesBtn = document.getElementById("saveChangesBtn");
+  saveChangesBtn.disabled = true;
+
+  // Show the spinner
+  const spinner = document.getElementById("spinner");
+  spinner.classList.remove("d-none");
+
+  // Darken the screen
+  const overlay = document.getElementById("overlay");
+  overlay.style.display = "block";
   let xMarkedStudents = [];
   document.querySelectorAll(".fa-times-circle").forEach(function (icon) {
     xMarkedStudents.push(icon.dataset.student);
@@ -95,6 +106,18 @@ async function saveAttendance() {
     }
 
     console.log("Attendance updated successfully");
+    
+    // Show the alert
+    alert('Attendance updated successfully');
+
+    // Close the modal
+    const modalInstance = bootstrap.Modal.getInstance(document.getElementById('myModal'));
+    modalInstance.hide();
+
+    // Enable the button, hide the spinner, and remove the overlay
+    saveChangesBtn.disabled = false;
+    spinner.classList.add("d-none");
+    overlay.style.display = "none";
   } catch (error) {
     console.error("Error updating attendance:", error);
   }
