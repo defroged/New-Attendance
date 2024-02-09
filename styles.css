@@ -128,3 +128,28 @@ button:hover {
 button {
     /* Adjust button padding or margins if necessary */
 }
+
+@media screen and (orientation: portrait) {
+    body {
+        /* Rotate the body by 90 degrees */
+        transform: rotate(90deg);
+        /* Move the body to the center of the viewport */
+        transform-origin: left top;
+        /* Scale the body to fit the width of the viewport. Adjust the scaling factor as needed */
+        /* The scaling factor would be the aspect ratio of the viewport */
+        /* Example for an aspect ratio of 16:9 would be 9 / 16 = 0.5625 */
+        /* You may need to adjust this value based on your device's aspect ratio */
+        scale: 0.5625;
+        /* Adjust width and height to 100vw and 100vh respectively */
+        width: 100vh;
+        height: 100vw;
+        /* Overflow hidden to avoid scrollbars */
+        overflow: hidden;
+        /* Position fixed to ensure the body stays in place during scroll */
+        position: fixed;
+        top: 0;
+        left: 0;
+        /* Adjust the z-index if needed to ensure it's above other elements */
+        z-index: 2;
+    }
+}
