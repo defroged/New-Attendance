@@ -114,9 +114,10 @@ async function saveAttendance() {
     showCustomAlert();
 
     setTimeout(function () {
-      const modalInstance = bootstrap.Modal.getInstance(document.getElementById('myModal'));
-      modalInstance.hide();
-    }, 2000);
+  const modalInstance = bootstrap.Modal.getInstance(document.getElementById('myModal'));
+  modalInstance.hide();
+  resetModalContent(); // Add this line
+}, 2000);
 
   } catch (error) {
     console.error("Error updating attendance:", error);
@@ -141,4 +142,9 @@ function resetState(saveChangesBtn, spinner, overlay) {
   saveChangesBtn.disabled = false;
   spinner.classList.add("d-none");
   overlay.style.display = "none";
+}
+
+function resetModalContent() {
+  const modalContent = document.getElementById("myModalContent");
+  modalContent.innerHTML = "";
 }
