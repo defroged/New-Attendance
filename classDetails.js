@@ -85,12 +85,6 @@ async function saveAttendance() {
 }),
 });
 
-// New lines added
-  const updateResult = await updateResponse.json();
-  if (updateResult.status !== 'success') {
-    throw new Error(`Failed to update Google Sheet data: ${updateResult.message}`);
-  }
-
     if (!updateResponse.ok) {
       try {
         console.error('Error response details:', await updateResponse.json());
