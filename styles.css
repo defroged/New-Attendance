@@ -99,57 +99,51 @@ button:hover {
 }
 
 @media (max-width: 926px) {
-    .calendar {
-        grid-template-columns: repeat(3, 1fr); /* Show fewer days for smaller screens */
-        overflow-x: auto; 
-       
-    }
-    
-    .calendar-container {
-        max-width: 100%; /* Use full width */
-        margin-left: auto; /* Center the calendar horizontally */
-        margin-right: auto; /* Center the calendar horizontally */
-        padding: 0; /* Remove padding if necessary */
-    }
+    /* Existing styles... */
 
-    /* Adjustments to day, date, and other elements as needed */
-    .day {
-        padding: 5px; /* Reduce padding */
-    }
-
-    .date {
-        font-size: 1em; /* Adjust font size as needed for smaller screens */
-    }
-    
-    /* Add any other styles here to adjust the layout and visibility on small screens */
+/* Styles for both landscape and portrait */
+.calendar {
+    display: flex; /* Changed from grid to flex for horizontal scrolling */
+    flex-wrap: nowrap; /* Prevent wrapping to a new line */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    scroll-snap-type: x mandatory; /* Enable snapping */
 }
 
-/* You may also want to check for any other elements that could affect the layout, such as the buttons */
-button {
-    /* Adjust button padding or margins if necessary */
+.day {
+    flex: 0 0 100%; /* Each day takes full width of the viewport */
+    scroll-snap-align: start; /* Ensure snapping aligns to the start of each day */
+    border-right: 1px solid #e0e0e0; /* Existing border style */
+    padding: 10px; /* Existing padding style */
+    box-sizing: border-box; /* Ensure padding is included in width */
 }
 
+/* Smooth scrolling for browsers that support it */
+.calendar {
+    scroll-behavior: smooth;
+}
+
+/* Resetting any specific portrait styles since they're not needed anymore */
 @media screen and (orientation: portrait) {
+    .calendar-container {
+        max-width: 100%; /* Take up full width */
+        margin: 0; /* Reset any specific margins if previously set */
+        padding: 0; /* Reset any specific paddings if previously set */
+    }
+
+    .day-of-week, .date, .event, .event-time, .event-summary {
+        font-size: 1em; /* Reset font sizes if they were changed for portrait */
+    }
+
+    /* Hide the landscape message if it was added */
+    .landscape-message {
+        display: none;
+    }
+
+    /* Ensure body content is shown */
     body {
-        /* Rotate the body by 90 degrees */
-        transform: rotate(90deg);
-        /* Move the body to the center of the viewport */
-        transform-origin: left top;
-        /* Scale the body to fit the width of the viewport. Adjust the scaling factor as needed */
-        /* The scaling factor would be the aspect ratio of the viewport */
-        /* Example for an aspect ratio of 16:9 would be 9 / 16 = 0.5625 */
-        /* You may need to adjust this value based on your device's aspect ratio */
-        scale: 0.5625;
-        /* Adjust width and height to 100vw and 100vh respectively */
-        width: 100vh;
-        height: 100vw;
-        /* Overflow hidden to avoid scrollbars */
-        overflow: hidden;
-        /* Position fixed to ensure the body stays in place during scroll */
-        position: fixed;
-        top: 0;
-        left: 0;
-        /* Adjust the z-index if needed to ensure it's above other elements */
-        z-index: 2;
+        display: block;
     }
 }
+
+}
+   
