@@ -129,4 +129,12 @@ function findAvailableSlotsByStudentName(studentName, data) {
 function displayAvailableSlots(availableSlots) {
   const availableSlotsElement = document.getElementById("available-slots");
   availableSlotsElement.innerHTML = `You have ${availableSlots} replacement lesson slots available`;
+
+  // Conditionally show/hide the "Choose the replacement lesson" dropdown
+  const stepThreeElement = document.getElementById("step-three");
+  if (availableSlots > 0) {
+    stepThreeElement.style.display = "block";
+  } else {
+    stepThreeElement.style.display = "none";
+  }
 }
