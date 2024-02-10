@@ -34,10 +34,10 @@ function fetchClassNames() {
       classSelect.appendChild(option);
     });
   }
-  
-  function initializeReplacementForm() {
-    fetchClassNames();
-  }
+function initializeReplacementForm() {
+  fetchClassNames();
+  document.getElementById("class-select").addEventListener("change", handleClassChange);
+}
   
   // Add this line to ensure the function is added to the global scope properly.
   window.initializeReplacementForm = initializeReplacementForm;
@@ -69,8 +69,6 @@ function handleClassChange() {
   document.getElementById("step-two").style.display = "block";
 }
 
-// Add event listener to class-select dropdown
-document.getElementById("class-select").addEventListener("change", handleClassChange);
 
 function fetchStudentNames(className) {
   fetch(apiUrl)
