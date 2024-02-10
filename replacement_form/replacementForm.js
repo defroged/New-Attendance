@@ -35,6 +35,7 @@ function fetchClassNames() {
 function initializeReplacementForm() {
   fetchClassNames();
   document.getElementById("class-select").addEventListener("change", handleClassChange);
+  document.getElementById("student-select").addEventListener("change", handleStudentChange); 
 }
   
   window.initializeReplacementForm = initializeReplacementForm;
@@ -89,4 +90,43 @@ function findStudentsByClassName(className, data) {
     }
   });
   return students;
+}
+
+function handleStudentChange() {
+  const studentSelect = document.getElementById("student-select");
+  const studentName = studentSelect.value;
+
+  fetchAvailableSlots(studentName);
+}
+
+function fetchAvailableSlots(studentName) {
+  fetch(apiUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch Google Sheet data: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const availableSlots = findAvailableSlotsByStudentName(studentName, data.values);
+      displayAvailableSlots(availableSlots);
+    })
+    .catch((error) => {
+      console.error('Error fetching available slots:', error);
+    });
+}
+
+function findAvailableSlotsByStudentName(studentName, data) {
+  let availableSlots = 0;
+  data.forEach(function (row) {
+    if (row[0] === studentName) {
+      availableSlots = parseInt(row[2]); // Assuming Column C stores the available slots
+    }
+  });
+  return availableSlots;
+}
+
+function displayAvailableSlots(availableSlots) {
+  const availableSlotsElement = document.getElementById("available-slots");
+  availableSlotsElement.innerHTML = `You have ${availableSlots} replacement lesson slots available`;
 }
