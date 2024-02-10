@@ -197,8 +197,10 @@ function populateReplacementClassDropdown(events) {
   events.forEach((event) => {
     const option = document.createElement("option");
     option.value = event.id;
-    // Assuming 'event.name' is the class name and 'event.date' is the date
-    option.textContent = `${event.name} - ${event.date.toLocaleDateString("en-US")}`;
+    const eventName = event.summary;
+    const eventDate = event.start.dateTime || event.start.date;
+    const formattedDate = new Date(eventDate).toLocaleDateString("en-US");
+    option.textContent = `${eventName} - ${formattedDate}`;
     replacementSelect.appendChild(option);
   });
 }
