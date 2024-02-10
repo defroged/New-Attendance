@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Replacement Lesson Form</title>
-	<script src="classDetails.js"></script>
-	<script src="replacement_form/replacementForm.js" onload="initializeReplacementForm()"></script>
+    <script src="classDetails.js"></script>
+    <script src="replacement_form/replacementForm.js"></script>
 </head>
+<body onload="initializeReplacementForm()">
 <body>
     <h1>Replacement Lesson Form</h1>
     <div id="step-one">
@@ -15,7 +16,7 @@
             <option value="" disabled selected>Please select a class</option>
         </select>
         <br>
-
+        <button id="next-btn" onclick="nextStep()">Next</button>
     </div>
 	<div id="step-two" style="display: none;">
         <label for="student-select">Choose your child:</label>

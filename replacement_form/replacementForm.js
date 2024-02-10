@@ -1,4 +1,3 @@
-// Fetch the distinct class names from the Google Spreadsheet
 (function() {
 function fetchClassNames() {
   fetch(apiUrl)
@@ -11,7 +10,6 @@ function fetchClassNames() {
     .then((data) => {
       const classSet = new Set();
       
-      // Start iterating from the second row (index 1) to exclude the header
       for (let i = 1; i < data.values.length; i++) {
         const row = data.values[i];
         classSet.add(row[1]);
@@ -39,14 +37,12 @@ function initializeReplacementForm() {
   document.getElementById("class-select").addEventListener("change", handleClassChange);
 }
   
-  // Add this line to ensure the function is added to the global scope properly.
   window.initializeReplacementForm = initializeReplacementForm;
 })();
 
 function populateStudentNames(students) {
   const studentSelect = document.getElementById("student-select");
 
-  // Clear the options first to prevent duplicates
   studentSelect.innerHTML = '<option value="" disabled selected>Please select a student</option>';
 
   students.forEach((student) => {
@@ -58,14 +54,12 @@ function populateStudentNames(students) {
 }
 
 function handleClassChange() {
-  // Fetch student names for the selected class
   const classSelect = document.getElementById("class-select");
   const className = classSelect.value;
   
-  // Call the fetchStudentNames for the className to get the list of students
+
   fetchStudentNames(className);
   
-  // Show the next step
   document.getElementById("step-two").style.display = "block";
 }
 
