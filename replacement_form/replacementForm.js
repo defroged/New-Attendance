@@ -39,7 +39,6 @@ function initializeReplacementForm() {
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
 }
 
-// Add this new handleReplacementChange function
 async function handleReplacementChange() {
   const replacementSelect = document.getElementById("replacement-select");
   const eventId = replacementSelect.value;
@@ -237,7 +236,7 @@ function filterEventsByClassNames(events, classNames) {
   return filteredEvents;
 }
 
-function addReplacementToDatesList(eventData) {
+async function addReplacementToDatesList(eventData) {
   const listElement = document.createElement("li");
   listElement.setAttribute("id", `replacement-date-${eventData.id}`);
   
@@ -254,14 +253,22 @@ function addReplacementToDatesList(eventData) {
   
   const replacementDatesList = document.getElementById("replacement-dates");
   replacementDatesList.appendChild(listElement);
+  
+  const studentSelect = document.getElementById("student-select");
+  const studentName = studentSelect.value;
+
+  await addBookedReplacementToSheet(studentName, eventData.name);
 }
 
 async function removeReplacement(eventId) {
   const listElementToRemove = document.getElementById(`replacement-date-${eventId}`);
+  const bookedReplacement = listElementToRemove.querySelector("span").textContent;
   listElementToRemove.remove();
 
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
+
+  await removeBookedReplacementFromSheet(studentName, bookedReplacement);
   await incrementStudentAvailableSlots(studentName);
   await fetchAvailableSlots(studentName);
 }
@@ -313,7 +320,7 @@ async function incrementStudentAvailableSlots(studentName) {
       if (row[0] === studentName) {
         row[2] = parseInt(row[2], 10) + 1;
       }
-      return row.slice(0, 3); // This will only return columns A to C
+      return row.slice(0, 3); 
     });
 
     const dataWithoutHeader = updatedValues.slice(1);
@@ -325,7 +332,7 @@ async function incrementStudentAvailableSlots(studentName) {
       },
       body: JSON.stringify({
         spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-        range: "Sheet1!A2:C", // Revert back to the original range
+        range: "Sheet1!A2:C", 
         data: dataWithoutHeader,
       }),
     });
@@ -337,5 +344,89 @@ async function incrementStudentAvailableSlots(studentName) {
     console.log("Student available slots incremented successfully");
   } catch (error) {
     console.error("Error incrementing student available slots:", error);
+  }
+}
+
+async function addBookedReplacementToSheet(studentName, bookedReplacement) {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
+
+    const updatedValues = values.map((row) => {
+      if (row[0] === studentName) {
+        for (let i = 1; i < row.length; i++) {
+          if (!row[i]) {
+            row[i] = bookedReplacement;
+            break;
+          }
+        }
+      }
+      return row;
+    });
+
+    const dataWithoutHeader = updatedValues.slice(1);
+
+    const updateResponse = await fetch("/api/updateBookedReplacements", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+        range: "Sheet2!A2:D", 
+        data: dataWithoutHeader,
+      }),
+    });
+
+    if (!updateResponse.ok) {
+      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
+    }
+
+    console.log("Booked replacement added to Sheet2 successfully");
+  } catch (error) {
+    console.error("Error adding booked replacement to Sheet2:", error);
+  }
+}
+
+async function removeBookedReplacementFromSheet(studentName, bookedReplacement) {
+  try {
+    const response = await fetch(apiUrlSheet2);
+    const data = await response.json();
+    const values = data.values;
+
+    const updatedValues = values.map((row) => {
+      if (row[0] === studentName) {
+        for (let i = 1; i < row.length; i++) {
+          if (row[i] === bookedReplacement) {
+            row[i] = null;
+            break;
+          }
+        }
+      }
+      return row;
+    });
+
+    const dataWithoutHeader = updatedValues.slice(1);
+
+    const updateResponse = await fetch("/api/updateBookedReplacements", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+        range: "Sheet2!A2:D",
+        data: dataWithoutHeader,
+      }),
+    });
+
+    if (!updateResponse.ok) {
+      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
+    }
+
+    console.log("Booked replacement removed from Sheet2 successfully");
+  } catch (error) {
+    console.error("Error removing booked replacement from Sheet2:", error);
   }
 }
