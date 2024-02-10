@@ -35,7 +35,28 @@ function fetchClassNames() {
 function initializeReplacementForm() {
   fetchClassNames();
   document.getElementById("class-select").addEventListener("change", handleClassChange);
-  document.getElementById("student-select").addEventListener("change", handleStudentChange); 
+  document.getElementById("student-select").addEventListener("change", handleStudentChange);
+  document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
+}
+
+// Add this new handleReplacementChange function
+async function handleReplacementChange() {
+  const replacementSelect = document.getElementById("replacement-select");
+  const eventId = replacementSelect.value;
+  const selectedOption = replacementSelect.options[replacementSelect.selectedIndex];
+  const eventData = {
+    id: eventId,
+    name: selectedOption.textContent
+  };
+
+  if (eventId) {
+    addReplacementToDatesList(eventData);
+    selectedOption.remove();
+    const studentSelect = document.getElementById("student-select");
+    const studentName = studentSelect.value;
+    await decrementStudentAvailableSlots(studentName);
+    await fetchAvailableSlots(studentName);
+  }
 }
   
   window.initializeReplacementForm = initializeReplacementForm;
@@ -214,4 +235,107 @@ function filterEventsByClassNames(events, classNames) {
   });
 
   return filteredEvents;
+}
+
+function addReplacementToDatesList(eventData) {
+  const listElement = document.createElement("li");
+  listElement.setAttribute("id", `replacement-date-${eventData.id}`);
+  
+  const dateTextElement = document.createElement("span");
+  dateTextElement.textContent = eventData.name;
+  
+  const removeButton = document.createElement("button");
+  removeButton.textContent = "X";
+  removeButton.className = "remove-replacement-button";
+  removeButton.addEventListener("click", () => removeReplacement(eventData.id));
+  
+  listElement.appendChild(dateTextElement);
+  listElement.appendChild(removeButton);
+  
+  const replacementDatesList = document.getElementById("replacement-dates");
+  replacementDatesList.appendChild(listElement);
+}
+
+async function removeReplacement(eventId) {
+  const listElementToRemove = document.getElementById(`replacement-date-${eventId}`);
+  listElementToRemove.remove();
+
+  const studentSelect = document.getElementById("student-select");
+  const studentName = studentSelect.value;
+  await incrementStudentAvailableSlots(studentName);
+  await fetchAvailableSlots(studentName);
+}
+
+async function decrementStudentAvailableSlots(studentName) {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
+
+    const updatedValues = values.map((row) => {
+      if (row[0] === studentName) {
+        row[2] = parseInt(row[2], 10) - 1;
+      }
+      return row.slice(0, 3); // This will only return columns A to C
+    });
+
+    const dataWithoutHeader = updatedValues.slice(1);
+
+    const updateResponse = await fetch("/api/updateAttendance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+        range: "Sheet1!A2:C", // Revert back to the original range
+        data: dataWithoutHeader,
+      }),
+    });
+
+    if (!updateResponse.ok) {
+      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
+    }
+
+    console.log("Student available slots decremented successfully");
+  } catch (error) {
+    console.error("Error decrementing student available slots:", error);
+  }
+}
+
+async function incrementStudentAvailableSlots(studentName) {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
+
+    const updatedValues = values.map((row) => {
+      if (row[0] === studentName) {
+        row[2] = parseInt(row[2], 10) + 1;
+      }
+      return row.slice(0, 3); // This will only return columns A to C
+    });
+
+    const dataWithoutHeader = updatedValues.slice(1);
+
+    const updateResponse = await fetch("/api/updateAttendance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+        range: "Sheet1!A2:C", // Revert back to the original range
+        data: dataWithoutHeader,
+      }),
+    });
+
+    if (!updateResponse.ok) {
+      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
+    }
+
+    console.log("Student available slots incremented successfully");
+  } catch (error) {
+    console.error("Error incrementing student available slots:", error);
+  }
 }
