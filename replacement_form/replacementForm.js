@@ -93,8 +93,6 @@ function findStudentsByClassName(className, data) {
 }
 
 function handleStudentChange(studentName) {
-  // const studentSelect = document.getElementById("student-select");
-  // const studentName = studentSelect.value;
 
   fetchAvailableSlots(studentName);
   fetchAvailableClasses(studentName);
@@ -121,7 +119,7 @@ function findAvailableSlotsByStudentName(studentName, data) {
   let availableSlots = 0;
   data.forEach(function (row) {
     if (row[0] === studentName) {
-      availableSlots = parseInt(row[2]); // Assuming Column C stores the available slots
+      availableSlots = parseInt(row[2]); 
     }
   });
   return availableSlots;
@@ -131,7 +129,6 @@ function displayAvailableSlots(availableSlots) {
   const availableSlotsElement = document.getElementById("available-slots");
   availableSlotsElement.innerHTML = `You have ${availableSlots} replacement lesson slots available`;
 
-  // Conditionally show/hide the "Choose the replacement lesson" dropdown
   const stepThreeElement = document.getElementById("step-three");
   if (availableSlots > 0) {
     stepThreeElement.style.display = "block";
@@ -161,9 +158,9 @@ function findAvailableClassesByStudentName(studentName, data) {
     let availableClasses = [];
     data.forEach(function (row) {
       if (row[0] === studentName) {
-        if (row[3]) availableClasses.push(row[3]); // Column D
-        if (row[4]) availableClasses.push(row[4]); // Column E
-        if (row[5]) availableClasses.push(row[5]); // Column F
+        if (row[3]) availableClasses.push(row[3]); 
+        if (row[4]) availableClasses.push(row[4]); 
+        if (row[5]) availableClasses.push(row[5]); 
       }
     });
     return availableClasses;
@@ -176,7 +173,6 @@ function fetchCalendarEventsForClasses(classes) {
   const encodedTimeMin = encodeURIComponent(timeMin.toISOString());
   const encodedTimeMax = encodeURIComponent(timeMax.toISOString());
 
-  // Replace '/api/calendar-events' with the actual path or URL to your serverless function
   fetch(`/api/calendar-events?timeMin=${encodedTimeMin}&timeMax=${encodedTimeMax}`)
     .then((response) => {
       if (!response.ok) {
@@ -205,4 +201,13 @@ function populateReplacementClassDropdown(events) {
     option.textContent = `${event.name} - ${event.date.toLocaleDateString("en-US")}`;
     replacementSelect.appendChild(option);
   });
+}
+
+function filterEventsByClassNames(events, classNames) {
+  const filteredEvents = events.filter((event) => {
+    const eventName = event.summary;
+    return classNames.some((className) => eventName.includes(className));
+  });
+
+  return filteredEvents;
 }
