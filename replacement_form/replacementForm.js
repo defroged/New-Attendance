@@ -92,14 +92,16 @@ function findStudentsByClassName(className, data) {
   return students;
 }
 
-function handleStudentChange(studentName) {
+async function handleStudentChange() {
+  const studentSelect = document.getElementById("student-select");
+  const studentName = studentSelect.value;
 
-  fetchAvailableSlots(studentName);
-  fetchAvailableClasses(studentName);
+  await fetchAvailableSlots(studentName);
+  await fetchAvailableClasses(studentName);
 }
 
 function fetchAvailableSlots(studentName) {
-  fetch(apiUrl)
+  return fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
         throw new Error(`Failed to fetch Google Sheet data: ${response.statusText}`);
@@ -138,7 +140,7 @@ function displayAvailableSlots(availableSlots) {
 }
 
 function fetchAvailableClasses(studentName) {
-  fetch(apiUrl)
+  return fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
         throw new Error(`Failed to fetch Google Sheet data: ${response.statusText}`);
