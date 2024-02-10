@@ -42,3 +42,59 @@ function fetchClassNames() {
   // Add this line to ensure the function is added to the global scope properly.
   window.initializeReplacementForm = initializeReplacementForm;
 })();
+
+function populateStudentNames(students) {
+  const studentSelect = document.getElementById("student-select");
+
+  // Clear the options first to prevent duplicates
+  studentSelect.innerHTML = '<option value="" disabled selected>Please select a student</option>';
+
+  students.forEach((student) => {
+    const option = document.createElement("option");
+    option.value = student;
+    option.textContent = student;
+    studentSelect.appendChild(option);
+  });
+}
+
+function handleClassChange() {
+  // Fetch student names for the selected class
+  const classSelect = document.getElementById("class-select");
+  const className = classSelect.value;
+  
+  // Call the fetchStudentNames for the className to get the list of students
+  fetchStudentNames(className);
+  
+  // Show the next step
+  document.getElementById("step-two").style.display = "block";
+}
+
+// Add event listener to class-select dropdown
+document.getElementById("class-select").addEventListener("change", handleClassChange);
+
+function fetchStudentNames(className) {
+  fetch(apiUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch Google Sheet data: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const students = findStudentsByClassName(className, data.values);
+      populateStudentNames(students);
+    })
+    .catch((error) => {
+      console.error('Error fetching student names:', error);
+    });
+}
+
+function findStudentsByClassName(className, data) {
+  let students = [];
+  data.forEach(function (row) {
+    if (row[1] === className) {
+      students.push(row[0]);
+    }
+  });
+  return students;
+}
