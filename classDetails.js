@@ -74,11 +74,11 @@ async function saveAttendance() {
     const values = data.values;
 
     const updatedValues = values.map((row) => {
-      if (xMarkedStudents.includes(row[0])) {
-        row[2] = parseInt(row[2], 10) + 1;
-      }
-      return row;
-    });
+  if (xMarkedStudents.includes(row[0])) {
+    row[2] = parseInt(row[2], 10) + 1;
+  }
+  return row.slice(0, 3); // This will only return columns A to C
+});
 	  console.log('Updated values:', updatedValues);
 
     const dataWithoutHeader = updatedValues.slice(1);
@@ -90,7 +90,7 @@ async function saveAttendance() {
   },
   body: JSON.stringify({
     spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-    range: "Sheet1!A2:C" + (dataWithoutHeader.length + 1), // Updated range
+    range: "Sheet1!A2:C", // Revert back to the original range
     data: dataWithoutHeader,
   }),
 });
