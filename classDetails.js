@@ -89,10 +89,10 @@ async function saveAttendance() {
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
-  spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-  range: "Sheet1!A2:C",
-  data: dataWithoutHeader,
-}),
+    spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+    range: "Sheet1!A2:C" + (dataWithoutHeader.length + 1), // Updated range
+    data: dataWithoutHeader,
+  }),
 });
 
     resetState(saveChangesBtn, spinner, overlay);
