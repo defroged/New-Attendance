@@ -92,11 +92,12 @@ function findStudentsByClassName(className, data) {
   return students;
 }
 
-function handleStudentChange() {
-  const studentSelect = document.getElementById("student-select");
-  const studentName = studentSelect.value;
+function handleStudentChange(studentName) {
+  // const studentSelect = document.getElementById("student-select");
+  // const studentName = studentSelect.value;
 
   fetchAvailableSlots(studentName);
+  fetchAvailableClasses(studentName);
 }
 
 function fetchAvailableSlots(studentName) {
@@ -137,4 +138,71 @@ function displayAvailableSlots(availableSlots) {
   } else {
     stepThreeElement.style.display = "none";
   }
+}
+
+function fetchAvailableClasses(studentName) {
+  fetch(apiUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch Google Sheet data: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const classes = findAvailableClassesByStudentName(studentName, data.values);
+      fetchCalendarEventsForClasses(classes);
+    })
+    .catch((error) => {
+      console.error('Error fetching available classes:', error);
+    });
+}
+
+function findAvailableClassesByStudentName(studentName, data) {
+    let availableClasses = [];
+    data.forEach(function (row) {
+      if (row[0] === studentName) {
+        if (row[3]) availableClasses.push(row[3]); // Column D
+        if (row[4]) availableClasses.push(row[4]); // Column E
+        if (row[5]) availableClasses.push(row[5]); // Column F
+      }
+    });
+    return availableClasses;
+}
+
+function fetchCalendarEventsForClasses(classes) {
+  const timeMin = new Date();
+  const timeMax = new Date(Date.now() + 3 * 30 * 24 * 60 * 60 * 1000); // Three months in the future
+
+  const encodedTimeMin = encodeURIComponent(timeMin.toISOString());
+  const encodedTimeMax = encodeURIComponent(timeMax.toISOString());
+
+  // Replace '/api/calendar-events' with the actual path or URL to your serverless function
+  fetch(`/api/calendar-events?timeMin=${encodedTimeMin}&timeMax=${encodedTimeMax}`)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch calendar events: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const events = filterEventsByClassNames(data.items, classes);
+      populateReplacementClassDropdown(events);
+    })
+    .catch((error) => {
+      console.error('Error fetching calendar events:', error);
+    });
+}
+
+function populateReplacementClassDropdown(events) {
+  const replacementSelect = document.getElementById("replacement-select");
+
+  replacementSelect.innerHTML = '<option value="" disabled selected>Please choose a replacement lesson</option>';
+
+  events.forEach((event) => {
+    const option = document.createElement("option");
+    option.value = event.id;
+    // Assuming 'event.name' is the class name and 'event.date' is the date
+    option.textContent = `${event.name} - ${event.date.toLocaleDateString("en-US")}`;
+    replacementSelect.appendChild(option);
+  });
 }
