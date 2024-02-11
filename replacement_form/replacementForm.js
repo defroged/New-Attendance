@@ -283,85 +283,12 @@ async function removeReplacement(eventId) {
   replacements.removed.push(eventData);
   displaySubmitSectionIfRequired();
 
-  // Call displayAvailableSlots with increased available slots count
   const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) + 1;
   document.getElementById("available-slots").setAttribute("data-count", availableSlots);
   displayAvailableSlots(availableSlots);
 }
 
-async function decrementStudentAvailableSlots(studentName, count) {
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    const values = data.values;
 
-    const updatedValues = values.map((row) => {
-    if (row[0] === studentName) {
-      row[2] = parseInt(row[2], 10) - count;
-    }
-    return row.slice(0, 3);
-  });
-
-    const dataWithoutHeader = updatedValues.slice(1);
-
-    const updateResponse = await fetch("/api/updateAttendance", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-        range: "Sheet1!A2:C", 
-        data: dataWithoutHeader,
-      }),
-    });
-
-    if (!updateResponse.ok) {
-      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
-    }
-
-    console.log("Student available slots decremented successfully");
-  } catch (error) {
-    console.error("Error decrementing student available slots:", error);
-  }
-}
-
-async function incrementStudentAvailableSlots(studentName, count) {
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    const values = data.values;
-
-     const updatedValues = values.map((row) => {
-    if (row[0] === studentName) {
-      row[2] = parseInt(row[2], 10) + count;
-    }
-    return row.slice(0, 3);
-  });
-
-    const dataWithoutHeader = updatedValues.slice(1);
-
-    const updateResponse = await fetch("/api/updateAttendance", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-        range: "Sheet1!A2:C", 
-        data: dataWithoutHeader,
-      }),
-    });
-
-    if (!updateResponse.ok) {
-      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
-    }
-
-    console.log("Student available slots incremented successfully");
-  } catch (error) {
-    console.error("Error incrementing student available slots:", error);
-  }
-}
 
 async function handleSubmit() {
   const studentSelect = document.getElementById("student-select");
@@ -370,11 +297,26 @@ async function handleSubmit() {
   await processAddedReplacements(studentName);
   await processRemovedReplacements(studentName);
 
-  const decrementPromise = decrementStudentAvailableSlots(studentName, replacements.added.length);
-  const incrementPromise = incrementStudentAvailableSlots(studentName, replacements.removed.length);
-  await Promise.all([decrementPromise, incrementPromise]);
+  const updatedData = await updateAvailableSlots(studentName, replacements.added.length, replacements.removed.length);
 
-  // Clear replacements data
+  const dataWithoutHeader = updatedData.slice(1);
+
+  const updateResponse = await fetch("/api/updateAttendance", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+      range: "Sheet1!A2:C", 
+      data: dataWithoutHeader,
+    }),
+  });
+
+  if (!updateResponse.ok) {
+    throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
+  }
+
   replacements.added = [];
   replacements.removed = [];
   document.getElementById("submit-section").style.display = "none";
@@ -399,5 +341,25 @@ async function processRemovedReplacements(studentName) {
 
     // Sleep for 100 ms to prevent exceeding API rate limit (optional)
     await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+}
+
+async function updateAvailableSlots(studentName, addedCount, removedCount) {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
+
+    const updatedValues = values.map((row) => {
+      if (row[0] === studentName) {
+        row[2] = parseInt(row[2], 10) + removedCount - addedCount;
+      }
+      return row.slice(0, 3);
+    });
+
+    console.log("Student available slots updated successfully");
+    return updatedValues;
+  } catch (error) {
+    console.error("Error updating student available slots:", error);
   }
 }
