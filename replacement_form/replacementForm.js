@@ -347,6 +347,9 @@ async function incrementStudentAvailableSlots(studentName, count) {
 }
 
 async function handleSubmit() {
+  const studentSelect = document.getElementById("student-select");
+  const studentName = studentSelect.value;
+
   const decrementPromise = decrementStudentAvailableSlots(studentName, replacements.added.length);
   const incrementPromise = incrementStudentAvailableSlots(studentName, replacements.removed.length);
 
@@ -356,12 +359,4 @@ async function handleSubmit() {
   replacements.added = [];
   replacements.removed = [];
   document.getElementById("submit-section").style.display = "none";
-}
-
-function displaySubmitSectionIfRequired() {
-  if (replacements.added.length > 0 || replacements.removed.length > 0) {
-    document.getElementById("submit-section").style.display = "block";
-  } else {
-    document.getElementById("submit-section").style.display = "none";
-  }
 }
