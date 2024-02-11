@@ -65,8 +65,15 @@ async function handleReplacementChange() {
   if (eventId) {
     replacements.added.push(eventData);
     displaySubmitSectionIfRequired();
+    
     addReplacementToDatesList(eventData);
     selectedOption.remove();
+
+    // Call displayAvailableSlots with decreased available slots count
+    const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) - 1;
+
+    document.getElementById("available-slots").setAttribute("data-count", availableSlots);
+    displayAvailableSlots(availableSlots);
   }
 }
   
@@ -162,6 +169,7 @@ function findAvailableSlotsByStudentName(studentName, data) {
 function displayAvailableSlots(availableSlots) {
   const availableSlotsElement = document.getElementById("available-slots");
   availableSlotsElement.innerHTML = `You have ${availableSlots} replacement lesson slots available`;
+  availableSlotsElement.setAttribute("data-count", availableSlots);
 
   const stepThreeElement = document.getElementById("step-three");
   if (availableSlots > 0) {
@@ -275,9 +283,10 @@ async function removeReplacement(eventId) {
   replacements.removed.push(eventData);
   displaySubmitSectionIfRequired();
 
-  const studentSelect = document.getElementById("student-select");
-  const studentName = studentSelect.value;
-  await fetchAvailableSlots(studentName);
+  // Call displayAvailableSlots with increased available slots count
+  const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) + 1;
+  document.getElementById("available-slots").setAttribute("data-count", availableSlots);
+  displayAvailableSlots(availableSlots);
 }
 
 async function decrementStudentAvailableSlots(studentName, count) {
