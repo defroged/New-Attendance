@@ -357,14 +357,38 @@ async function incrementStudentAvailableSlots(studentName, count) {
 async function handleSubmit() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
+  
+  await processAddedReplacements(studentName);
+  await processRemovedReplacements(studentName);
 
   const decrementPromise = decrementStudentAvailableSlots(studentName, replacements.added.length);
   const incrementPromise = incrementStudentAvailableSlots(studentName, replacements.removed.length);
-
   await Promise.all([decrementPromise, incrementPromise]);
 
   // Clear replacements data
   replacements.added = [];
   replacements.removed = [];
   document.getElementById("submit-section").style.display = "none";
+}
+
+async function processAddedReplacements(studentName) {
+  for (const addedReplacement of replacements.added) {
+    const eventId = addedReplacement.id;
+    // Assign the selected lesson to the student in the Google Sheets
+    // ... (call the API to update the appropriate fields related to the specific eventId)
+
+    // Sleep for 100 ms to prevent exceeding API rate limit (optional)
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+}
+
+async function processRemovedReplacements(studentName) {
+  for (const removedReplacement of replacements.removed) {
+    const eventId = removedReplacement.id;
+    // Unassign the removed lesson from the student in the Google Sheets
+    // ... (call the API to update the appropriate fields related to the specific eventId)
+
+    // Sleep for 100 ms to prevent exceeding API rate limit (optional)
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
 }
