@@ -45,6 +45,14 @@ function initializeReplacementForm() {
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
 }
 
+function displaySubmitSectionIfRequired() {
+  if (replacements.added.length > 0 || replacements.removed.length > 0) {
+    document.getElementById("submit-section").style.display = "block";
+  } else {
+    document.getElementById("submit-section").style.display = "none";
+  }
+}
+
 async function handleReplacementChange() {
   const replacementSelect = document.getElementById("replacement-select");
   const eventId = replacementSelect.value;
