@@ -69,4 +69,37 @@ module.exports = async (req, res) => {
   }
 };
 
+async function updateBookedReplacements(spreadsheetId, range, data) {
+  data = data || [];
+
+  const stringData = data.map((row) => {
+    if (!Array.isArray(row)) {
+      console.error('Unexpected data format:', row);
+      return [];
+    }
+    return row.map((value) => String(value));
+  });
+
+  console.log('Input data to updateBookedReplacements:', { spreadsheetId, range, stringData });
+  try {
+    const response = await sheets.spreadsheets.values.batchUpdate({
+      spreadsheetId,
+      resource: {
+        valueInputOption: 'RAW',
+        data: [
+          {
+            range: range,
+            values: data,
+          },
+        ],
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating Google Sheet:', error);
+    throw error;
+  }
+}
+
 module.exports.updateAttendance = updateAttendance;
+module.exports.updateBookedReplacements = updateBookedReplacements;
