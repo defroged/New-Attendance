@@ -78,6 +78,7 @@ async function handleReplacementChange() {
 }
   
   window.initializeReplacementForm = initializeReplacementForm;
+  window.displaySubmitSectionIfRequired = displaySubmitSectionIfRequired;
 })();
 
 function populateStudentNames(students) {
@@ -281,7 +282,7 @@ async function removeReplacement(eventId) {
 
   const eventData = { id: eventId };
   replacements.removed.push(eventData);
-  displaySubmitSectionIfRequired();
+  window.displaySubmitSectionIfRequired();
 
   const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) + 1;
   document.getElementById("available-slots").setAttribute("data-count", availableSlots);
