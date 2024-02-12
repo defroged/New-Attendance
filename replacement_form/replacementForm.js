@@ -376,12 +376,52 @@ async function processAddedReplacements(studentName) {
 async function processRemovedReplacements(studentName) {
   for (const removedReplacement of replacements.removed) {
     const eventId = removedReplacement.id;
-    // Unassign the removed lesson from the student in the Google Sheets
-    // ... (call the API to update the appropriate fields related to the specific eventId)
-
-    // Sleep for 100 ms to prevent exceeding API rate limit (optional)
+    await updateRemovedReplacements(studentName, eventId);
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
+}
+
+async function updateRemovedReplacements(studentName, eventId) {
+  const response = await fetch(apiUrl);
+  const data = await response.json();
+  const values = data.values;
+
+  const rowIndex = values.findIndex((row) => row[0] === studentName);
+
+  if (rowIndex < 0) {
+    console.error("Student not found");
+    return;
+  }
+
+  const columnName = values[rowIndex].findIndex((cell) => cell === eventId);
+  if (columnName < 0) {
+    console.error("Event not found");
+    return;
+  }
+
+  values[rowIndex][columnName] = "";
+
+  const dataWithoutHeader = values.slice(1);
+
+  const updateResponse = await fetch("/api/updateAttendance", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+      range: "Sheet1!A2:Z",
+      data: dataWithoutHeader,
+    }),
+  });
+
+  if (!updateResponse.ok) {
+    throw new Error(
+      `Failed to update Google Sheet data for removed replacements: ${updateResponse.statusText}`
+    );
+  }
+
+  console.log("Successfully updated Google Sheet data for removed replacements");
 }
 
 async function updateAvailableSlots(studentName, addedCount, removedCount) {
