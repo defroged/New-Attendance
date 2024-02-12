@@ -380,7 +380,7 @@ async function processRemovedReplacements(studentName) {
   }
 }
 
-async function updateRemovedReplacements(studentName, eventId) {
+async function updateRemovedReplacements(studentName, removedReplacement) {
   const response = await fetch(apiUrl);
   const data = await response.json();
   const values = data.values;
@@ -392,7 +392,7 @@ async function updateRemovedReplacements(studentName, eventId) {
     return;
   }
 
-const columnName = values[rowIndex].findIndex((cell) => cell === eventData.name);
+const columnName = values[rowIndex].findIndex((cell) => cell === removedReplacement.name);
   if (columnName < 0) {
     console.error("Event not found");
     return;
