@@ -139,9 +139,13 @@ async function handleStudentChange() {
   // Fetch booked slots and add them to the selected slots container
   const bookedSlots = await fetchBookedSlots(studentName);
   bookedSlots.forEach((slot) => {
-    const eventData = { id: generateUniqueID(), name: slot }; // Generate a unique ID for each added event
-    replacements.added.push(eventData);
-    addReplacementToDatesList(eventData);
+    const eventId = generateUniqueID(); // Generate a unique ID for each added event
+    // Prevent adding removed slots to the replacements.added array
+    if (!replacements.removed.some(replacement => replacement.name === slot)) {
+      const eventData = { id: eventId, name: slot };
+      replacements.added.push(eventData);
+      addReplacementToDatesList(eventData);
+    }
   });
 
   displaySubmitSectionIfRequired();
