@@ -147,9 +147,7 @@ sync function handleStudentChange() {
   displaySubmitSectionIfRequired();
 }
 
-  window.initializeReplacementForm = initializeReplacementForm;
-  window.displaySubmitSectionIfRequired = displaySubmitSectionIfRequired;
-})();
+  
 
 function populateStudentNames(students) {
   const studentSelect = document.getElementById("student-select");
@@ -457,4 +455,6 @@ if (emptyColumnIndex === -1) {
 }
 
 
-
+window.initializeReplacementForm = initializeReplacementForm;
+  window.displaySubmitSectionIfRequired = displaySubmitSectionIfRequired;
+})();
