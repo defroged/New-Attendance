@@ -392,7 +392,7 @@ async function updateRemovedReplacements(studentName, eventId) {
     return;
   }
 
-const columnName = values[rowIndex].findIndex((cell) => cell === removedReplacement.name);
+const columnName = values[rowIndex].findIndex((cell) => cell === eventData.name);
   if (columnName < 0) {
     console.error("Event not found");
     return;
