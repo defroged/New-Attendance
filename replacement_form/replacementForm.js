@@ -323,27 +323,6 @@ async function handleSubmit() {
   document.getElementById("submit-section").style.display = "none";
 }
 
-async function processAddedReplacements(studentName) {
-  for (const addedReplacement of replacements.added) {
-    const eventId = addedReplacement.id;
-    // Assign the selected lesson to the student in the Google Sheets
-    // ... (call the API to update the appropriate fields related to the specific eventId)
-
-    // Sleep for 100 ms to prevent exceeding API rate limit (optional)
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  }
-}
-
-async function processRemovedReplacements(studentName) {
-  for (const removedReplacement of replacements.removed) {
-    const eventId = removedReplacement.id;
-    // Unassign the removed lesson from the student in the Google Sheets
-    // ... (call the API to update the appropriate fields related to the specific eventId)
-
-    // Sleep for 100 ms to prevent exceeding API rate limit (optional)
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  }
-}
 
 async function updateAvailableSlots(studentName, addedCount, removedCount) {
   try {
