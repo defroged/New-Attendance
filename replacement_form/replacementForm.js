@@ -382,7 +382,10 @@ async function updateAddedReplacements(studentName, addedReplacements) {
   }
 
   const emptyColumnIndex =
-    Math.max(values[rowIndex].findIndex((cell, index) => cell === "" && index >= 6), values[rowIndex].length);
+    Math.max(
+      values[rowIndex].findIndex((cell, index) => cell === "" && index >= 6),
+      values[rowIndex].length
+    ) || 6;
 
   addedReplacements.forEach((replacement, index) => {
     values[rowIndex][emptyColumnIndex + index] = replacement.name;
@@ -397,7 +400,7 @@ async function updateAddedReplacements(studentName, addedReplacements) {
     },
     body: JSON.stringify({
       spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-      range: "Sheet1!A2:Z", // Update the range to include columns G, H, I, and so on
+      range: "Sheet1!A2:Z",
       data: dataWithoutHeader,
     }),
   });
