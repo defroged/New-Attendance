@@ -392,13 +392,14 @@ async function updateRemovedReplacements(studentName, removedReplacement) {
     return;
   }
 
-const columnName = values[rowIndex].findIndex((cell) => cell === removedReplacement.name);
-  if (columnName < 0) {
+  const columnIndex = values[rowIndex].findIndex((cell) => cell === removedReplacement.name);
+  if (columnIndex < 0) {
     console.error("Event not found");
     return;
   }
 
-  values[rowIndex][columnName] = "";
+  // Remove the found cell instead of setting it to an empty string
+  values[rowIndex].splice(columnIndex, 1);
 
   const dataWithoutHeader = values.slice(1);
 
