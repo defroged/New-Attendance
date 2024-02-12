@@ -294,11 +294,16 @@ async function removeReplacement(eventId) {
 async function handleSubmit() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
-  
+
   await processAddedReplacements(studentName);
+  await updateAddedReplacements(studentName, replacements.added); // Add this line
   await processRemovedReplacements(studentName);
 
-  const updatedData = await updateAvailableSlots(studentName, replacements.added.length, replacements.removed.length);
+  const updatedData = await updateAvailableSlots(
+    studentName,
+    replacements.added.length,
+    replacements.removed.length
+  );
 
   const dataWithoutHeader = updatedData.slice(1);
 
@@ -309,7 +314,7 @@ async function handleSubmit() {
     },
     body: JSON.stringify({
       spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-      range: "Sheet1!A2:C", 
+      range: "Sheet1!A2:C",
       data: dataWithoutHeader,
     }),
   });
@@ -363,4 +368,41 @@ async function updateAvailableSlots(studentName, addedCount, removedCount) {
   } catch (error) {
     console.error("Error updating student available slots:", error);
   }
+}
+
+async function updateAddedReplacements(studentName, addedReplacements) {
+  const response = await fetch(apiUrl);
+  const data = await response.json();
+  const values = data.values;
+  const rowIndex = values.findIndex((row) => row[0] === studentName);
+
+  if (rowIndex < 0) {
+    console.error("Student not found");
+    return;
+  }
+
+  addedReplacements.forEach((replacement, index) => {
+    values[rowIndex][6 + index] = replacement.name;
+  });
+
+  const dataWithoutHeader = values.slice(1);
+
+  const updateResponse = await fetch("/api/updateAttendance", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+      range: "Sheet1!A2:Z", // Update the range to include columns G, H, I, and so on
+      data: dataWithoutHeader,
+    }),
+  });
+
+  if (!updateResponse.ok) {
+    throw new Error(
+      `Failed to update Google Sheet data for added replacements: ${updateResponse.statusText}`
+    );
+  }
+  console.log("Successfully updated Google Sheet data for added replacements");
 }
