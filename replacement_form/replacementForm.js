@@ -381,10 +381,14 @@ async function updateAddedReplacements(studentName, addedReplacements) {
     return;
   }
 
-  const emptyColumnIndex = Math.max(
-  values[rowIndex].findIndex((cell, index) => cell === "" && index >= 6),
-  values[rowIndex].length
-);
+  const emptyColumnIndex = (() => {
+  for (let i = values[rowIndex].length - 1; i >= 6; i--) {
+    if (values[rowIndex][i] !== "") {
+      return i + 1;
+    }
+  }
+  return 6;
+})();
 
 if (emptyColumnIndex === -1) {
   emptyColumnIndex = 6;
