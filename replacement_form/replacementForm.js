@@ -132,12 +132,22 @@ function findStudentsByClassName(className, data) {
   return students;
 }
 
-async function handleStudentChange() {
+sync function handleStudentChange() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
 
   await fetchAvailableSlots(studentName);
   await fetchAvailableClasses(studentName);
+
+  // Fetch booked slots and add them to the selected slots container
+  const bookedSlots = await fetchBookedSlots(studentName);
+  bookedSlots.forEach((slot) => {
+    const eventData = { id: generateUniqueID(), name: slot }; // Generate a unique ID for each added event
+    replacements.added.push(eventData);
+    addReplacementToDatesList(eventData);
+  });
+
+  displaySubmitSectionIfRequired();
 }
 
 function fetchAvailableSlots(studentName) {
@@ -418,4 +428,27 @@ if (emptyColumnIndex === -1) {
     );
   }
   console.log("Successfully updated Google Sheet data for added replacements");
+}
+
+async function fetchBookedSlots(studentName) {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
+
+    const rowIndex = values.findIndex((row) => row[0] === studentName);
+
+    if (rowIndex > -1) {
+      const bookedSlots = values[rowIndex].slice(6).filter((slot) => slot !== '');
+      return bookedSlots;
+    }
+  } catch (error) {
+    console.error('Error fetching booked slots: ', error);
+  }
+
+  return [];
+}
+
+function generateUniqueID() {
+  return Math.random().toString(36).substr(2, 9);
 }
