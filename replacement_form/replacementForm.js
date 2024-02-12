@@ -89,24 +89,24 @@ async function handleReplacementChange() {
   }
 }
 
-async function fetchBookedSlots(studentName) {
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    const values = data.values;
+ async function fetchBookedSlots(studentName) {
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      const values = data.values;
 
-    const rowIndex = values.findIndex((row) => row[0] === studentName);
+      const rowIndex = values.findIndex((row) => row[0] === studentName);
 
-    if (rowIndex > -1) {
-      const bookedSlots = values[rowIndex].slice(6).filter((slot) => slot !== '');
-      return bookedSlots;
+      if (rowIndex > -1) {
+        const bookedSlots = values[rowIndex].slice(6).filter((slot) => slot !== '');
+        return bookedSlots;
+      }
+    } catch (error) {
+      console.error('Error fetching booked slots: ', error);
     }
-  } catch (error) {
-    console.error('Error fetching booked slots: ', error);
-  }
 
-  return [];
-}
+    return [];
+  }
 
 function generateUniqueID() {
   return Math.random().toString(36).substr(2, 9);
@@ -129,7 +129,7 @@ function fetchAvailableSlots(studentName) {
     });
 }
 
-sync function handleStudentChange() {
+async function handleStudentChange() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
 
