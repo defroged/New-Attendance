@@ -69,7 +69,6 @@ async function handleReplacementChange() {
     addReplacementToDatesList(eventData);
     selectedOption.remove();
 
-    // Call displayAvailableSlots with decreased available slots count
     const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) - 1;
 
     document.getElementById("available-slots").setAttribute("data-count", availableSlots);
@@ -77,6 +76,77 @@ async function handleReplacementChange() {
   }
 }
   
+  function displayAvailableSlots(availableSlots) {
+  const availableSlotsElement = document.getElementById("available-slots");
+  availableSlotsElement.innerHTML = `You have ${availableSlots} replacement lesson slots available`;
+  availableSlotsElement.setAttribute("data-count", availableSlots);
+
+  const stepThreeElement = document.getElementById("step-three");
+  if (availableSlots > 0) {
+    stepThreeElement.style.display = "block";
+  } else {
+    stepThreeElement.style.display = "none";
+  }
+}
+
+async function fetchBookedSlots(studentName) {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
+
+    const rowIndex = values.findIndex((row) => row[0] === studentName);
+
+    if (rowIndex > -1) {
+      const bookedSlots = values[rowIndex].slice(6).filter((slot) => slot !== '');
+      return bookedSlots;
+    }
+  } catch (error) {
+    console.error('Error fetching booked slots: ', error);
+  }
+
+  return [];
+}
+
+function generateUniqueID() {
+  return Math.random().toString(36).substr(2, 9);
+}
+
+function fetchAvailableSlots(studentName) {
+  return fetch(apiUrl)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch Google Sheet data: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const availableSlots = findAvailableSlotsByStudentName(studentName, data.values);
+      displayAvailableSlots(availableSlots);
+    })
+    .catch((error) => {
+      console.error('Error fetching available slots:', error);
+    });
+}
+
+sync function handleStudentChange() {
+  const studentSelect = document.getElementById("student-select");
+  const studentName = studentSelect.value;
+
+  await fetchAvailableSlots(studentName);
+  await fetchAvailableClasses(studentName);
+
+  // Fetch booked slots and add them to the selected slots container
+  const bookedSlots = await fetchBookedSlots(studentName);
+  bookedSlots.forEach((slot) => {
+    const eventData = { id: generateUniqueID(), name: slot }; // Generate a unique ID for each added event
+    replacements.added.push(eventData);
+    addReplacementToDatesList(eventData);
+  });
+
+  displaySubmitSectionIfRequired();
+}
+
   window.initializeReplacementForm = initializeReplacementForm;
   window.displaySubmitSectionIfRequired = displaySubmitSectionIfRequired;
 })();
@@ -132,40 +202,7 @@ function findStudentsByClassName(className, data) {
   return students;
 }
 
-sync function handleStudentChange() {
-  const studentSelect = document.getElementById("student-select");
-  const studentName = studentSelect.value;
 
-  await fetchAvailableSlots(studentName);
-  await fetchAvailableClasses(studentName);
-
-  // Fetch booked slots and add them to the selected slots container
-  const bookedSlots = await fetchBookedSlots(studentName);
-  bookedSlots.forEach((slot) => {
-    const eventData = { id: generateUniqueID(), name: slot }; // Generate a unique ID for each added event
-    replacements.added.push(eventData);
-    addReplacementToDatesList(eventData);
-  });
-
-  displaySubmitSectionIfRequired();
-}
-
-function fetchAvailableSlots(studentName) {
-  return fetch(apiUrl)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Failed to fetch Google Sheet data: ${response.statusText}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      const availableSlots = findAvailableSlotsByStudentName(studentName, data.values);
-      displayAvailableSlots(availableSlots);
-    })
-    .catch((error) => {
-      console.error('Error fetching available slots:', error);
-    });
-}
 
 function findAvailableSlotsByStudentName(studentName, data) {
   let availableSlots = 0;
@@ -177,18 +214,7 @@ function findAvailableSlotsByStudentName(studentName, data) {
   return availableSlots;
 }
 
-function displayAvailableSlots(availableSlots) {
-  const availableSlotsElement = document.getElementById("available-slots");
-  availableSlotsElement.innerHTML = `You have ${availableSlots} replacement lesson slots available`;
-  availableSlotsElement.setAttribute("data-count", availableSlots);
 
-  const stepThreeElement = document.getElementById("step-three");
-  if (availableSlots > 0) {
-    stepThreeElement.style.display = "block";
-  } else {
-    stepThreeElement.style.display = "none";
-  }
-}
 
 function fetchAvailableClasses(studentName) {
   return fetch(apiUrl)
@@ -430,25 +456,5 @@ if (emptyColumnIndex === -1) {
   console.log("Successfully updated Google Sheet data for added replacements");
 }
 
-async function fetchBookedSlots(studentName) {
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    const values = data.values;
 
-    const rowIndex = values.findIndex((row) => row[0] === studentName);
 
-    if (rowIndex > -1) {
-      const bookedSlots = values[rowIndex].slice(6).filter((slot) => slot !== '');
-      return bookedSlots;
-    }
-  } catch (error) {
-    console.error('Error fetching booked slots: ', error);
-  }
-
-  return [];
-}
-
-function generateUniqueID() {
-  return Math.random().toString(36).substr(2, 9);
-}
