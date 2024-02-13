@@ -459,21 +459,18 @@ async function updateAddedReplacements(studentName, addedReplacements) {
     return;
   }
 
-  const emptyColumnIndex = (() => {
-  for (let i = values[rowIndex].length - 1; i >= 6; i--) {
-    if (values[rowIndex][i] !== "") {
-      return i + 1;
+  function findNextEmptyColumnIndex() {
+    for (let i = 6; i < values[rowIndex].length; i++) {
+      if (values[rowIndex][i] === "") {
+        return i;
+      }
     }
+    return values[rowIndex].length;
   }
-  return 6;
-})();
 
-if (emptyColumnIndex === -1) {
-  emptyColumnIndex = 6;
-}
-
-  addedReplacements.forEach((replacement, index) => {
-    values[rowIndex][emptyColumnIndex + index] = replacement.name;
+  addedReplacements.forEach((replacement) => {
+    const columnIndex = findNextEmptyColumnIndex();
+    values[rowIndex][columnIndex] = replacement.name;
   });
 
   const dataWithoutHeader = values.slice(1);
