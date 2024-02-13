@@ -437,7 +437,7 @@ async function handleSubmit() {
 
     await updateReplacements(studentName, finalAddedReplacements);
 
-    const decrementCount = finalAddedReplacements.length - newRemovedReplacements.length;
+    const decrementCount = replacements.added.length - newRemovedReplacements.length;
     await decrementStudentAvailableSlots(studentName, decrementCount);
     await incrementStudentAvailableSlots(studentName, newRemovedReplacements.length);
 
