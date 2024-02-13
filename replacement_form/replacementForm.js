@@ -322,7 +322,11 @@ async function removeReplacement(eventId) {
     replacements.removed.push(eventData);
   }
   displaySubmitSectionIfRequired();
+
+  const currentAvailableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
+  const availableSlots = addedIndex !== -1 ? currentAvailableSlots + 1 : currentAvailableSlots;
   document.getElementById("available-slots").setAttribute("data-count", availableSlots);
+  displayAvailableSlots(availableSlots);
 }
 
 async function handleSubmit() {
