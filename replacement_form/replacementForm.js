@@ -463,7 +463,7 @@ async function updateRemovedReplacements(studentName, removedReplacement) {
   console.log("Successfully updated Google Sheet data for removed replacements");
 }
 
-async function updateAvailableSlots(studentName) {
+async function updateAvailableSlots(studentName, netAddedSlots = 0) {
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
@@ -476,7 +476,7 @@ async function updateAvailableSlots(studentName) {
         const newAddedReplacements = replacements.added.filter(notRemoved);
         const removedReplacements = replacements.removed.filter(notRemoved);
         
-        newAvailableSlots = parseInt(row[2], 10) + removedReplacements.length - newAddedReplacements.length;
+        newAvailableSlots = parseInt(row[2], 10) - netAddedSlots;
         row[2] = newAvailableSlots;
       }
       return row.slice(0, 3);
