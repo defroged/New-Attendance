@@ -347,7 +347,7 @@ async function handleSubmit() {
   ));
 
   await updateReplacements(studentName, newAddedReplacements);
-  const updatedData = await updateAvailableSlots(
+  const { updatedValues, newAvailableSlots } = await updateAvailableSlots(
     studentName,
     newAddedReplacements.length,
     replacements.removed.length
@@ -480,15 +480,17 @@ async function updateAvailableSlots(studentName, addedCount, removedCount) {
     const data = await response.json();
     const values = data.values;
 
+    let newAvailableSlots;
     const updatedValues = values.map((row) => {
       if (row[0] === studentName) {
-        row[2] = parseInt(row[2], 10) + removedCount - addedCount;
+        newAvailableSlots = parseInt(row[2], 10) + removedCount - addedCount;
+        row[2] = newAvailableSlots;
       }
       return row.slice(0, 3);
     });
 
     console.log("Student available slots updated successfully");
-    return updatedValues;
+    return { updatedValues, newAvailableSlots };
   } catch (error) {
     console.error("Error updating student available slots:", error);
   }
