@@ -43,12 +43,6 @@ function initializeReplacementForm() {
   document.getElementById("student-select").addEventListener("change", handleStudentChange);
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
-
-  // Call the new populateBookedSlots function
-  const studentSelect = document.getElementById("student-select");
-  if (studentSelect.value) {
-    populateBookedSlots(studentSelect.value);
-  }
 }
 
 function displaySubmitSectionIfRequired() {
@@ -141,6 +135,10 @@ async function handleStudentChange() {
 
   await fetchAvailableSlots(studentName);
   await fetchAvailableClasses(studentName);
+
+  // Call the new populateBookedSlots function
+  await populateBookedSlots(studentName);
+
   displaySubmitSectionIfRequired();
 }
 
