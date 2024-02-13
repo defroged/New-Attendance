@@ -314,14 +314,11 @@ async function removeReplacement(eventId) {
 
   const eventData = { id: eventId, name: eventText };
   replacements.removed.push(eventData);
-  displaySubmitSectionIfRequired();
+  window.displaySubmitSectionIfRequired();
 
-  const wasReplaced = replacements.added.some((addedEvent) => addedEvent.id === eventData.id);
-  if (!wasReplaced) {
-    const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) + 1;
-    document.getElementById("available-slots").setAttribute("data-count", availableSlots);
-    displayAvailableSlots(availableSlots);
-  }
+  const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) + 1;
+  document.getElementById("available-slots").setAttribute("data-count", availableSlots);
+  displayAvailableSlots(availableSlots);
 }
 
 async function handleSubmit() {
