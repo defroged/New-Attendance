@@ -341,16 +341,19 @@ async function handleSubmit() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
 
-await processRemovedReplacements(studentName);
-await processAddedReplacements(studentName);
-await updateAddedReplacements(studentName, replacements.added);
+  // Filter out removed replacements from added list
+  const newAddedReplacements = replacements.added.filter((addedEvent) => !(
+    replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id)
+  ));
 
+  await updateReplacements(studentName, newAddedReplacements);
   const updatedData = await updateAvailableSlots(
     studentName,
-    replacements.added.length,
+    newAddedReplacements.length,
     replacements.removed.length
   );
 
+  // Rest of the code remains the same
   const dataWithoutHeader = updatedData.slice(1);
 
   const updateResponse = await fetch("/api/updateAttendance", {
@@ -374,23 +377,59 @@ await updateAddedReplacements(studentName, replacements.added);
   document.getElementById("submit-section").style.display = "none";
 }
 
-async function processAddedReplacements(studentName) {
-  for (const addedReplacement of replacements.added) {
-    const eventId = addedReplacement.id;
-    // Assign the selected lesson to the student in the Google Sheets
-    // ... (call the API to update the appropriate fields related to the specific eventId)
+async function updateReplacements(studentName, finalAddedReplacements) {
+  const response = await fetch(apiUrl);
+  const data = await response.json();
+  const values = data.values;
+  const rowIndex = values.findIndex((row) => row[0] === studentName);
 
-    // Sleep for 100 ms to prevent exceeding API rate limit (optional)
-    await new Promise((resolve) => setTimeout(resolve, 100));
+  if (rowIndex < 0) {
+    console.error("Student not found");
+    return;
   }
+
+  function findNextEmptyColumnIndex() {
+    for (let i = 6; i < values[rowIndex].length; i++) {
+      if (values[rowIndex][i] === "") {
+        return i;
+      }
+    }
+    return Math.max(6, values[rowIndex].length);
+  }
+
+  // Remove all past bookings
+  for (let i = 6; i < values[rowIndex].length; i++) {
+    values[rowIndex][i] = "";
+  }
+
+  // Add new bookings
+  finalAddedReplacements.forEach((replacement) => {
+    const columnIndex = findNextEmptyColumnIndex();
+    values[rowIndex][columnIndex] = replacement.name;
+  });
+
+  const dataWithoutHeader = values.slice(1);
+
+  const updateResponse = await fetch("/api/updateAttendance", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+      range: "Sheet1!A2:Z",
+      data: dataWithoutHeader,
+    }),
+  });
+
+  if (!updateResponse.ok) {
+    throw new Error(
+      `Failed to update Google Sheet data for added replacements: ${updateResponse.statusText}`
+    );
+  }
+  console.log("Successfully updated Google Sheet data for added replacements");
 }
 
-async function processRemovedReplacements(studentName) {
-  for (const removedReplacement of replacements.removed) {
-    await updateRemovedReplacements(studentName, removedReplacement);
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  }
-}
 
 // this is the problematic function
 async function updateRemovedReplacements(studentName, removedReplacement) {
