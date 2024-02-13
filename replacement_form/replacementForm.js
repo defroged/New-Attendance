@@ -324,15 +324,18 @@ async function removeReplacement(eventId) {
 async function handleSubmit() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
-  const newAddedReplacements = replacements.added.filter((addedEvent) => !(
-    replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id)
-  ));
+
+  const notRemoved = (addedEvent) => !replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id);
+  const newAddedReplacements = replacements.added.filter(notRemoved);
+  const removedReplacements = replacements.removed.filter(notRemoved);
 
   await updateReplacements(studentName, newAddedReplacements);
+  await Promise.all(removedReplacements.map((eventData) => updateRemovedReplacements(studentName, eventData)));
+
   const { updatedValues, newAvailableSlots } = await updateAvailableSlots(
     studentName,
     newAddedReplacements.length,
-    replacements.removed.length
+    removedReplacements.length
   );
 
   const dataWithoutHeader = updatedValues.slice(1);
