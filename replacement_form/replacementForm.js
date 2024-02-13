@@ -141,24 +141,18 @@ async function handleStudentChange() {
   replacements.removed = [];
 
   // Fetch booked slots and add them to the selected slots container
-  const bookedSlots = await fetchBookedSlots(studentName);
+const bookedSlots = await fetchBookedSlots(studentName);
 
-  // Update replacements.added array
-  bookedSlots.forEach((slot) => {
+// Filter out the removed slots
+const filteredBookedSlots = bookedSlots.filter(
+  (slot) => !replacements.removed.some((removedEvent) => removedEvent.name === slot)
+);
+
+filteredBookedSlots.forEach((slot) => {
   const eventId = generateUniqueID(); // Generate a unique ID for each added event
   const eventData = { id: eventId, name: slot };
-
-  // Check if slot is in the removed array
-  const removedIndex = replacements.removed.findIndex((removedEvent) => removedEvent.name === slot);
-
-  if (removedIndex > -1) {
-    // Remove the slot from the removed array
-    replacements.removed.splice(removedIndex, 1);
-  } else {
-    // Add the slot to the added array and display it in the UI
-    replacements.added.push(eventData);
-    addReplacementToDatesList(eventData);
-  }
+  replacements.added.push(eventData);
+  addReplacementToDatesList(eventData);
 });
 
   // Update replacements.removed array with only those that are not present in bookedSlots
