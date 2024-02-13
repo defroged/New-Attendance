@@ -141,7 +141,10 @@ async function decrementStudentAvailableSlots(studentName, count) {
       }
       return row.slice(0, 3);
     });
-
+console.log("Starting to decrement slots", {
+    studentName,
+    count,
+  });
     const dataWithoutHeader = updatedValues.slice(1);
 
     const updateResponse = await fetch("/api/updateAttendance", {
@@ -178,7 +181,10 @@ async function incrementStudentAvailableSlots(studentName, count) {
       }
       return row.slice(0, 3);
     });
-
+console.log("Starting to increment slots", {
+    studentName,
+    count,
+  });
     const dataWithoutHeader = updatedValues.slice(1);
 
     const updateResponse = await fetch("/api/updateAttendance", {
@@ -412,24 +418,32 @@ async function removeReplacement(eventId) {
 
 
 async function handleSubmit() {
-  const studentSelect = document.getElementById("student-select");
-  const studentName = studentSelect.value;
+  try {
+    const studentSelect = document.getElementById("student-select");
+    const studentName = studentSelect.value;
 
-  // Filter out removed replacements from added list
-  const newAddedReplacements = replacements.added.filter((addedEvent) => !(
-    replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id)
-  ));
+    console.log("Starting handleSubmit()", {
+      studentName,
+      addedReplacements: replacements.added,
+      removedReplacements: replacements.removed,
+    });
 
-  await updateReplacements(studentName, newAddedReplacements);
-  
-  // Use the newly added functions to modify available slots
-  await decrementStudentAvailableSlots(studentName, newAddedReplacements.length);
-  await incrementStudentAvailableSlots(studentName, replacements.removed.length);
+    const newAddedReplacements = replacements.added.filter((addedEvent) => !(
+      replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id)
+    ));
 
-  // Clear replacements data
-  replacements.added = [];
-  replacements.removed = [];
-  document.getElementById("submit-section").style.display = "none";
+    console.log("newAddedReplacements:", newAddedReplacements);
+
+    await updateReplacements(studentName, newAddedReplacements);
+    await decrementStudentAvailableSlots(studentName, newAddedReplacements.length);
+    await incrementStudentAvailableSlots(studentName, replacements.removed.length);
+
+    replacements.added = [];
+    replacements.removed = [];
+    document.getElementById("submit-section").style.display = "none";
+  } catch (error) {
+    console.error("Error in handleSubmit()", error);
+  }
 }
 
 async function updateReplacements(studentName, finalAddedReplacements) {
