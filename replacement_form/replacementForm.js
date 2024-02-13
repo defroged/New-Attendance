@@ -288,7 +288,13 @@ function filterEventsByClassNames(events, classNames) {
 
 async function populateBookedSlots(studentName) {
   const bookedSlots = await fetchBookedSlots(studentName);
-  bookedSlots.forEach((slot) => {
+
+  // Filter out slots that are already in the list of added slots
+  const newBookedSlots = bookedSlots.filter(
+    (slot) => !replacements.added.some((addedEvent) => addedEvent.name === slot)
+  );
+
+  newBookedSlots.forEach((slot) => {
     const eventId = generateUniqueID(); // Generate a unique ID for each added event
     const eventData = { id: eventId, name: slot };
     replacements.added.push(eventData);
