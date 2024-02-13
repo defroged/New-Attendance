@@ -352,9 +352,9 @@ async function handleSubmit() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
 
-  await processAddedReplacements(studentName);
-  await updateAddedReplacements(studentName, replacements.added); // Add this line
-  await processRemovedReplacements(studentName);
+await processRemovedReplacements(studentName);
+await processAddedReplacements(studentName);
+await updateAddedReplacements(studentName, replacements.added);
 
   const updatedData = await updateAvailableSlots(
     studentName,
