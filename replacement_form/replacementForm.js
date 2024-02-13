@@ -347,31 +347,13 @@ async function handleSubmit() {
   ));
 
   await updateReplacements(studentName, newAddedReplacements);
-  const updatedData = await updateAvailableSlots(
-    studentName,
-    newAddedReplacements.length,
-    replacements.removed.length
-  );
+  
+  // Use Promise.all() to resolve updating available slots for added and removed replacements
+  const addSlotsPromise = updateAvailableSlots(studentName, newAddedReplacements.length, 0);
+  const removeSlotsPromise = updateAvailableSlots(studentName, 0, replacements.removed.length);
+  await Promise.all([addSlotsPromise, removeSlotsPromise]);
 
-  // Rest of the code remains the same
-  const dataWithoutHeader = updatedData.slice(1);
-
-  const updateResponse = await fetch("/api/updateAttendance", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-      range: "Sheet1!A2:C",
-      data: dataWithoutHeader,
-    }),
-  });
-
-  if (!updateResponse.ok) {
-    throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
-  }
-
+  // Clear replacements data
   replacements.added = [];
   replacements.removed = [];
   document.getElementById("submit-section").style.display = "none";
