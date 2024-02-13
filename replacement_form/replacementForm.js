@@ -384,6 +384,7 @@ async function processRemovedReplacements(studentName) {
   }
 }
 
+// this is the problematic function
 async function updateRemovedReplacements(studentName, removedReplacement) {
   const response = await fetch(apiUrl);
   const data = await response.json();
@@ -402,8 +403,8 @@ async function updateRemovedReplacements(studentName, removedReplacement) {
     return;
   }
 
-  // Remove the found cell instead of setting it to an empty string
-  values[rowIndex].splice(columnIndex, 1);
+  // Replace the found cell with an empty string
+  values[rowIndex][columnIndex] = "";
 
   const dataWithoutHeader = values.slice(1);
 
