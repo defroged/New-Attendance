@@ -128,7 +128,7 @@ function fetchAvailableSlots(studentName) {
       console.error('Error fetching available slots:', error);
     });
 }
-
+// this one is also problematic
 async function handleStudentChange() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
@@ -136,20 +136,25 @@ async function handleStudentChange() {
   await fetchAvailableSlots(studentName);
   await fetchAvailableClasses(studentName);
 
+  // Clear replacements arrays
+  replacements.added = [];
+  replacements.removed = [];
+
   // Fetch booked slots and add them to the selected slots container
   const bookedSlots = await fetchBookedSlots(studentName);
+
+  // Update replacements.added array
   bookedSlots.forEach((slot) => {
     const eventId = generateUniqueID(); // Generate a unique ID for each added event
-    const bookingExistsInRemovedReplacements = replacements.removed.some(
-      (removedEvent) => removedEvent.name === slot
-    );
-
-    if (!bookingExistsInRemovedReplacements) {
-      const eventData = { id: eventId, name: slot };
-      replacements.added.push(eventData);
-      addReplacementToDatesList(eventData);
-    }
+    const eventData = { id: eventId, name: slot };
+    replacements.added.push(eventData);
+    addReplacementToDatesList(eventData);
   });
+
+  // Update replacements.removed array with only those that are not present in bookedSlots
+  replacements.removed = replacements.removed.filter(
+    (removedEvent) => !bookedSlots.includes(removedEvent.name)
+  );
 
   displaySubmitSectionIfRequired();
 }
