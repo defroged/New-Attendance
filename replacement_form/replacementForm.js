@@ -460,13 +460,13 @@ async function updateAddedReplacements(studentName, addedReplacements) {
   }
 
   function findNextEmptyColumnIndex() {
-  for (let i = 6; i < values[rowIndex].length; i++) {
-    if (values[rowIndex][i] === "") {
-      return i;
+    for (let i = 6; i < values[rowIndex].length; i++) {
+      if (values[rowIndex][i] === "") {
+        return i;
+      }
     }
+    return Math.max(6, values[rowIndex].length);
   }
-  return values[rowIndex].length;
-}
 
   addedReplacements.forEach((replacement) => {
     const columnIndex = findNextEmptyColumnIndex();
