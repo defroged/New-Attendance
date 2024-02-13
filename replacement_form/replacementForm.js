@@ -37,6 +37,7 @@ function fetchClassNames() {
       classSelect.appendChild(option);
     });
   }
+  
 function initializeReplacementForm() {
   fetchClassNames();
   document.getElementById("class-select").addEventListener("change", handleClassChange);
@@ -65,10 +66,8 @@ async function handleReplacementChange() {
   if (eventId) {
     replacements.added.push(eventData);
     displaySubmitSectionIfRequired();
-    
     addReplacementToDatesList(eventData);
     selectedOption.remove();
-
     const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) - 1;
 
     document.getElementById("available-slots").setAttribute("data-count", availableSlots);
@@ -94,7 +93,6 @@ async function handleReplacementChange() {
       const response = await fetch(apiUrl);
       const data = await response.json();
       const values = data.values;
-
       const rowIndex = values.findIndex((row) => row[0] === studentName);
 
       if (rowIndex > -1) {
@@ -132,17 +130,12 @@ function fetchAvailableSlots(studentName) {
 async function handleStudentChange() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
-
   await fetchAvailableSlots(studentName);
   await fetchAvailableClasses(studentName);
-
-  // Call the new populateBookedSlots function
   await populateBookedSlots(studentName);
 
   displaySubmitSectionIfRequired();
 }
-
-  
 
 function populateStudentNames(students) {
   const studentSelect = document.getElementById("student-select");
@@ -159,8 +152,7 @@ function populateStudentNames(students) {
 
 function handleClassChange() {
   const classSelect = document.getElementById("class-select");
-  const className = classSelect.value;
-  
+  const className = classSelect.value;  
 
   fetchStudentNames(className);
   
@@ -195,8 +187,6 @@ function findStudentsByClassName(className, data) {
   return students;
 }
 
-
-
 function findAvailableSlotsByStudentName(studentName, data) {
   let availableSlots = 0;
   data.forEach(function (row) {
@@ -206,8 +196,6 @@ function findAvailableSlotsByStudentName(studentName, data) {
   });
   return availableSlots;
 }
-
-
 
 function fetchAvailableClasses(studentName) {
   return fetch(apiUrl)
@@ -288,14 +276,12 @@ function filterEventsByClassNames(events, classNames) {
 
 async function populateBookedSlots(studentName) {
   const bookedSlots = await fetchBookedSlots(studentName);
-
-  // Filter out slots that are already in the list of added slots
   const newBookedSlots = bookedSlots.filter(
     (slot) => !replacements.added.some((addedEvent) => addedEvent.name === slot)
   );
 
   newBookedSlots.forEach((slot) => {
-    const eventId = generateUniqueID(); // Generate a unique ID for each added event
+    const eventId = generateUniqueID(); 
     const eventData = { id: eventId, name: slot };
     replacements.added.push(eventData);
     addReplacementToDatesList(eventData);
@@ -335,13 +321,9 @@ async function removeReplacement(eventId) {
   displayAvailableSlots(availableSlots);
 }
 
-
-
 async function handleSubmit() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
-
-  // Filter out removed replacements from added list
   const newAddedReplacements = replacements.added.filter((addedEvent) => !(
     replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id)
   ));
@@ -353,9 +335,7 @@ async function handleSubmit() {
     replacements.removed.length
   );
 
-  // Rest of the code remains the same
-  const dataWithoutHeader = updatedData.slice(1);
-
+  const dataWithoutHeader = updatedValues.slice(1);
   const updateResponse = await fetch("/api/updateAttendance", {
     method: "POST",
     headers: {
@@ -397,12 +377,10 @@ async function updateReplacements(studentName, finalAddedReplacements) {
     return Math.max(6, values[rowIndex].length);
   }
 
-  // Remove all past bookings
   for (let i = 6; i < values[rowIndex].length; i++) {
     values[rowIndex][i] = "";
   }
 
-  // Add new bookings
   finalAddedReplacements.forEach((replacement) => {
     const columnIndex = findNextEmptyColumnIndex();
     values[rowIndex][columnIndex] = replacement.name;
@@ -448,7 +426,6 @@ async function updateRemovedReplacements(studentName, removedReplacement) {
     return;
   }
 
-  // Replace the found cell with an empty string
   values[rowIndex][columnIndex] = "";
 
   const dataWithoutHeader = values.slice(1);
