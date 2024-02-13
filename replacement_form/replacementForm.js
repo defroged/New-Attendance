@@ -431,11 +431,15 @@ async function handleSubmit() {
       (replacement) => !previouslyBookedSlots.includes(replacement.name)
     );
 
+    const newRemovedReplacements = replacements.removed.filter((removedEvent) => !(
+      newAddedReplacements.some((addedEvent) => addedEvent.id === removedEvent.id)
+    ));
+
     await updateReplacements(studentName, finalAddedReplacements);
 
-    const decrementCount = finalAddedReplacements.length - replacements.removed.length;
+    const decrementCount = finalAddedReplacements.length - newRemovedReplacements.length;
     await decrementStudentAvailableSlots(studentName, decrementCount);
-    await incrementStudentAvailableSlots(studentName, replacements.removed.length);
+    await incrementStudentAvailableSlots(studentName, newRemovedReplacements.length);
 
     replacements.added = [];
     replacements.removed = [];
