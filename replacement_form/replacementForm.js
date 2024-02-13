@@ -348,10 +348,9 @@ async function handleSubmit() {
 
   await updateReplacements(studentName, newAddedReplacements);
   
-  // Use Promise.all() to resolve updating available slots for added and removed replacements
-  const addSlotsPromise = updateAvailableSlots(studentName, newAddedReplacements.length, 0);
-  const removeSlotsPromise = updateAvailableSlots(studentName, 0, replacements.removed.length);
-  await Promise.all([addSlotsPromise, removeSlotsPromise]);
+  // Use the newly added functions to modify available slots
+  await decrementStudentAvailableSlots(studentName, newAddedReplacements.length);
+  await incrementStudentAvailableSlots(studentName, replacements.removed.length);
 
   // Clear replacements data
   replacements.added = [];
@@ -456,25 +455,6 @@ async function updateRemovedReplacements(studentName, removedReplacement) {
   console.log("Successfully updated Google Sheet data for removed replacements");
 }
 
-async function updateAvailableSlots(studentName, addedCount, removedCount) {
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    const values = data.values;
-
-    const updatedValues = values.map((row) => {
-      if (row[0] === studentName) {
-        row[2] = parseInt(row[2], 10) + removedCount - addedCount;
-      }
-      return row.slice(0, 3);
-    });
-
-    console.log("Student available slots updated successfully");
-    return updatedValues;
-  } catch (error) {
-    console.error("Error updating student available slots:", error);
-  }
-}
 
 async function updateAddedReplacements(studentName, addedReplacements) {
   const response = await fetch(apiUrl);
