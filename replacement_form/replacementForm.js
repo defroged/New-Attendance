@@ -3,13 +3,6 @@ const replacements = {
   removed: [],
 };
 
-function formatDate(date) {
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const year = date.getFullYear();
-  return `${month}/${day}/${year}`;
-}
-
 (function() {
 function fetchClassNames() {
   fetch(apiUrl)
@@ -64,17 +57,15 @@ async function handleReplacementChange() {
   const replacementSelect = document.getElementById("replacement-select");
   const eventId = replacementSelect.value;
   const selectedOption = replacementSelect.options[replacementSelect.selectedIndex];
-  const eventDate = event.start.dateTime || event.start.date;
-  const formattedDate = formatDate(new Date(eventDate));
   const eventData = {
     id: eventId,
-    name: `${selectedOption.textContent} - ${formattedDate}`,
+    name: selectedOption.textContent
   };
 
   if (eventId) {
     replacements.added.push(eventData);
     displaySubmitSectionIfRequired();
-
+    
     addReplacementToDatesList(eventData);
     selectedOption.remove();
 
