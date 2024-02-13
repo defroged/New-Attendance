@@ -140,8 +140,11 @@ async function handleStudentChange() {
   const bookedSlots = await fetchBookedSlots(studentName);
   bookedSlots.forEach((slot) => {
     const eventId = generateUniqueID(); // Generate a unique ID for each added event
-    // Prevent adding removed slots to the replacements.added array
-    if (!replacements.removed.some(replacement => replacement.name === slot)) {
+    const bookingExistsInRemovedReplacements = replacements.removed.some(
+      (removedEvent) => removedEvent.name === slot
+    );
+
+    if (!bookingExistsInRemovedReplacements) {
       const eventData = { id: eventId, name: slot };
       replacements.added.push(eventData);
       addReplacementToDatesList(eventData);
