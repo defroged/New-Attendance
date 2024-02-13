@@ -337,11 +337,15 @@ async function handleSubmit() {
   const notRemoved = (addedEvent) => !replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id);
   const newAddedReplacements = replacements.added.filter(notRemoved);
   const removedReplacements = replacements.removed.filter(notRemoved);
-
+  
   await updateReplacements(studentName, newAddedReplacements);
   await Promise.all(removedReplacements.map((eventData) => updateRemovedReplacements(studentName, eventData)));
 
-  const { updatedValues, newAvailableSlots } = await updateAvailableSlots(studentName);
+  // Calculate the net effect of added and removed slots
+  const netAddedSlots = newAddedReplacements.length - removedReplacements.length;
+  
+  // Update the available slots based on the net effect
+  const { updatedValues, newAvailableSlots } = await updateAvailableSlots(studentName, netAddedSlots);
 
   const dataWithoutHeader = updatedValues.slice(1);
   const updateResponse = await fetch("/api/updateAttendance", {
