@@ -37,7 +37,6 @@ function fetchClassNames() {
       classSelect.appendChild(option);
     });
   }
-  
 function initializeReplacementForm() {
   fetchClassNames();
   document.getElementById("class-select").addEventListener("change", handleClassChange);
@@ -47,14 +46,10 @@ function initializeReplacementForm() {
 }
 
 function displaySubmitSectionIfRequired() {
-  const hasAdded = replacements.added.length > 0;
-  const hasRemoved = replacements.removed.length > 0;
-  const submitSection = document.getElementById("submit-section");
-
-  if (hasAdded || hasRemoved) {
-    submitSection.style.display = "block";
+  if (replacements.added.length > 0 || replacements.removed.length > 0) {
+    document.getElementById("submit-section").style.display = "block";
   } else {
-    submitSection.style.display = "none";
+    document.getElementById("submit-section").style.display = "none";
   }
 }
 
@@ -70,10 +65,14 @@ async function handleReplacementChange() {
   if (eventId) {
     replacements.added.push(eventData);
     displaySubmitSectionIfRequired();
+    
     addReplacementToDatesList(eventData);
     selectedOption.remove();
-    document.getElementById("available-slots").setAttribute("data-count", availableSlots);
 
+    const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) - 1;
+
+    document.getElementById("available-slots").setAttribute("data-count", availableSlots);
+    displayAvailableSlots(availableSlots);
   }
 }
   
@@ -95,6 +94,7 @@ async function handleReplacementChange() {
       const response = await fetch(apiUrl);
       const data = await response.json();
       const values = data.values;
+
       const rowIndex = values.findIndex((row) => row[0] === studentName);
 
       if (rowIndex > -1) {
@@ -132,12 +132,17 @@ function fetchAvailableSlots(studentName) {
 async function handleStudentChange() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
+
   await fetchAvailableSlots(studentName);
   await fetchAvailableClasses(studentName);
+
+  // Call the new populateBookedSlots function
   await populateBookedSlots(studentName);
 
   displaySubmitSectionIfRequired();
 }
+
+  
 
 function populateStudentNames(students) {
   const studentSelect = document.getElementById("student-select");
@@ -154,7 +159,8 @@ function populateStudentNames(students) {
 
 function handleClassChange() {
   const classSelect = document.getElementById("class-select");
-  const className = classSelect.value;  
+  const className = classSelect.value;
+  
 
   fetchStudentNames(className);
   
@@ -189,6 +195,8 @@ function findStudentsByClassName(className, data) {
   return students;
 }
 
+
+
 function findAvailableSlotsByStudentName(studentName, data) {
   let availableSlots = 0;
   data.forEach(function (row) {
@@ -198,6 +206,8 @@ function findAvailableSlotsByStudentName(studentName, data) {
   });
   return availableSlots;
 }
+
+
 
 function fetchAvailableClasses(studentName) {
   return fetch(apiUrl)
@@ -278,12 +288,14 @@ function filterEventsByClassNames(events, classNames) {
 
 async function populateBookedSlots(studentName) {
   const bookedSlots = await fetchBookedSlots(studentName);
+
+  // Filter out slots that are already in the list of added slots
   const newBookedSlots = bookedSlots.filter(
     (slot) => !replacements.added.some((addedEvent) => addedEvent.name === slot)
   );
 
   newBookedSlots.forEach((slot) => {
-    const eventId = generateUniqueID(); 
+    const eventId = generateUniqueID(); // Generate a unique ID for each added event
     const eventData = { id: eventId, name: slot };
     replacements.added.push(eventData);
     addReplacementToDatesList(eventData);
@@ -315,40 +327,51 @@ async function removeReplacement(eventId) {
   listElementToRemove.remove();
 
   const eventData = { id: eventId, name: eventText };
-  const addedIndex = replacements.added.findIndex((event) => event.id === eventId);
-  if (addedIndex !== -1) {
-    replacements.added.splice(addedIndex, 1);
-  } else {
-    replacements.removed.push(eventData);
-  }
-  displaySubmitSectionIfRequired();
+  replacements.removed.push(eventData);
+  window.displaySubmitSectionIfRequired();
+
+  const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) + 1;
   document.getElementById("available-slots").setAttribute("data-count", availableSlots);
+  displayAvailableSlots(availableSlots);
 }
+
+
 
 async function handleSubmit() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
-  
-  const notRemoved = (addedEvent) => !replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id);
-  const newAddedReplacements = replacements.added.filter(notRemoved);
-  const removedReplacements = replacements.removed.filter(notRemoved);
-  
+
+  // Filter out removed replacements from added list
+  const newAddedReplacements = replacements.added.filter((addedEvent) => !(
+    replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id)
+  ));
+
   await updateReplacements(studentName, newAddedReplacements);
-  await Promise.all(removedReplacements.map((eventData) => updateRemovedReplacements(studentName, eventData)));
+  const updatedData = await updateAvailableSlots(
+    studentName,
+    newAddedReplacements.length,
+    replacements.removed.length
+  );
 
-  // Calculate the net effect of added and removed slots
-  const netAddedSlots = newAddedReplacements.length - removedReplacements.length;
-  
-  // Get the current available slots
-  const currentAvailableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
+  // Rest of the code remains the same
+  const dataWithoutHeader = updatedData.slice(1);
 
-  // Update the available slots based on the net effect
-  const updatedAvailableSlots = currentAvailableSlots - netAddedSlots;
+  const updateResponse = await fetch("/api/updateAttendance", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+      range: "Sheet1!A2:C",
+      data: dataWithoutHeader,
+    }),
+  });
 
-  // Update the display
-  document.getElementById("available-slots").setAttribute("data-count", updatedAvailableSlots);
-  displayAvailableSlots(updatedAvailableSlots);
-  
+  if (!updateResponse.ok) {
+    throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
+  }
+
   replacements.added = [];
   replacements.removed = [];
   document.getElementById("submit-section").style.display = "none";
@@ -374,10 +397,12 @@ async function updateReplacements(studentName, finalAddedReplacements) {
     return Math.max(6, values[rowIndex].length);
   }
 
+  // Remove all past bookings
   for (let i = 6; i < values[rowIndex].length; i++) {
     values[rowIndex][i] = "";
   }
 
+  // Add new bookings
   finalAddedReplacements.forEach((replacement) => {
     const columnIndex = findNextEmptyColumnIndex();
     values[rowIndex][columnIndex] = replacement.name;
@@ -423,6 +448,7 @@ async function updateRemovedReplacements(studentName, removedReplacement) {
     return;
   }
 
+  // Replace the found cell with an empty string
   values[rowIndex][columnIndex] = "";
 
   const dataWithoutHeader = values.slice(1);
@@ -448,27 +474,21 @@ async function updateRemovedReplacements(studentName, removedReplacement) {
   console.log("Successfully updated Google Sheet data for removed replacements");
 }
 
-async function updateAvailableSlots(studentName, netAddedSlots = 0) {
+async function updateAvailableSlots(studentName, addedCount, removedCount) {
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
 
-    let newAvailableSlots;
     const updatedValues = values.map((row) => {
       if (row[0] === studentName) {
-        const notRemoved = (addedEvent) => !replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id);
-        const newAddedReplacements = replacements.added.filter(notRemoved);
-        const removedReplacements = replacements.removed.filter(notRemoved);
-        
-        newAvailableSlots = parseInt(row[2], 10) - netAddedSlots;
-        row[2] = newAvailableSlots;
+        row[2] = parseInt(row[2], 10) + removedCount - addedCount;
       }
       return row.slice(0, 3);
     });
 
     console.log("Student available slots updated successfully");
-    return { updatedValues, newAvailableSlots };
+    return updatedValues;
   } catch (error) {
     console.error("Error updating student available slots:", error);
   }
@@ -521,45 +541,6 @@ async function updateAddedReplacements(studentName, addedReplacements) {
   console.log("Successfully updated Google Sheet data for added replacements");
 }
 
-async function updateAvailableSlotsOnly(studentName, netAddedSlots) {
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    const values = data.values;
-
-    let newAvailableSlots;
-    const updatedValues = values.map((row) => {
-      if (row[0] === studentName) {
-        newAvailableSlots = parseInt(row[2], 10) - netAddedSlots;
-        row[2] = newAvailableSlots;
-      }
-      return row.slice(0, 3);
-    });
-
-    console.log("Student available slots updated successfully");
-    const dataWithoutHeader = updatedValues.slice(1);
-
-    const updateResponse = await fetch("/api/updateAttendance", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-        range: "Sheet1!A2:C",
-        data: dataWithoutHeader,
-      }),
-    });
-
-    if (!updateResponse.ok) {
-      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
-    }
-
-    return { updatedValues, newAvailableSlots };
-  } catch (error) {
-    console.error("Error updating student available slots:", error);
-  }
-}
 
 window.initializeReplacementForm = initializeReplacementForm;
   window.displaySubmitSectionIfRequired = displaySubmitSectionIfRequired;
