@@ -324,7 +324,7 @@ async function removeReplacement(eventId) {
 async function handleSubmit() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
-
+  
   const notRemoved = (addedEvent) => !replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id);
   const newAddedReplacements = replacements.added.filter(notRemoved);
   const removedReplacements = replacements.removed.filter(notRemoved);
@@ -332,11 +332,7 @@ async function handleSubmit() {
   await updateReplacements(studentName, newAddedReplacements);
   await Promise.all(removedReplacements.map((eventData) => updateRemovedReplacements(studentName, eventData)));
 
-  const { updatedValues, newAvailableSlots } = await updateAvailableSlots(
-    studentName,
-    newAddedReplacements.length,
-    removedReplacements.length
-  );
+  const { updatedValues, newAvailableSlots } = await updateAvailableSlots(studentName);
 
   const dataWithoutHeader = updatedValues.slice(1);
   const updateResponse = await fetch("/api/updateAttendance", {
@@ -454,7 +450,7 @@ async function updateRemovedReplacements(studentName, removedReplacement) {
   console.log("Successfully updated Google Sheet data for removed replacements");
 }
 
-async function updateAvailableSlots(studentName, addedCount, removedCount) {
+async function updateAvailableSlots(studentName) {
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
@@ -463,7 +459,11 @@ async function updateAvailableSlots(studentName, addedCount, removedCount) {
     let newAvailableSlots;
     const updatedValues = values.map((row) => {
       if (row[0] === studentName) {
-        newAvailableSlots = parseInt(row[2], 10) + removedCount - addedCount;
+        const notRemoved = (addedEvent) => !replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id);
+        const newAddedReplacements = replacements.added.filter(notRemoved);
+        const removedReplacements = replacements.removed.filter(notRemoved);
+        
+        newAvailableSlots = parseInt(row[2], 10) + removedReplacements.length - newAddedReplacements.length;
         row[2] = newAvailableSlots;
       }
       return row.slice(0, 3);
