@@ -72,10 +72,8 @@ async function handleReplacementChange() {
     displaySubmitSectionIfRequired();
     addReplacementToDatesList(eventData);
     selectedOption.remove();
-    const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) - 1;
-
     document.getElementById("available-slots").setAttribute("data-count", availableSlots);
-    displayAvailableSlots(availableSlots);
+
   }
 }
   
@@ -324,10 +322,7 @@ async function removeReplacement(eventId) {
     replacements.removed.push(eventData);
   }
   displaySubmitSectionIfRequired();
-
-  const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) + 1;
   document.getElementById("available-slots").setAttribute("data-count", availableSlots);
-  displayAvailableSlots(availableSlots);
 }
 
 async function handleSubmit() {
@@ -340,7 +335,9 @@ async function handleSubmit() {
   
   await updateReplacements(studentName, newAddedReplacements);
   await Promise.all(removedReplacements.map((eventData) => updateRemovedReplacements(studentName, eventData)));
-
+const currentAvailableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
+const updatedAvailableSlots = currentAvailableSlots - netAddedSlots;
+displayAvailableSlots(updatedAvailableSlots);
   // Calculate the net effect of added and removed slots
   const netAddedSlots = newAddedReplacements.length - removedReplacements.length;
   
