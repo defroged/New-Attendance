@@ -345,7 +345,7 @@ async function handleSubmit() {
   const netAddedSlots = newAddedReplacements.length - removedReplacements.length;
   
   // Update the available slots based on the net effect
-  const { updatedValues, newAvailableSlots } = await updateAvailableSlots(studentName, netAddedSlots);
+  const { updatedValues, newAvailableSlots } = await updateAvailableSlotsOnly(studentName, netAddedSlots);
 
   const dataWithoutHeader = updatedValues.slice(1);
   const updateResponse = await fetch("/api/updateAttendance", {
@@ -536,6 +536,45 @@ async function updateAddedReplacements(studentName, addedReplacements) {
   console.log("Successfully updated Google Sheet data for added replacements");
 }
 
+async function updateAvailableSlotsOnly(studentName, netAddedSlots) {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
+
+    let newAvailableSlots;
+    const updatedValues = values.map((row) => {
+      if (row[0] === studentName) {
+        newAvailableSlots = parseInt(row[2], 10) - netAddedSlots;
+        row[2] = newAvailableSlots;
+      }
+      return row.slice(0, 3);
+    });
+
+    console.log("Student available slots updated successfully");
+    const dataWithoutHeader = updatedValues.slice(1);
+
+    const updateResponse = await fetch("/api/updateAttendance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+        range: "Sheet1!A2:C",
+        data: dataWithoutHeader,
+      }),
+    });
+
+    if (!updateResponse.ok) {
+      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
+    }
+
+    return { updatedValues, newAvailableSlots };
+  } catch (error) {
+    console.error("Error updating student available slots:", error);
+  }
+}
 
 window.initializeReplacementForm = initializeReplacementForm;
   window.displaySubmitSectionIfRequired = displaySubmitSectionIfRequired;
