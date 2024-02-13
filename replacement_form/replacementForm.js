@@ -43,6 +43,12 @@ function initializeReplacementForm() {
   document.getElementById("student-select").addEventListener("change", handleStudentChange);
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
+
+  // Call the new populateBookedSlots function
+  const studentSelect = document.getElementById("student-select");
+  if (studentSelect.value) {
+    populateBookedSlots(studentSelect.value);
+  }
 }
 
 function displaySubmitSectionIfRequired() {
@@ -135,31 +141,6 @@ async function handleStudentChange() {
 
   await fetchAvailableSlots(studentName);
   await fetchAvailableClasses(studentName);
-
-  // Clear replacements arrays
-  replacements.added = [];
-  replacements.removed = [];
-
-  // Fetch booked slots and add them to the selected slots container
-const bookedSlots = await fetchBookedSlots(studentName);
-
-// Filter out the removed slots
-const filteredBookedSlots = bookedSlots.filter(
-  (slot) => !replacements.removed.some((removedEvent) => removedEvent.name === slot)
-);
-
-filteredBookedSlots.forEach((slot) => {
-  const eventId = generateUniqueID(); // Generate a unique ID for each added event
-  const eventData = { id: eventId, name: slot };
-  replacements.added.push(eventData);
-  addReplacementToDatesList(eventData);
-});
-
-  // Update replacements.removed array with only those that are not present in bookedSlots
-  replacements.removed = replacements.removed.filter(
-    (removedEvent) => !bookedSlots.includes(removedEvent.name)
-  );
-
   displaySubmitSectionIfRequired();
 }
 
@@ -305,6 +286,16 @@ function filterEventsByClassNames(events, classNames) {
   });
 
   return filteredEvents;
+}
+
+async function populateBookedSlots(studentName) {
+  const bookedSlots = await fetchBookedSlots(studentName);
+  bookedSlots.forEach((slot) => {
+    const eventId = generateUniqueID(); // Generate a unique ID for each added event
+    const eventData = { id: eventId, name: slot };
+    replacements.added.push(eventData);
+    addReplacementToDatesList(eventData);
+  });
 }
 
 function addReplacementToDatesList(eventData) {
