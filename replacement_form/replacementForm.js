@@ -422,29 +422,21 @@ async function handleSubmit() {
     const studentSelect = document.getElementById("student-select");
     const studentName = studentSelect.value;
 
-    // Filter out removed replacements from added list
     const newAddedReplacements = replacements.added.filter((addedEvent) => !(
       replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id)
     ));
 
-    console.log("Starting handleSubmit()", {
-      studentName,
-      addedReplacements: replacements.added,
-      removedReplacements: replacements.removed,
-    });
+    const previouslyBookedSlots = await fetchBookedSlots(studentName);
+    const finalAddedReplacements = newAddedReplacements.filter(
+      (replacement) => !previouslyBookedSlots.includes(replacement.name)
+    );
 
-    console.log("newAddedReplacements:", newAddedReplacements);
+    await updateReplacements(studentName, finalAddedReplacements);
 
-    await updateReplacements(studentName, newAddedReplacements);
-    
-    // Calculate the correct count for decrementing slots
-    const decrementCount = newAddedReplacements.length - replacements.removed.length;
-
-    // Use the new decrementCount value
+    const decrementCount = finalAddedReplacements.length - replacements.removed.length;
     await decrementStudentAvailableSlots(studentName, decrementCount);
     await incrementStudentAvailableSlots(studentName, replacements.removed.length);
 
-    // Clear replacements data
     replacements.added = [];
     replacements.removed = [];
     document.getElementById("submit-section").style.display = "none";
