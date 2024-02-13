@@ -129,6 +129,80 @@ function fetchAvailableSlots(studentName) {
     });
 }
 
+async function decrementStudentAvailableSlots(studentName, count) {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
+
+    const updatedValues = values.map((row) => {
+      if (row[0] === studentName) {
+        row[2] = parseInt(row[2], 10) - count;
+      }
+      return row.slice(0, 3);
+    });
+
+    const dataWithoutHeader = updatedValues.slice(1);
+
+    const updateResponse = await fetch("/api/updateAttendance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+        range: "Sheet1!A2:C", 
+        data: dataWithoutHeader,
+      }),
+    });
+
+    if (!updateResponse.ok) {
+      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
+    }
+
+    console.log("Student available slots decremented successfully");
+  } catch (error) {
+    console.error("Error decrementing student available slots:", error);
+  }
+}
+
+async function incrementStudentAvailableSlots(studentName, count) {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
+
+    const updatedValues = values.map((row) => {
+      if (row[0] === studentName) {
+        row[2] = parseInt(row[2], 10) + count;
+      }
+      return row.slice(0, 3);
+    });
+
+    const dataWithoutHeader = updatedValues.slice(1);
+
+    const updateResponse = await fetch("/api/updateAttendance", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+        range: "Sheet1!A2:C", 
+        data: dataWithoutHeader,
+      }),
+    });
+
+    if (!updateResponse.ok) {
+      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
+    }
+
+    console.log("Student available slots incremented successfully");
+  } catch (error) {
+    console.error("Error incrementing student available slots:", error);
+  }
+}
+
 async function handleStudentChange() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
