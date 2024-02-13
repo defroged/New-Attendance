@@ -47,10 +47,14 @@ function initializeReplacementForm() {
 }
 
 function displaySubmitSectionIfRequired() {
-  if (replacements.added.length > 0 || replacements.removed.length > 0) {
-    document.getElementById("submit-section").style.display = "block";
+  const hasAdded = replacements.added.length > 0;
+  const hasRemoved = replacements.removed.length > 0;
+  const submitSection = document.getElementById("submit-section");
+
+  if (hasAdded || hasRemoved) {
+    submitSection.style.display = "block";
   } else {
-    document.getElementById("submit-section").style.display = "none";
+    submitSection.style.display = "none";
   }
 }
 
@@ -313,8 +317,13 @@ async function removeReplacement(eventId) {
   listElementToRemove.remove();
 
   const eventData = { id: eventId, name: eventText };
-  replacements.removed.push(eventData);
-  window.displaySubmitSectionIfRequired();
+  const addedIndex = replacements.added.findIndex((event) => event.id === eventId);
+  if (addedIndex !== -1) {
+    replacements.added.splice(addedIndex, 1);
+  } else {
+    replacements.removed.push(eventData);
+  }
+  displaySubmitSectionIfRequired();
 
   const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) + 1;
   document.getElementById("available-slots").setAttribute("data-count", availableSlots);
