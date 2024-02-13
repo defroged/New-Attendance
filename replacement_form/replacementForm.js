@@ -322,11 +322,7 @@ async function removeReplacement(eventId) {
     replacements.removed.push(eventData);
   }
   displaySubmitSectionIfRequired();
-
-  const currentAvailableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
-  const availableSlots = addedIndex !== -1 ? currentAvailableSlots + 1 : currentAvailableSlots;
   document.getElementById("available-slots").setAttribute("data-count", availableSlots);
-  displayAvailableSlots(availableSlots);
 }
 
 async function handleSubmit() {
@@ -339,32 +335,20 @@ async function handleSubmit() {
   
   await updateReplacements(studentName, newAddedReplacements);
   await Promise.all(removedReplacements.map((eventData) => updateRemovedReplacements(studentName, eventData)));
-const currentAvailableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
-const updatedAvailableSlots = currentAvailableSlots - netAddedSlots;
-displayAvailableSlots(updatedAvailableSlots);
+
   // Calculate the net effect of added and removed slots
   const netAddedSlots = newAddedReplacements.length - removedReplacements.length;
   
+  // Get the current available slots
+  const currentAvailableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
+
   // Update the available slots based on the net effect
-  const { updatedValues, newAvailableSlots } = await updateAvailableSlotsOnly(studentName, netAddedSlots);
+  const updatedAvailableSlots = currentAvailableSlots - netAddedSlots;
 
-  const dataWithoutHeader = updatedValues.slice(1);
-  const updateResponse = await fetch("/api/updateAttendance", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-      range: "Sheet1!A2:C",
-      data: dataWithoutHeader,
-    }),
-  });
-
-  if (!updateResponse.ok) {
-    throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
-  }
-
+  // Update the display
+  document.getElementById("available-slots").setAttribute("data-count", updatedAvailableSlots);
+  displayAvailableSlots(updatedAvailableSlots);
+  
   replacements.added = [];
   replacements.removed = [];
   document.getElementById("submit-section").style.display = "none";
