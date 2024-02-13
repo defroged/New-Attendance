@@ -316,9 +316,10 @@ function addReplacementToDatesList(eventData) {
 
 async function removeReplacement(eventId) {
   const listElementToRemove = document.getElementById(`replacement-date-${eventId}`);
+  const eventText = listElementToRemove.firstElementChild.textContent;
   listElementToRemove.remove();
 
-  const eventData = { id: eventId };
+  const eventData = { id: eventId, name: eventText };
   replacements.removed.push(eventData);
   window.displaySubmitSectionIfRequired();
 
