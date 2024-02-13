@@ -465,10 +465,13 @@ async function updateReplacements(studentName, finalAddedReplacements) {
     return Math.max(6, values[rowIndex].length);
   }
 
-  // Remove all past bookings
-  for (let i = 6; i < values[rowIndex].length; i++) {
-    values[rowIndex][i] = "";
+  // Remove removed bookings but preserve existing booked slots
+replacements.removed.forEach((replacement) => {
+  const columnIndex = values[rowIndex].findIndex((cell) => cell === replacement.name);
+  if (columnIndex >= 0) {
+    values[rowIndex][columnIndex] = "";
   }
+});
 
   // Add new bookings
   finalAddedReplacements.forEach((replacement) => {
