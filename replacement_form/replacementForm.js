@@ -128,7 +128,7 @@ function fetchAvailableSlots(studentName) {
       console.error('Error fetching available slots:', error);
     });
 }
-// this one is also problematic
+
 async function handleStudentChange() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
@@ -430,8 +430,6 @@ async function updateReplacements(studentName, finalAddedReplacements) {
   console.log("Successfully updated Google Sheet data for added replacements");
 }
 
-
-// this is the problematic function
 async function updateRemovedReplacements(studentName, removedReplacement) {
   const response = await fetch(apiUrl);
   const data = await response.json();
