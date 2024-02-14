@@ -142,7 +142,6 @@ async function updateStudentAvailableSlots(studentName) {
       return;
     }
 
-    // Get the number of available slots from the front end
     const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
 
     const updatedValues = values.map((row) => {
@@ -152,7 +151,6 @@ async function updateStudentAvailableSlots(studentName) {
       return row.slice(0, 3);
     });
 
-    // Copy the remaining part of the original decrementStudentAvailableSlots() function
     const dataWithoutHeader = updatedValues.slice(1);
 
     const updateResponse = await fetch("/api/updateAttendance", {
@@ -223,13 +221,10 @@ async function handleStudentChange() {
   await fetchAvailableSlots(studentName);
   await fetchAvailableClasses(studentName);
 
-  // Call the new populateBookedSlots function
   await populateBookedSlots(studentName);
 
   displaySubmitSectionIfRequired();
 }
-
-  
 
 function populateStudentNames(students) {
   const studentSelect = document.getElementById("student-select");
@@ -281,8 +276,6 @@ function findStudentsByClassName(className, data) {
   });
   return students;
 }
-
-
 
 function findAvailableSlotsByStudentName(studentName, data) {
   let availableSlots = 0;
@@ -376,13 +369,12 @@ function filterEventsByClassNames(events, classNames) {
 async function populateBookedSlots(studentName) {
   const bookedSlots = await fetchBookedSlots(studentName);
 
-  // Filter out slots that are already in the list of added slots
   const newBookedSlots = bookedSlots.filter(
     (slot) => !replacements.added.some((addedEvent) => addedEvent.name === slot)
   );
 
   newBookedSlots.forEach((slot) => {
-    const eventId = generateUniqueID(); // Generate a unique ID for each added event
+    const eventId = generateUniqueID(); 
     const eventData = { id: eventId, name: slot };
     replacements.added.push(eventData);
     addReplacementToDatesList(eventData);
@@ -475,7 +467,6 @@ async function updateReplacements(studentName, finalAddedReplacements) {
     return Math.max(6, values[rowIndex].length);
   }
 
-  // Remove removed bookings but preserve existing booked slots
 replacements.removed.forEach((replacement) => {
   const columnIndex = values[rowIndex].findIndex((cell) => cell === replacement.name);
   if (columnIndex >= 0) {
@@ -483,7 +474,6 @@ replacements.removed.forEach((replacement) => {
   }
 });
 
-  // Add new bookings
   finalAddedReplacements.forEach((replacement) => {
     const columnIndex = findNextEmptyColumnIndex();
     values[rowIndex][columnIndex] = replacement.name;
@@ -529,7 +519,6 @@ async function updateRemovedReplacements(studentName, removedReplacement) {
     return;
   }
 
-  // Replace the found cell with an empty string
   values[rowIndex][columnIndex] = "";
 
   const dataWithoutHeader = values.slice(1);
