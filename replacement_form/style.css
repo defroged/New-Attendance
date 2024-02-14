@@ -1,15 +1,17 @@
 /* Base styles for the entire body to ensure a modern look */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7f6;
+    color: #4a4a4a;
     padding: 20px;
     margin: 0;
 }
 
 h1 {
-    color: #0056b3;
+    color: #2c3e50;
     text-align: center;
+    font-size: 2em;
+    margin-bottom: 1em;
 }
 
 /* Style for the div containers */
@@ -17,36 +19,60 @@ div {
     background-color: #ffffff;
     padding: 20px;
     margin-bottom: 20px;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 label {
     font-weight: bold;
+    display: block; /* Makes label take the full width */
+    margin-bottom: .5em;
 }
 
 select {
-    width: 100%;
+    width: calc(100% - 20px);
     padding: 10px;
-    margin-top: 5px;
     margin-bottom: 20px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    border-radius: 8px;
+    border: 1px solid #dfe3e8;
+    font-size: 1em;
+    background-color: #f9f9f9;
 }
 
 button {
-    background-color: #4CAF50; /* Green */
+    background-color: #3498db; /* Blue */
     color: white;
-    padding: 15px 20px;
-    margin: 10px 0;
+    padding: 12px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    width: 100%;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    display: block; /* Center the button */
+    width: 100%; /* Full-width */
+    box-sizing: border-box; /* Include padding and border in the width */
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #2980b9;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    padding: 10px;
+    background-color: #27ae60; /* Green */
+    color: white;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+li:hover {
+    background-color: #2ecc71; /* Lighter green */
 }
 
 /* Responsive design adjustments */
@@ -64,4 +90,4 @@ button:hover {
     }
 }
 
-/* Add any additional specific styles for other elements as needed */
+/* Additional styles for other elements can be added here */
