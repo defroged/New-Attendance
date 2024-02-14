@@ -135,9 +135,19 @@ async function decrementStudentAvailableSlots(studentName, count) {
     const data = await response.json();
     const values = data.values;
 
+    const rowIndex = values.findIndex((row) => row[0] === studentName);
+
+    if (rowIndex < 0) {
+      console.error("Student not found");
+      return;
+    }
+
+    // Calculate the number of new slots that were actually added in the current session
+    const newAddedSlotCount = count - (values[rowIndex].length - 6);
+
     const updatedValues = values.map((row) => {
       if (row[0] === studentName) {
-        row[2] = parseInt(row[2], 10) - count;
+        row[2] = parseInt(row[2], 10) - newAddedSlotCount;
       }
       return row.slice(0, 3);
     });
