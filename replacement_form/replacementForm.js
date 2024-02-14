@@ -129,7 +129,7 @@ function fetchAvailableSlots(studentName) {
     });
 }
 
-async function decrementStudentAvailableSlots(studentName, count) {
+async function updateStudentAvailableSlots(studentName) {
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
@@ -142,19 +142,17 @@ async function decrementStudentAvailableSlots(studentName, count) {
       return;
     }
 
-    // Calculate the number of new slots that were actually added in the current session
-    const newAddedSlotCount = count - (values[rowIndex].length - 6);
+    // Get the number of available slots from the front end
+    const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
 
     const updatedValues = values.map((row) => {
       if (row[0] === studentName) {
-        row[2] = parseInt(row[2], 10) - newAddedSlotCount;
+        row[2] = availableSlots;
       }
       return row.slice(0, 3);
     });
-console.log("Starting to decrement slots", {
-    studentName,
-    count,
-  });
+
+    // Copy the remaining part of the original decrementStudentAvailableSlots() function
     const dataWithoutHeader = updatedValues.slice(1);
 
     const updateResponse = await fetch("/api/updateAttendance", {
@@ -164,7 +162,7 @@ console.log("Starting to decrement slots", {
       },
       body: JSON.stringify({
         spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-        range: "Sheet1!A2:C", 
+        range: "Sheet1!A2:C",
         data: dataWithoutHeader,
       }),
     });
@@ -173,9 +171,8 @@ console.log("Starting to decrement slots", {
       throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
     }
 
-    console.log("Student available slots decremented successfully");
   } catch (error) {
-    console.error("Error decrementing student available slots:", error);
+    console.error("Error updating student available slots:", error);
   }
 }
 
@@ -448,8 +445,7 @@ async function handleSubmit() {
     await updateReplacements(studentName, finalAddedReplacements);
 
     const decrementCount = replacements.added.length - newRemovedReplacements.length;
-    await decrementStudentAvailableSlots(studentName, decrementCount);
-    await incrementStudentAvailableSlots(studentName, newRemovedReplacements.length);
+    await updateStudentAvailableSlots(studentName);
 
     replacements.added = [];
     replacements.removed = [];
