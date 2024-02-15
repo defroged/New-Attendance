@@ -394,29 +394,10 @@ function addReplacementToDatesList(eventData) {
   const dateTextElement = document.createElement("span");
   dateTextElement.textContent = eventData.name;
   
-// Create the container div
-const container = document.createElement("div");
-container.className = "button-container"; // Add a class for styling
-
-// Create the text node or span
-const textSpan = document.createElement("span");
-textSpan.className = "button-text";
-textSpan.textContent = "Teddy bear - 3/30/2024"; // Your text goes here
-
-// Create the remove button
-const removeButton = document.createElement("button");
-removeButton.textContent = "X";
-removeButton.className = "remove-replacement-button";
-removeButton.addEventListener("click", () => removeReplacement(eventData.id));
-
-// Append the text and button to the container
-container.appendChild(textSpan);
-container.appendChild(removeButton);
-
-// Append the container to the DOM where you want it to show up
-// For example, to add it to the body of the page:
-document.body.appendChild(container);
-
+  const removeButton = document.createElement("button");
+  removeButton.textContent = "X";
+  removeButton.className = "remove-replacement-button";
+  removeButton.addEventListener("click", () => removeReplacement(eventData.id));
   
   listElement.appendChild(dateTextElement);
   listElement.appendChild(removeButton);
