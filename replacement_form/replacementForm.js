@@ -220,11 +220,17 @@ async function handleStudentChange() {
 
   await fetchAvailableSlots(studentName);
   await fetchAvailableClasses(studentName);
-
   await populateBookedSlots(studentName);
-
   displaySubmitSectionIfRequired();
+
+  const replacementList = document.getElementById("replacement-list");
+  if (studentName) {
+    replacementList.style.display = "block"; 
+  } else {
+    replacementList.style.display = "none"; 
+  }
 }
+
 
 function populateStudentNames(students) {
   const studentSelect = document.getElementById("student-select");
