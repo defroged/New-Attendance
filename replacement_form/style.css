@@ -13,7 +13,7 @@ body {
 
 .container {
     max-width: 90%; /* Set a max-width for the container and center it */
-    margin: auto;
+    margin: 20px 20px 20px 150px;
     padding: 20px;
     box-sizing: border-box; /* Include padding in the width */
 }
@@ -23,6 +23,7 @@ h1 {
     text-align: center;
     font-size: 1.8em; /* Slightly smaller */
     margin-bottom: 1em;
+    margin: 10px 10px 20px 10px;
 }
 
 /* Style for the div containers */
@@ -86,10 +87,6 @@ li:hover {
 
 /* Responsive design adjustments */
 @media (max-width: 768px) {
-    .container {
-        max-width: 100%; /* Allow the container to fill the screen on small devices */
-    }
-
     body, div, select, button {
         padding: 5px; /* Smaller padding for a compact look */
     }
@@ -97,6 +94,19 @@ li:hover {
     h1, label, select, button, li {
         font-size: 0.8em; /* Slightly reduce font size for small screens */
     }
+
+    h1 {
+        position: absolute; /* Position h1 absolutely */
+        top: 0; /* Align top to the body */
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%); /* Offset by half the width of the h1 to truly center it */
+        width: 100%; /* Full width */
+        text-align: center; /* Ensure text is centered */
+        margin-top: 10px; /* Add some space at the top */
+    }
+
+    .container {
+        margin-top: 60px; /* Add margin to the top of the container to avoid overlap with the h1 */
+    }
 }
 
-/* Additional styles for other elements can be added here */
