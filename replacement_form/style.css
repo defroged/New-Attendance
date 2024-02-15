@@ -5,26 +5,29 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column; /* Stack elements vertically on mobile */
+    justify-content: center; /* Center children vertically */
+    align-items: center; /* Center children horizontally */
     min-height: 100vh;
-}
-
-.container {
-    width: 90%;
-    max-width: 1100px; /* Set a max-width for larger screens */
-    margin: 20px;
-    display: flex;
-    flex-direction: column; /* Start with a column layout */
-    align-items: center; /* Center children */
 }
 
 h1 {
     color: #2c3e50;
     text-align: center;
     font-size: 1.8em;
-    margin-bottom: 1em;
-    width: 100%;
+    margin: 20px 10px; /* Adjust top and bottom margin as needed */
+    width: 100%; /* Full width */
+}
+
+.container {
+    width: 90%;
+    max-width: 500px; /* Adjust max width for larger screens if necessary */
+    margin: 0; /* Remove margin to allow centering */
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center elements horizontally */
 }
 
 
@@ -88,37 +91,58 @@ li:hover {
 
 /* Desktop view */
 @media (min-width: 769px) {
-    .container {
-        flex-direction: row; /* Change to row layout */
-        align-items: flex-start; /* Align items to the start of the cross axis */
+    body {
+        justify-content: flex-start; /* Align to the top of the viewport */
     }
 
     h1 {
-        width: auto; /* Let the width be determined by content size */
-        text-align: left; /* Align text to the left */
-        margin-bottom: 0; /* Remove the bottom margin */
-        margin-right: 20px; /* Space between the title and form */
+        position: absolute; /* Take out of flow to align to the left */
+        left: 20px; /* Spacing from the left edge */
+        top: 20px; /* Spacing from the top edge */
+        width: auto; /* Shrink to fit content */
+        margin: 0; /* Remove margin */
+    }
+
+    .container {
+        position: relative; /* Ensure container is positioned relative to body */
+        margin-left: 200px; /* Adjust according to the width of your h1 */
+        margin-top: 40px; /* Adjust for spacing from the top */
+        width: calc(100% - 200px); /* Take remaining width minus h1 width */
+        max-width: 800px; /* Adjust max width for larger screens if necessary */
     }
 }
 
 
 @media (max-width: 768px) {
-    body, div, select, button {
-        padding: 5px; 
+    /* It's usually better to target specific elements rather than all divs, selects, etc. */
+    body {
+        padding: 5px;
+    }
+
+    .container, select, button {
+        padding: 5px;
     }
 
     h1, label, select, button, li {
-        font-size: 0.8em; 
+        font-size: 0.8em; /* Only do this if you want to change font size for all these elements */
     }
 
+    /* Assuming .container flex-direction is set to column outside of the media query */
     .container {
-        flex-direction: column; /* Stack container items vertically */
-        margin: 20px;
+        margin: 20px auto; /* auto horizontally centers the container */
+        width: calc(100% - 10px); /* Full width minus the body padding */
     }
 
     h1 {
         text-align: center;
-        margin-top: 20px; /* Space above the title */
+        margin-top: 20px; /* Adjust as needed */
+        margin-bottom: 0; /* Prevents too much space between the h1 and the form */
+    }
+
+    /* You may also want to adjust the margin for the bottom of your form elements to match the top */
+    .container > *:last-child {
+        margin-bottom: 20px;
     }
 }
+
 
