@@ -1,35 +1,35 @@
-/* Base styles for the entire body to ensure a modern look */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f7f6;
     color: #4a4a4a;
-    padding: 0; /* Updated to remove default padding */
+    padding: 0;
     margin: 0;
-    display: flex; /* Flex display to center the container */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    min-height: 100vh; /* Full height */
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
 }
 
 .container {
-    max-width: 90%; /* Set a max-width for the container and center it */
-    margin: 20px 20px 20px 150px;
+    max-width: 90%;
+    margin: 20px;
     padding: 20px;
-    box-sizing: border-box; /* Include padding in the width */
+    box-sizing: border-box;
+    min-height: 300px; /* This can be adjusted based on your content */
 }
 
 h1 {
     color: #2c3e50;
     text-align: center;
-    font-size: 1.8em; /* Slightly smaller */
+    font-size: 1.8em;
     margin-bottom: 1em;
     margin: 10px 10px 20px 10px;
 }
 
-/* Style for the div containers */
+
 div {
     background-color: #ffffff;
-    padding: 15px; /* Slightly smaller padding */
+    padding: 15px; 
     margin-bottom: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -43,22 +43,22 @@ label {
 
 select {
     width: calc(100% - 20px);
-    padding: 8px; /* Slightly smaller padding */
+    padding: 8px; 
     margin-bottom: 20px;
     border-radius: 8px;
     border: 1px solid #dfe3e8;
-    font-size: .9em; /* Slightly smaller */
+    font-size: .9em; 
     background-color: #f9f9f9;
 }
 
 button {
     background-color: #3498db;
     color: white;
-    padding: 10px 20px; /* Adjusted padding */
+    padding: 10px 20px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: .9em; /* Slightly smaller */
+    font-size: .9em; 
     transition: background-color 0.3s ease;
     display: block;
     width: 100%;
@@ -74,7 +74,7 @@ ul {
 }
 
 li {
-    padding: 8px; /* Slightly smaller padding */
+    padding: 8px; 
     background-color: #27ae60;
     color: white;
     margin-bottom: 10px;
@@ -85,30 +85,25 @@ li:hover {
     background-color: #2ecc71;
 }
 
-/* Responsive design adjustments */
 @media (max-width: 768px) {
     body, div, select, button {
-        padding: 5px; /* Smaller padding for a compact look */
+        padding: 5px; 
     }
 
     h1, label, select, button, li {
-        font-size: 0.8em; /* Slightly reduce font size for small screens */
+        font-size: 0.8em; 
     }
 
     h1 {
-        position: absolute; /* Position h1 absolutely */
-        top: 0; /* Align top to the body */
-        left: 46%; /* Center horizontally */
-        transform: translateX(-50%); /* Offset by half the width of the h1 to truly center it */
-        width: 100%; /* Full width */
-        text-align: center; /* Ensure text is centered */
-        margin-top: 50px; /* Add some space at the top */
+        margin-top: 20px; /* Adjust this value to ensure the title doesn't overlap with the content */
         font-size: 23px;
-        /*! right: 50%; */
+        position: relative; /* Changed from absolute to relative */
+        left: 0; 
+        transform: none; /* Removed the transform property */
     }
 
     .container {
-     margin: 20px 20px 20px 20px;
+     margin: 20px; /* Removed the varying margins for different sides */
     }
 }
 
