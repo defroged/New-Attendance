@@ -5,17 +5,20 @@ body {
     padding: 0;
     margin: 0;
     display: flex; 
+    flex-direction: column; /* Stack elements vertically */
     justify-content: center; 
     align-items: center; 
     min-height: 100vh;
 }
 
 .container {
-    max-width: 90%;
+    width: 90%; /* Adjust width as necessary */
     margin: 20px;
     padding: 20px;
     box-sizing: border-box;
-    min-height: 300px; /* This can be adjusted based on your content */
+    display: flex; /* Use flex layout */
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center align items vertically */
 }
 
 h1 {
@@ -23,7 +26,7 @@ h1 {
     text-align: center;
     font-size: 1.8em;
     margin-bottom: 1em;
-    margin: 10px 10px 20px 10px;
+    width: 100%;
 }
 
 
@@ -85,6 +88,33 @@ li:hover {
     background-color: #2ecc71;
 }
 
+@media (min-width: 769px) {
+    body {
+        flex-direction: row; /* Align elements horizontally */
+        justify-content: flex-start; /* Align to the start of the main axis */
+    }
+
+    .container {
+        flex-direction: row; /* Align container items horizontally */
+        max-width: 1000px; /* Adjust max width as necessary */
+        margin: 20px;
+    }
+
+    h1 {
+        text-align: left;
+        flex-basis: 20%; /* Adjust width of title */
+        margin: 0; /* Reset margins for desktop */
+    }
+
+    .form-container {
+        flex-basis: 80%; /* Adjust width of form container */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+
 @media (max-width: 768px) {
     body, div, select, button {
         padding: 5px; 
@@ -94,16 +124,14 @@ li:hover {
         font-size: 0.8em; 
     }
 
-    h1 {
-        margin-top: 20px; /* Adjust this value to ensure the title doesn't overlap with the content */
-        font-size: 23px;
-        position: relative; /* Changed from absolute to relative */
-        left: 0; 
-        transform: none; /* Removed the transform property */
+    .container {
+        flex-direction: column; /* Stack container items vertically */
+        margin: 20px;
     }
 
-    .container {
-     margin: 20px; /* Removed the varying margins for different sides */
+    h1 {
+        text-align: center;
+        margin-top: 20px; /* Space above the title */
     }
 }
 
