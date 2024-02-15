@@ -86,6 +86,31 @@ li {
     border-radius: 8px;
 }
 
+.button-container {
+    display: flex;           /* This enables flexbox */
+    align-items: center;     /* This centers the items vertically */
+    justify-content: space-between; /* This puts space between the text and the button */
+    background-color: #76B947; /* This is the green background */
+    border-radius: 25px;     /* This makes the container's corners rounded */
+    padding: 0 10px;         /* This adds some padding inside the container */
+}
+
+.button-text {
+    /* Add styles for your text here */
+}
+
+.remove-replacement-button {
+    box-sizing: border-box;
+    border: none;            /* Assuming you don't want a border on the button */
+    border-radius: 50%;      /* This makes the button round */
+    width: 20px;
+    height: 20px;
+    cursor: pointer;         /* Changes the mouse cursor to indicate it's clickable */
+    background-color: inherit; /* Makes the button's background the same as its container */
+    margin-left: 10px;       /* Adds space between the text and the button if needed */
+}
+
+
 li:hover {
     background-color: #2ecc71;
 }
