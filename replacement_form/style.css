@@ -91,6 +91,36 @@ li:hover {
     background-color: #2ecc71;
 }
 
+#replacement-dates li {
+    display: flex;             /* Enables flexbox layout */
+    justify-content: space-between; /* Spaces text and button apart */
+    align-items: center;       /* Centers items vertically */
+    background-color: #76B947; /* Example background color, replace with your own */
+    border-radius: 25px;       /* Rounded corners for list items */
+    padding: 5px 10px;         /* Padding within each list item */
+    margin-bottom: 5px;        /* Space between list items */
+}
+
+/* Styles for the text within the list items */
+#replacement-dates li span {
+    /* Add styles for the text here, for example: */
+    color: white;              /* Sets the text color */
+    flex-grow: 1;              /* Allows the text to take up available space */
+}
+
+/* Styles for the remove button within the list items */
+.remove-replacement-button {
+    box-sizing: border-box;
+    border: none;              /* Removes the border */
+    border-radius: 10%;        /* Keeps the button round */
+    width: 20px;
+    height: 20px;
+    cursor: pointer;           /* Changes the cursor to indicate it's clickable */
+    background-color: #d9534f; /* Sets a different background color for the button */
+    color: white;              /* Sets the text color for the button */
+    margin-left: 10px;         /* Adds space between the text and the button */ 
+}
+
 /* Desktop view */
 @media (min-width: 769px) {
     body {
@@ -112,6 +142,19 @@ li:hover {
         width: calc(100% - 200px); /* Take remaining width minus h1 width */
         max-width: 800px; /* Adjust max width for larger screens if necessary */
     }
+    
+    .remove-replacement-button {
+    box-sizing: border-box;
+    border: none;              /* Removes the border */
+    border-radius: 92%;        /* Keeps the button round */
+    width: 24px;
+    height: 21px;
+    cursor: pointer;           /* Changes the cursor to indicate it's clickable */
+    background-color: #d9534f; /* Sets a different background color for the button */
+    color: white;              /* Sets the text color for the button */
+    margin-left: 10px;         /* Adds space between the text and the button */ 
+    padding: 0;
+}
 }
 
 
@@ -145,6 +188,19 @@ li:hover {
     .container > *:last-child {
         margin-bottom: 20px;
     }
+    
+        .remove-replacement-button {
+    box-sizing: border-box;
+    border: none;              /* Removes the border */
+    border-radius: 92%;        /* Keeps the button round */
+    width: 24px;
+    height: 21px;
+    cursor: pointer;           /* Changes the cursor to indicate it's clickable */
+    background-color: #d9534f; /* Sets a different background color for the button */
+    color: white;              /* Sets the text color for the button */
+    margin-left: 10px;         /* Adds space between the text and the button */ 
+    padding: 0;
+}
 }
 
 

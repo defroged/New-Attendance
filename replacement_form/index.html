@@ -12,36 +12,36 @@
 <body onload="initializeReplacementForm()">
 <body>
 
-    <h1>Replacement Lesson Form</h1>
+    <h1>振替レッスン<br>申込フォーム</h1>
 	<div class="container">
 
     <div id="step-one">
-        <label for="class-select">Choose your class:</label>
+        <label for="class-select">お子様のクラスを選択してください</label>
         <select id="class-select">
-            <option value="" disabled selected>Please select a class</option>
+            <option value="" disabled selected>クラスを選択してください</option>
         </select>
         <br>
     </div>
 	<div id="step-two" style="display: none;">
-        <label for="student-select">Choose your child:</label>
+        <label for="student-select">お子様のお名前を選択してください</label>
         <select id="student-select">
-    <option value="" disabled selected>Please select a student</option>
+    <option value="" disabled selected>お名前を選択してください</option>
 </select>
 		<br>
 		<p id="available-slots"></p>
     </div>
 	 <div id="step-three" style="display: none;">
-        <label for="replacement-select">Choose the replacement lesson:</label>
+        <label for="replacement-select">振替レッスンの枠をお選びください</label>
         <select id="replacement-select">
-            <option value="" disabled selected>Please choose a replacement lesson</option>
+            <option value="" disabled selected>振替レッスン</option>
         </select>
     </div>
 	<div id="replacement-list" style="display: none;">
-  <h3>Chosen Replacement Dates:</h3>
+  <h3>選択された振替レッスン：</h3>
   <ul id="replacement-dates"></ul>
 </div>
 <div id="submit-section" style="display: none;">
-  <button id="submit-button">Submit Changes</button>
+  <button id="submit-button">保存する</button>
 </div>
 
 </div>
