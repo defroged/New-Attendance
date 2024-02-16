@@ -66,6 +66,7 @@ async function handlePasswordInput() {
  }
 
 async function handlePasswordSubmit() {
+	console.log("Password submit clicked.");
   const passwordInput = document.getElementById("password-input");
   const password = parseInt(passwordInput.value, 10);
   const studentName = await fetchStudentNameByPassword(password);
