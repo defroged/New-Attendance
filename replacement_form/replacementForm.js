@@ -82,9 +82,12 @@ async function handlePasswordSubmit() {
     const studentSelect = document.getElementById("student-select");
 studentSelect.value = studentName;
 await handleStudentChange(); 
+
     document.getElementById("step-two").style.display = "block";
 
     await handleStudentChange(); 
+  } else {
+    console.log(`No student name found for password: ${passwordInput.value}`);
   }
 }
 
@@ -99,6 +102,7 @@ async function fetchStudentNameByPassword(password) {
         return row[0];
       }
     }
+	console.log(`Student not found for password: ${password}`);
   } catch (error) {
     console.error('Error fetching student name by password:', error);
   }
