@@ -76,7 +76,9 @@ async function handlePasswordSubmit() {
  
     document.getElementById("class-select").value = ""; 
     document.getElementById("step-one").style.display = "none";
-    document.getElementById("student-select").value = studentName;
+    const studentSelect = document.getElementById("student-select");
+studentSelect.value = studentName;
+await handleStudentChange(); 
     document.getElementById("step-two").style.display = "block";
 
     await handleStudentChange(); 
