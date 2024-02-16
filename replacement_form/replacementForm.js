@@ -458,15 +458,6 @@ async function updateReplacements(studentName, finalAddedReplacements) {
     return;
   }
 
-  function findNextEmptyColumnIndex() {
-    for (let i = 6; i < values[rowIndex].length; i++) {
-      if (values[rowIndex][i] === "") {
-        return i;
-      }
-    }
-    return Math.max(6, values[rowIndex].length);
-  }
-
 replacements.removed.forEach((replacement) => {
   const columnIndex = values[rowIndex].findIndex((cell) => cell === replacement.name);
   if (columnIndex >= 0) {
@@ -475,9 +466,9 @@ replacements.removed.forEach((replacement) => {
 });
 
   finalAddedReplacements.forEach((replacement) => {
-    const columnIndex = findNextEmptyColumnIndex();
-    values[rowIndex][columnIndex] = replacement.name;
-  });
+  const columnIndex = findNextEmptyColumnIndex(values, rowIndex);
+  values[rowIndex][columnIndex] = replacement.name;
+});
 
   const dataWithoutHeader = values.slice(1);
 
@@ -499,6 +490,15 @@ replacements.removed.forEach((replacement) => {
     );
   }
   console.log("Successfully updated Google Sheet data for added replacements");
+}
+
+function findNextEmptyColumnIndex(values, rowIndex) {
+  for (let i = 6; i < values[rowIndex].length; i++) {
+    if (values[rowIndex][i] === "") {
+      return i;
+    }
+  }
+  return Math.max(6, values[rowIndex].length);
 }
 
 async function updateRemovedReplacements(studentName, removedReplacement) {
@@ -556,17 +556,8 @@ async function updateAddedReplacements(studentName, addedReplacements) {
     return;
   }
 
-  function findNextEmptyColumnIndex() {
-    for (let i = 6; i < values[rowIndex].length; i++) {
-      if (values[rowIndex][i] === "") {
-        return i;
-      }
-    }
-    return Math.max(6, values[rowIndex].length);
-  }
-
   addedReplacements.forEach((replacement) => {
-    const columnIndex = findNextEmptyColumnIndex();
+    const columnIndex = findNextEmptyColumnIndex(values, rowIndex);
     values[rowIndex][columnIndex] = replacement.name;
   });
 
