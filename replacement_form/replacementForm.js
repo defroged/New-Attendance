@@ -43,9 +43,6 @@ function initializeReplacementForm() {
   document.getElementById("student-select").addEventListener("change", handleStudentChange);
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
-  console.log('Attaching event listeners...');
-  document.getElementById("password-input").addEventListener("input", handlePasswordInput);
-  document.getElementById("password-submit").addEventListener("click", handlePasswordSubmit);
 }
 
 function displaySubmitSectionIfRequired() {
@@ -54,60 +51,6 @@ function displaySubmitSectionIfRequired() {
   } else {
     document.getElementById("submit-section").style.display = "none";
   }
-}
-
-async function handlePasswordInput() {
-  console.log('Password input changed.');
-  const passwordInput = document.getElementById("password-input");
-  const passwordSubmit = document.getElementById("password-submit");
-  if (passwordInput.value.length === 4) {
-    passwordSubmit.disabled = false;
-  } else {
-    passwordSubmit.disabled = true;
-  }
- }
-
-async function handlePasswordSubmit() {
-	console.log("Password submit clicked.");
-  const passwordInput = document.getElementById("password-input");
-  const password = parseInt(passwordInput.value, 10);
-  const studentName = await fetchStudentNameByPassword(password);
-
-  if (studentName) {
-    passwordInput.value = "";
-    document.getElementById("password-section").style.display = "none";
- 
-    document.getElementById("class-select").value = ""; 
-    document.getElementById("step-one").style.display = "none";
-    const studentSelect = document.getElementById("student-select");
-studentSelect.value = studentName;
-await handleStudentChange(); 
-
-    document.getElementById("step-two").style.display = "block";
-
-    await handleStudentChange(); 
-  } else {
-    console.log(`No student name found for password: ${passwordInput.value}`);
-  }
-}
-
-async function fetchStudentNameByPassword(password) {
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    const values = data.values;
-
-    for (const row of values) {
-      if (parseInt(row[12], 10) === password) {
-        return row[0];
-      }
-    }
-	console.log(`Student not found for password: ${password}`);
-  } catch (error) {
-    console.error('Error fetching student name by password:', error);
-  }
-
-  return null;
 }
 
 async function handleReplacementChange() {
@@ -288,7 +231,6 @@ async function handleStudentChange() {
   }
 }
 
-
 function populateStudentNames(students) {
   const studentSelect = document.getElementById("student-select");
 
@@ -311,7 +253,6 @@ function handleClassChange() {
   
   document.getElementById("step-two").style.display = "block";
 }
-
 
 function fetchStudentNames(className) {
   fetch(apiUrl)
@@ -381,7 +322,8 @@ function findAvailableClassesByStudentName(studentName, data) {
 
 function fetchCalendarEventsForClasses(classes) {
   const timeMin = new Date();
-  const timeMax = new Date(Date.now() + 3 * 30 * 24 * 60 * 60 * 1000); 
+  const timeMax = new Date(Date.now() + 3 * 30 * 24 * 60 * 60 * 1000);
+
   const encodedTimeMin = encodeURIComponent(timeMin.toISOString());
   const encodedTimeMax = encodeURIComponent(timeMax.toISOString());
 
@@ -601,6 +543,7 @@ async function updateRemovedReplacements(studentName, removedReplacement) {
 
   console.log("Successfully updated Google Sheet data for removed replacements");
 }
+
 
 async function updateAddedReplacements(studentName, addedReplacements) {
   const response = await fetch(apiUrl);

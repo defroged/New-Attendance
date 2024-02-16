@@ -4,14 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Replacement Lesson Form</title>
-    
+    <script src="classDetails.js"></script>
+    <script src="replacement_form/replacementForm.js"></script>
     <link rel="stylesheet" href="replacement_form/style.css">
 
 </head>
 <body onload="initializeReplacementForm()">
+
     <h1>振替レッスン<br>申込フォーム</h1>
 	<div class="container">
-    <div id="step-one" style="display: none;">
+
+    <div id="step-one">
         <label for="class-select">お子様のクラスを選択してください</label>
         <select id="class-select">
             <option value="" disabled selected>クラスを選択してください</option>
@@ -39,14 +42,8 @@
 <div id="submit-section" style="display: none;">
   <button id="submit-button">保存する</button>
 </div>
-<div id="password-section">
-    <label for="password-input">パスワードを入力してください（4桁）：</label>
-    <input type="number" min="1000" max="9999" inputmode="numeric" pattern="[0-9]*" id="password-input" />
-    <br>
-    <button id="password-submit" disabled>送信</button>
+
 </div>
-</div>
-	<script src="classDetails.js"></script>
-    <script src="replacement_form/replacementForm.js"></script>
+
 </body>
 </html>
