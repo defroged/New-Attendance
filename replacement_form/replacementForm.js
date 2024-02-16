@@ -43,6 +43,7 @@ function initializeReplacementForm() {
   document.getElementById("student-select").addEventListener("change", handleStudentChange);
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
+  console.log('Attaching event listeners...');
   document.getElementById("password-input").addEventListener("input", handlePasswordInput);
   document.getElementById("password-submit").addEventListener("click", handlePasswordSubmit);
 }
@@ -56,6 +57,7 @@ function displaySubmitSectionIfRequired() {
 }
 
 async function handlePasswordInput() {
+  console.log('Password input changed.');
   const passwordInput = document.getElementById("password-input");
   const passwordSubmit = document.getElementById("password-submit");
   if (passwordInput.value.length === 4) {
