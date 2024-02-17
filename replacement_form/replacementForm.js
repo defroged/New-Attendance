@@ -104,10 +104,20 @@ async function handleStudentNameMatch(studentName) {
   document.getElementById("step-three").style.display = "block";
   document.getElementById("replacement-list").style.display = "block";
 
-  await fetchAvailableSlots(studentName);
-  await fetchAvailableClasses(studentName);
-  await populateBookedSlots(studentName);
-  displaySubmitSectionIfRequired();
+  const studentSelect = document.getElementById("student-select");
+  const matchedOption = Array.from(studentSelect.options).find(option => option.value === studentName);
+
+  if (matchedOption) {
+    matchedOption.selected = true;
+  } else {
+    const option = document.createElement("option");
+    option.value = studentName;
+    option.textContent = studentName;
+    studentSelect.appendChild(option);
+    studentSelect.value = studentName;
+  }
+
+  await handleStudentChange();
 }
 
 function displaySubmitSectionIfRequired() {
