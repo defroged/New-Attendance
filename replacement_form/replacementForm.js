@@ -36,6 +36,7 @@ function fetchClassNames() {
     })
     .catch((error) => {
       console.error('Error fetching class names:', error);
+	  hideSpinner();
     });
 }
   
