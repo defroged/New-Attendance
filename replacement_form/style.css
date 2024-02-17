@@ -19,6 +19,38 @@ h1 {
     width: 100%; /* Full width */
 }
 
+/* Style for the password input */
+#password-input {
+  width: 100%; /* Makes the input stretch to the full width of its container */
+  padding: 10px; /* Adds some space inside the input, making it taller and the text not touch the edges */
+  margin: 8px 0; /* Adds some space above and below the input */
+  display: inline-block; /* Allows you to specify width and padding */
+  border: 1px solid #ccc; /* A light grey border */
+  box-sizing: border-box; /* Makes sure padding doesn't affect the overall width */
+  border-radius: 4px; /* Slightly rounded corners */
+}
+
+/* Style for the login button */
+#login-button {
+  width: 100%; /* Makes the button stretch to the full width of its container */
+  padding: 14px 20px; /* Larger padding to make the button taller and wider */
+  margin: 8px 0; /* Adds some space above and below the button */
+  border: none; /* No border for the button */
+  background-color: #4CAF50; /* A nice shade of green */
+  color: white; /* White text */
+  text-align: center; /* Centers the text in the button */
+  text-decoration: none; /* Removes any underline from text */
+  display: inline-block; /* Allows you to specify width and padding */
+  font-size: 16px; /* Slightly larger font size */
+  border-radius: 4px; /* Slightly rounded corners */
+  cursor: pointer; /* Changes the mouse cursor to a pointer when hovered */
+}
+
+#login-button:hover {
+  background-color: #45a049; /* A darker green for hover effect */
+}
+
+
 .container {
     width: 90%;
     max-width: 500px; /* Adjust max width for larger screens if necessary */

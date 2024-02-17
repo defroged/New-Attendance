@@ -160,7 +160,7 @@ async function handleReplacementChange() {
   
   function displayAvailableSlots(availableSlots) {
   const availableSlotsElement = document.getElementById("available-slots");
-  availableSlotsElement.innerHTML = `You have ${availableSlots} replacement lesson slots available`;
+  availableSlotsElement.innerHTML = `可能な振替レッスンは${availableSlots}枠が残っています`;
   availableSlotsElement.setAttribute("data-count", availableSlots);
 
   const stepThreeElement = document.getElementById("step-three");
