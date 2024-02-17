@@ -285,7 +285,7 @@ function findAvailableSlotsByStudentName(studentName, data) {
   let availableSlots = 0;
   data.forEach(function (row) {
     if (row[0] === studentName) {
-      availableSlots = parseInt(row[2]); 
+      availableSlots = parseInt(row[2]);
     }
   });
   return availableSlots;
@@ -309,15 +309,15 @@ function fetchAvailableClasses(studentName) {
 }
 
 function findAvailableClassesByStudentName(studentName, data) {
-    let availableClasses = [];
-    data.forEach(function (row) {
-      if (row[0] === studentName) {
-        if (row[3]) availableClasses.push(row[3]); 
-        if (row[4]) availableClasses.push(row[4]); 
-        if (row[5]) availableClasses.push(row[5]); 
+  let availableClasses = [];
+  data.forEach(function (row) {
+    if (row[0] === studentName) {
+      for (let i = 3; i <= 8; i++) {
+        if (row[i]) availableClasses.push(row[i]);
       }
-    });
-    return availableClasses;
+    }
+  });
+  return availableClasses;
 }
 
 function fetchCalendarEventsForClasses(classes) {
