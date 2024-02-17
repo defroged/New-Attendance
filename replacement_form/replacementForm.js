@@ -15,7 +15,7 @@ function hideSpinner() {
 
 
 function fetchClassNames() {
-	
+	showSpinner();
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -32,6 +32,7 @@ function fetchClassNames() {
       }
 
       populateClassNames(Array.from(classSet));
+	  hideSpinner(); 
     })
     .catch((error) => {
       console.error('Error fetching class names:', error);
@@ -50,21 +51,15 @@ function fetchClassNames() {
   }
   
 function initializeReplacementForm() {
-  showSpinner();
-
-  fetchClassNames()
-    .then(() => {
-      document.getElementById("password-input").addEventListener("input", handlePasswordInputChange);
-      document.getElementById("step-one").style.display = "none";
-      document.getElementById("login-button").addEventListener("click", handleLogin);
-      document.getElementById("class-select").addEventListener("change", handleClassChange);
-      document.getElementById("student-select").addEventListener("change", handleStudentChange);
-      document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
-      document.getElementById("submit-button").addEventListener("click", handleSubmit);
-    })
-    .finally(() => {
-      hideSpinner();
-    });
+	
+  fetchClassNames();
+  document.getElementById("password-input").addEventListener("input", handlePasswordInputChange); 
+  document.getElementById("step-one").style.display = "none"; 
+  document.getElementById("login-button").addEventListener("click", handleLogin); 
+  document.getElementById("class-select").addEventListener("change", handleClassChange);
+  document.getElementById("student-select").addEventListener("change", handleStudentChange);
+  document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
+  document.getElementById("submit-button").addEventListener("click", handleSubmit);
 }
 
 function handlePasswordInputChange() {
