@@ -90,23 +90,24 @@ async function handleReplacementChange() {
 }
 
  async function fetchBookedSlots(studentName) {
-    try {
-      const response = await fetch(apiUrl);
-      const data = await response.json();
-      const values = data.values;
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
 
-      const rowIndex = values.findIndex((row) => row[0] === studentName);
+    const rowIndex = values.findIndex((row) => row[0] === studentName);
 
-      if (rowIndex > -1) {
-        const bookedSlots = values[rowIndex].slice(6).filter((slot) => slot !== '');
-        return bookedSlots;
-      }
-    } catch (error) {
-      console.error('Error fetching booked slots: ', error);
+    if (rowIndex > -1) {
+      // Change this line to limit the data from columns G to L
+      const bookedSlots = values[rowIndex].slice(6, 12).filter((slot) => slot !== '');
+      return bookedSlots;
     }
-
-    return [];
+  } catch (error) {
+    console.error('Error fetching booked slots: ', error);
   }
+
+  return [];
+}
 
 function generateUniqueID() {
   return Math.random().toString(36).substr(2, 9);
@@ -285,7 +286,7 @@ function findAvailableSlotsByStudentName(studentName, data) {
   let availableSlots = 0;
   data.forEach(function (row) {
     if (row[0] === studentName) {
-      availableSlots = parseInt(row[2]);
+      availableSlots = parseInt(row[2]); 
     }
   });
   return availableSlots;
@@ -309,15 +310,15 @@ function fetchAvailableClasses(studentName) {
 }
 
 function findAvailableClassesByStudentName(studentName, data) {
-  let availableClasses = [];
-  data.forEach(function (row) {
-    if (row[0] === studentName) {
-      for (let i = 3; i <= 8; i++) {
-        if (row[i]) availableClasses.push(row[i]);
+    let availableClasses = [];
+    data.forEach(function (row) {
+      if (row[0] === studentName) {
+        if (row[3]) availableClasses.push(row[3]); 
+        if (row[4]) availableClasses.push(row[4]); 
+        if (row[5]) availableClasses.push(row[5]); 
       }
-    }
-  });
-  return availableClasses;
+    });
+    return availableClasses;
 }
 
 function fetchCalendarEventsForClasses(classes) {
@@ -375,11 +376,8 @@ async function populateBookedSlots(studentName) {
     (slot) => !replacements.added.some((addedEvent) => addedEvent.name === slot)
   );
 
-  // Filter slots between column G to L only
-  const filteredBookedSlots = newBookedSlots.slice(0, 6);
-
-  filteredBookedSlots.forEach((slot) => {
-    const eventId = generateUniqueID();
+  newBookedSlots.forEach((slot) => {
+    const eventId = generateUniqueID(); 
     const eventData = { id: eventId, name: slot };
     replacements.added.push(eventData);
     addReplacementToDatesList(eventData);
@@ -469,11 +467,9 @@ replacements.removed.forEach((replacement) => {
 });
 
   finalAddedReplacements.forEach((replacement) => {
-    const columnIndex = findNextEmptyColumnIndex(values, rowIndex);
-    if (columnIndex < 12) { // Add a conditional check to ensure the columnIndex does not go beyond 11 (column L)
-      values[rowIndex][columnIndex] = replacement.name;
-    }
-  });
+  const columnIndex = findNextEmptyColumnIndex(values, rowIndex);
+  values[rowIndex][columnIndex] = replacement.name;
+});
 
   const dataWithoutHeader = values.slice(1);
 
@@ -498,12 +494,12 @@ replacements.removed.forEach((replacement) => {
 }
 
 function findNextEmptyColumnIndex(values, rowIndex) {
-  for (let i = 6; i < 12; i++) { // Change the upper limit from the length of the array to 12
+  for (let i = 6; i < values[rowIndex].length; i++) {
     if (values[rowIndex][i] === "") {
       return i;
     }
   }
-  return Math.max(6, 12);
+  return Math.max(6, values[rowIndex].length);
 }
 
 async function updateRemovedReplacements(studentName, removedReplacement) {
