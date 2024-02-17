@@ -375,8 +375,11 @@ async function populateBookedSlots(studentName) {
     (slot) => !replacements.added.some((addedEvent) => addedEvent.name === slot)
   );
 
-  newBookedSlots.forEach((slot) => {
-    const eventId = generateUniqueID(); 
+  // Filter slots between column G to L only
+  const filteredBookedSlots = newBookedSlots.slice(0, 6);
+
+  filteredBookedSlots.forEach((slot) => {
+    const eventId = generateUniqueID();
     const eventData = { id: eventId, name: slot };
     replacements.added.push(eventData);
     addReplacementToDatesList(eventData);
