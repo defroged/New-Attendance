@@ -69,7 +69,7 @@ async function fetchStudentNameByPassword(password) {
     const values = data.values;
 
     for (let i = 0; i < values.length; i++) {
-      if (values[i][isHereIndex] === password.toString()) {
+      if (values[i][12] === password.toString()) { // Replace 'isHereIndex' with '12'
         return values[i][0];
       }
     }
