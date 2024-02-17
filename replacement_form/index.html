@@ -14,9 +14,10 @@
     <h1>振替レッスン<br>申込フォーム</h1>
 	<div id="login-section">
     <label for="password-input">Please enter your 4-digit password:</label>
-    <input type="password" id="password-input" maxlength="4" pattern="\d{4}" autocomplete="off">
-    <button id="login-button" disabled>ログイン</button>
+    <input type="password" id="password-input" maxlength="4" pattern="\d{4}" autocomplete="off" oninput="handlePasswordInputChange()">
+    <button id="login-button" style="display: none;" disabled>Log In</button>
 </div>
+
 	<div class="container">
 
     <div id="step-one">

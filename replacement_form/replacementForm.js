@@ -54,12 +54,16 @@ function handlePasswordInputChange() {
   const passwordInput = document.getElementById("password-input");
   const loginButton = document.getElementById("login-button");
 
+  // Show the button when password length is exactly 4 digits
   if (passwordInput.value.length === 4) {
-    loginButton.disabled = false;
+    loginButton.style.display = 'block'; // Show the button
+    loginButton.disabled = false; // Enable the button
   } else {
-    loginButton.disabled = true;
+    loginButton.style.display = 'none'; // Hide the button
+    loginButton.disabled = true; // Keep the button disabled for good measure
   }
 }
+
 
 //new
 async function fetchStudentNameByPassword(password) {
