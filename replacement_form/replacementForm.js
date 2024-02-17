@@ -50,14 +50,21 @@ function fetchClassNames() {
   }
   
 function initializeReplacementForm() {
-  fetchClassNames();
-  document.getElementById("password-input").addEventListener("input", handlePasswordInputChange); 
-  document.getElementById("step-one").style.display = "none"; 
-  document.getElementById("login-button").addEventListener("click", handleLogin); 
-  document.getElementById("class-select").addEventListener("change", handleClassChange);
-  document.getElementById("student-select").addEventListener("change", handleStudentChange);
-  document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
-  document.getElementById("submit-button").addEventListener("click", handleSubmit);
+  showSpinner();
+
+  fetchClassNames()
+    .then(() => {
+      document.getElementById("password-input").addEventListener("input", handlePasswordInputChange);
+      document.getElementById("step-one").style.display = "none";
+      document.getElementById("login-button").addEventListener("click", handleLogin);
+      document.getElementById("class-select").addEventListener("change", handleClassChange);
+      document.getElementById("student-select").addEventListener("change", handleStudentChange);
+      document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
+      document.getElementById("submit-button").addEventListener("click", handleSubmit);
+    })
+    .finally(() => {
+      hideSpinner();
+    });
 }
 
 function handlePasswordInputChange() {
