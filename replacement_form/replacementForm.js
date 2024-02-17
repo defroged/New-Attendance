@@ -37,12 +37,77 @@ function fetchClassNames() {
       classSelect.appendChild(option);
     });
   }
+  
 function initializeReplacementForm() {
   fetchClassNames();
+  document.getElementById("password-input").addEventListener("input", handlePasswordInputChange); // new
+  document.getElementById("step-one").style.display = "none"; // new
+  document.getElementById("login-button").addEventListener("click", handleLogin); //new
   document.getElementById("class-select").addEventListener("change", handleClassChange);
   document.getElementById("student-select").addEventListener("change", handleStudentChange);
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
+}
+
+//new
+function handlePasswordInputChange() {
+  const passwordInput = document.getElementById("password-input");
+  const loginButton = document.getElementById("login-button");
+
+  if (passwordInput.value.length === 4) {
+    loginButton.disabled = false;
+  } else {
+    loginButton.disabled = true;
+  }
+}
+
+//new
+async function fetchStudentNameByPassword(password) {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
+
+    for (let i = 0; i < values.length; i++) {
+      if (values[i][isHereIndex] === password.toString()) {
+        return values[i][0];
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching student name by password:', error);
+  }
+
+  return null;
+}
+
+//new
+async function handleLogin() {
+  const passwordInput = document.getElementById("password-input");
+  const password = passwordInput.value;
+
+  const studentName = await fetchStudentNameByPassword(password);
+
+  if (studentName) {
+    await handleStudentNameMatch(studentName);
+  } else {
+    alert("Invalid password. Please try again.");
+    passwordInput.value = "";
+    passwordInput.focus();
+  }
+}
+
+//new
+async function handleStudentNameMatch(studentName) {
+  document.getElementById("login-section").style.display = "none";
+  document.getElementById("step-one").style.display = "none";
+  document.getElementById("step-two").style.display = "none";
+  document.getElementById("step-three").style.display = "block";
+  document.getElementById("replacement-list").style.display = "block";
+
+  await fetchAvailableSlots(studentName);
+  await fetchAvailableClasses(studentName);
+  await populateBookedSlots(studentName);
+  displaySubmitSectionIfRequired();
 }
 
 function displaySubmitSectionIfRequired() {
@@ -98,7 +163,6 @@ async function handleReplacementChange() {
     const rowIndex = values.findIndex((row) => row[0] === studentName);
 
     if (rowIndex > -1) {
-      // Change this line to limit the data from columns G to L
       const bookedSlots = values[rowIndex].slice(6, 12).filter((slot) => slot !== '');
       return bookedSlots;
     }
