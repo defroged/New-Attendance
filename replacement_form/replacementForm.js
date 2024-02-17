@@ -4,7 +4,18 @@ const replacements = {
 };
 
 (function() {
+	
+function showSpinner() {
+  document.getElementById("spinner").style.display = "block";
+}
+
+function hideSpinner() {
+  document.getElementById("spinner").style.display = "none";
+}
+
+
 function fetchClassNames() {
+	showSpinner();
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -24,6 +35,8 @@ function fetchClassNames() {
     })
     .catch((error) => {
       console.error('Error fetching class names:', error);
+	   .finally(() => {
+      hideSpinner();
     });
 }
   
@@ -40,32 +53,27 @@ function fetchClassNames() {
   
 function initializeReplacementForm() {
   fetchClassNames();
-  document.getElementById("password-input").addEventListener("input", handlePasswordInputChange); // new
-  document.getElementById("step-one").style.display = "none"; // new
-  document.getElementById("login-button").addEventListener("click", handleLogin); //new
+  document.getElementById("password-input").addEventListener("input", handlePasswordInputChange); 
+  document.getElementById("step-one").style.display = "none"; 
+  document.getElementById("login-button").addEventListener("click", handleLogin); 
   document.getElementById("class-select").addEventListener("change", handleClassChange);
   document.getElementById("student-select").addEventListener("change", handleStudentChange);
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
 }
 
-//new
 function handlePasswordInputChange() {
   const passwordInput = document.getElementById("password-input");
   const loginButton = document.getElementById("login-button");
-
-  // Show the button when password length is exactly 4 digits
   if (passwordInput.value.length === 4) {
-    loginButton.style.display = 'block'; // Show the button
-    loginButton.disabled = false; // Enable the button
+    loginButton.style.display = 'block'; 
+    loginButton.disabled = false; 
   } else {
-    loginButton.style.display = 'none'; // Hide the button
-    loginButton.disabled = true; // Keep the button disabled for good measure
+    loginButton.style.display = 'none'; 
+    loginButton.disabled = true; 
   }
 }
 
-
-//new
 async function fetchStudentNameByPassword(password) {
   try {
     const response = await fetch(apiUrl);
@@ -73,7 +81,7 @@ async function fetchStudentNameByPassword(password) {
     const values = data.values;
 
     for (let i = 0; i < values.length; i++) {
-      if (values[i][12] === password.toString()) { // Replace 'isHereIndex' with '12'
+      if (values[i][12] === password.toString()) { 
         return values[i][0];
       }
     }
@@ -84,7 +92,6 @@ async function fetchStudentNameByPassword(password) {
   return null;
 }
 
-//new
 async function handleLogin() {
   const passwordInput = document.getElementById("password-input");
   const password = passwordInput.value;
@@ -94,7 +101,7 @@ async function handleLogin() {
   if (studentName) {
     await handleStudentNameMatch(studentName);
   } else {
-    alert("Invalid password. Please try again.");
+    alert("ID番号が違います。再度ご入力お願いします。");
     passwordInput.value = "";
     passwordInput.focus();
   }
