@@ -466,9 +466,11 @@ replacements.removed.forEach((replacement) => {
 });
 
   finalAddedReplacements.forEach((replacement) => {
-  const columnIndex = findNextEmptyColumnIndex(values, rowIndex);
-  values[rowIndex][columnIndex] = replacement.name;
-});
+    const columnIndex = findNextEmptyColumnIndex(values, rowIndex);
+    if (columnIndex < 12) { // Add a conditional check to ensure the columnIndex does not go beyond 11 (column L)
+      values[rowIndex][columnIndex] = replacement.name;
+    }
+  });
 
   const dataWithoutHeader = values.slice(1);
 
@@ -493,12 +495,12 @@ replacements.removed.forEach((replacement) => {
 }
 
 function findNextEmptyColumnIndex(values, rowIndex) {
-  for (let i = 6; i < values[rowIndex].length; i++) {
+  for (let i = 6; i < 12; i++) { // Change the upper limit from the length of the array to 12
     if (values[rowIndex][i] === "") {
       return i;
     }
   }
-  return Math.max(6, values[rowIndex].length);
+  return Math.max(6, 12);
 }
 
 async function updateRemovedReplacements(studentName, removedReplacement) {
