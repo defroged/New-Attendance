@@ -15,7 +15,7 @@ function hideSpinner() {
 
 
 function fetchClassNames() {
-	showSpinner();
+	
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -35,8 +35,6 @@ function fetchClassNames() {
     })
     .catch((error) => {
       console.error('Error fetching class names:', error);
-	   .finally(() => {
-      hideSpinner();
     });
 }
   
