@@ -104,7 +104,8 @@ async function handleStudentNameMatch(studentName) {
   document.getElementById("step-three").style.display = "block";
   document.getElementById("replacement-list").style.display = "block";
 
-  await fetchAvailableSlots(studentName);
+  const availableSlots = await fetchAvailableSlots(studentName);
+  displayAvailableSlots(availableSlots);
   await fetchAvailableClasses(studentName);
   await populateBookedSlots(studentName);
   displaySubmitSectionIfRequired();
