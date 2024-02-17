@@ -117,6 +117,12 @@ async function handleStudentNameMatch(studentName) {
     studentSelect.value = studentName;
   }
 
+  const availableSlots = await fetchAvailableSlots(studentName);
+  displayAvailableSlots(availableSlots);
+  await fetchAvailableClasses(studentName);
+  await populateBookedSlots(studentName);
+  displaySubmitSectionIfRequired();
+
   await handleStudentChange();
 }
 
