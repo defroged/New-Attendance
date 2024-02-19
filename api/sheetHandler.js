@@ -45,7 +45,7 @@ const stringData = data.map(row => {
   }
 }
 
-module.exports = async (req, res) => {
+/*module.exports = async (req, res) => {
   const spreadsheetId = '1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U';
   const apiKey = process.env.GOOGLE_CALENDAR_API_KEY;
   const sheetName = 'Sheet1';
@@ -67,7 +67,7 @@ module.exports = async (req, res) => {
     console.error('Error fetching Google Sheet data:', error);
     res.status(500).send('Internal Server Error');
   }
-};
+};*/
 
 async function findStudentRowIndex(student, spreadsheetId, sheetName) {
   const response = await sheets.spreadsheets.values.get({
