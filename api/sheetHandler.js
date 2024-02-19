@@ -62,7 +62,7 @@ async function findStudentRowIndex(student, spreadsheetId, sheetName) {
 }
 
 //new 
-async function updateAbsenceDates(spreadsheetId, sheetId, absenceData) {
+async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData) {
   const requests = [];
   for (const absenceEntry of absenceData) {
     const student = absenceEntry.student;

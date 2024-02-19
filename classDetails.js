@@ -98,22 +98,25 @@ async function saveAttendance() {
     data: dataWithoutHeader,
   }),
 });
-
 // new
 const absenceData = xMarkedStudents.map((student) => {
   return { student, eventName: className, date: dateOfAbsence };
 });
+
+const sheetId = 759358030; 
+const sheetName = 'absence'; 
 
 const updateAbsenceResponse = await fetch("/api/updateAbsenceDates", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
   },
-  body: JSON.stringify({
-    spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-    sheetId: 759358030,
-    data: absenceData,
-  }),
+ body: JSON.stringify({
+  spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+  sheetId,
+  sheetName,
+  data: absenceData,
+}),
 });
 
 if (!updateAbsenceResponse.ok) {
