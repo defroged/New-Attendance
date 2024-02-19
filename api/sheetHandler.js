@@ -65,7 +65,6 @@ async function findStudentRowIndex(student, spreadsheetId, sheetName) {
 async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData) {
   const studentAbsences = {};
 
-  // Group absences by student
   for (const absenceEntry of absenceData) {
     const student = absenceEntry.student;
     if (!studentAbsences[student]) {
@@ -83,10 +82,8 @@ async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData
       continue;
     }
 
-    // Sort absences by date from new to old
     absences.sort((a, b) => b.date.localeCompare(a.date));
 
-    // Format each absence and join them into a single string
     const absencesInfo = absences
       .map(absence => `${absence.eventName} - ${absence.date}`)
       .join(', ');
@@ -97,7 +94,7 @@ async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData
           sheetId: sheetId,
           startRowIndex: rowIndex - 1,
           endRowIndex: rowIndex,
-          startColumnIndex: 1, // Assuming you want to write to the second column (index 1)
+          startColumnIndex: 1, 
           endColumnIndex: 2,
         },
         rows: [
@@ -105,7 +102,7 @@ async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData
             values: [
               {
                 userEnteredValue: {
-                  stringValue: absencesInfo, // Use the formatted string of absences
+                  stringValue: absencesInfo, 
                 },
               },
             ],
