@@ -111,7 +111,7 @@ const updateAbsenceResponse = await fetch("/api/updateAbsenceDates", {
   },
   body: JSON.stringify({
     spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-    sheetName: "absence", // This should be the name of your 'absence' sheet
+    sheetId: <759358030>,
     data: absenceData,
   }),
 });

@@ -62,7 +62,7 @@ async function findStudentRowIndex(student, spreadsheetId, sheetName) {
 }
 
 //new 
-async function updateAbsenceDates(spreadsheetId, sheetName, absenceData) {
+async function updateAbsenceDates(spreadsheetId, sheetId, absenceData) {
   const requests = [];
   for (const absenceEntry of absenceData) {
     const student = absenceEntry.student;
@@ -75,12 +75,12 @@ async function updateAbsenceDates(spreadsheetId, sheetName, absenceData) {
     requests.push({
       updateCells: {
         range: {
-          sheetId: sheetName,
-          startRowIndex: rowIndex - 1,
-          endRowIndex: rowIndex,
-          startColumnIndex: 1,
-          endColumnIndex: 3,
-        },
+  sheetId: <759358030>, 
+  startRowIndex: rowIndex - 1,
+  endRowIndex: rowIndex,
+  startColumnIndex: 1,
+  endColumnIndex: 3,
+},
         rows: [
           {
             values: [
