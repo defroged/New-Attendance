@@ -55,12 +55,7 @@ function iconClicked(event) {
 
 async function saveAttendance() {
 	
- // old  
- /*const dateOfAbsence = new Date().toLocaleDateString(); */
- 
-// new 
-  const dateOfAbsence = new Date(event.start.dateTime || event.start.date).toLocaleDateString('en-US'); 
-// end new
+ const dateOfAbsence = new Date().toLocaleDateString(); 
   const className = document.querySelector("h4").innerText.slice(6);
   
   const saveChangesBtn = document.getElementById("saveChangesBtn");
@@ -85,7 +80,7 @@ async function saveAttendance() {
   if (xMarkedStudents.includes(row[0])) {
     row[2] = parseInt(row[2], 10) + 1;
   }
-  return row.slice(0, 3); // This will only return columns A to C
+  return row.slice(0, 3); 
 });
 	  console.log('Updated values:', updatedValues);
 
