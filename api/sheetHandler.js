@@ -75,7 +75,7 @@ async function updateAbsenceDates(spreadsheetId, sheetId, absenceData) {
     requests.push({
       updateCells: {
         range: {
-  sheetId: <759358030>, 
+  sheetId: 759358030, 
   startRowIndex: rowIndex - 1,
   endRowIndex: rowIndex,
   startColumnIndex: 1,
