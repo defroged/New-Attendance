@@ -72,28 +72,27 @@ async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData
       continue;
     }
 
+    // Concatenate the eventName and date with a separator (e.g., " - ")
+    const classInfo = `${absenceEntry.eventName} - ${absenceEntry.date}`;
+
     requests.push({
       updateCells: {
         range: {
-  sheetId: 759358030, 
-  startRowIndex: rowIndex - 1,
-  endRowIndex: rowIndex,
-  startColumnIndex: 1,
-  endColumnIndex: 3,
-},
+          sheetId: sheetId, // Use the sheetId parameter instead of a hardcoded value
+          startRowIndex: rowIndex - 1,
+          endRowIndex: rowIndex,
+          startColumnIndex: 1, // Assuming you want to write to the second column (index 1)
+          endColumnIndex: 2, // Only need to increase this by 1 as we are writing to a single cell
+        },
         rows: [
           {
             values: [
               {
                 userEnteredValue: {
-                  stringValue: absenceEntry.eventName,
+                  stringValue: classInfo, // Use the concatenated classInfo as the value
                 },
               },
-              {
-                userEnteredValue: {
-                  stringValue: absenceEntry.date,
-                },
-              },
+              // Remove the second cell value since we're combining the data into one cell
             ],
           },
         ],
@@ -111,6 +110,7 @@ async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData
 
   return response.data;
 }
+
 
 module.exports = {
   fetchSheetData: async (req, res) => {
