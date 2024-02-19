@@ -1,7 +1,7 @@
 let modalInstance;
 const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 
-function fetchClassDetails(className) {
+function fetchClassDetails(eventSummary, eventDate) {
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -11,7 +11,7 @@ function fetchClassDetails(className) {
     })
     .then((data) => {
       const students = findStudentsByClassName(className, data.values);
-      showModalWithClassDetails(className, students);
+      showModalWithClassDetails(className, students, eventDate);
     })
     .catch((error) => {
       console.error('Error fetching class details:', error);
@@ -28,10 +28,13 @@ function findStudentsByClassName(className, data) {
   return students;
 }
 
-function showModalWithClassDetails(className, students) {
+function showModalWithClassDetails(className, students, eventDate) {
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
   students.forEach(function (student) {
-    modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
+// new
+	modalContent += '<input type="hidden" id="eventDate" value="' + eventDate + '">';
+// end new    
+	modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
   });
   modalContent += '</ul>';
   // Save Changes button
@@ -54,6 +57,8 @@ function iconClicked(event) {
 }
 
 async function saveAttendance() {
+  const eventDateField = document.getElementById('eventDate');
+  const dateOfAbsence = new Date(eventDateField.value).toLocaleDateString();
 	
   const dateOfAbsence = new Date().toLocaleDateString();
 	
@@ -81,7 +86,7 @@ async function saveAttendance() {
   if (xMarkedStudents.includes(row[0])) {
     row[2] = parseInt(row[2], 10) + 1;
   }
-  return row.slice(0, 3); // This will only return columns A to C
+  return row.slice(0, 3); 
 });
 	  console.log('Updated values:', updatedValues);
 
@@ -94,7 +99,7 @@ async function saveAttendance() {
   },
   body: JSON.stringify({
     spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-    range: "Sheet1!A2:C", // Revert back to the original range
+    range: "Sheet1!A2:C", 
     data: dataWithoutHeader,
   }),
 });
@@ -142,7 +147,7 @@ if (!updateAbsenceResponse.ok) {
     throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
   }
 
-  resetState(saveChangesBtn, spinner, overlay); // Moved here
+  resetState(saveChangesBtn, spinner, overlay); 
 
   console.log("Attendance updated successfully");
   showCustomAlert();

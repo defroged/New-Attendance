@@ -112,7 +112,7 @@ function displayEvents(events) {
             if (timeSlot) {
     const clonedEventElement = eventElement.cloneNode(true);
     clonedEventElement.addEventListener('click', function () {
-        fetchClassDetails(event.summary);
+        fetchClassDetails(event.summary, eventStart.toISOString());
     });
     timeSlot.appendChild(clonedEventElement);
 } else {
@@ -121,17 +121,17 @@ function displayEvents(events) {
         }
 
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Start of the current day
+        today.setHours(0, 0, 0, 0);
 
         while (eventStart < eventEnd) {
             if (eventStart >= today) {
                 displayEventForDay(eventStart, eventEnd, eventElement);
             }
             eventStart.setDate(eventStart.getDate() + 1);
-            eventStart.setHours(0, 0, 0, 0); // Reset to the start of the next day
+            eventStart.setHours(0, 0, 0, 0); 
         }
 		eventElement.addEventListener('click', function () {
-            fetchClassDetails(event.summary);
+            fetchClassDetails(event.summary, eventStart.toISOString());
         });
     });
 }
