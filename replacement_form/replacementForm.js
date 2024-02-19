@@ -342,7 +342,6 @@ function handleClassChange() {
 }
 
 function fetchStudentNames(className) {
-	showSpinner();
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -353,11 +352,9 @@ function fetchStudentNames(className) {
     .then((data) => {
       const students = findStudentsByClassName(className, data.values);
       populateStudentNames(students);
-	   hideSpinner(); 
     })
     .catch((error) => {
       console.error('Error fetching student names:', error);
-	   hideSpinner(); 
     });
 }
 

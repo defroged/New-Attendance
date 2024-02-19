@@ -69,4 +69,72 @@ module.exports = async (req, res) => {
   }
 };
 
-module.exports.updateAttendance = updateAttendance;
+async function findStudentRowIndex(student, spreadsheetId, sheetName) {
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: `${sheetName}!A:A`,
+  });
+  const values = response.data.values;
+  for (let i = 1; i < values.length; i++) {
+    if (values[i] && student === values[i][0]) {
+      return i + 1;
+    }
+  }
+  return null;
+}
+
+//new 
+async function updateAbsenceDates(spreadsheetId, sheetName, absenceData) {
+  const requests = [];
+  for (const absenceEntry of absenceData) {
+    const student = absenceEntry.student;
+    const rowIndex = await findStudentRowIndex(student, spreadsheetId, sheetName);
+    if (rowIndex === null) {
+      console.warn(`Student not found: ${student}`);
+      continue;
+    }
+
+    requests.push({
+      updateCells: {
+        range: {
+          sheetId: sheetName,
+          startRowIndex: rowIndex - 1,
+          endRowIndex: rowIndex,
+          startColumnIndex: 1,
+          endColumnIndex: 3,
+        },
+        rows: [
+          {
+            values: [
+              {
+                userEnteredValue: {
+                  stringValue: absenceEntry.eventName,
+                },
+              },
+              {
+                userEnteredValue: {
+                  stringValue: absenceEntry.date,
+                },
+              },
+            ],
+          },
+        ],
+        fields: "userEnteredValue",
+      },
+    });
+  }
+
+  const response = await sheets.spreadsheets.batchUpdate({
+    spreadsheetId,
+    requestBody: {
+      requests,
+    },
+  });
+
+  return response.data;
+}
+
+module.exports = {
+  updateAttendance,
+  updateAbsenceDates,
+};
