@@ -60,8 +60,6 @@ async function saveAttendance() {
   const eventDateField = document.getElementById('eventDate');
   const dateOfAbsence = new Date(eventDateField.value).toLocaleDateString();
 	
-  const dateOfAbsence = new Date().toLocaleDateString();
-	
   const className = document.querySelector("h4").innerText.slice(6);
   
   const saveChangesBtn = document.getElementById("saveChangesBtn");
@@ -184,3 +182,5 @@ function resetModalContent() {
   const modalContent = document.getElementById("myModalContent");
   modalContent.innerHTML = "";
 }
+
+window.fetchClassDetails = fetchClassDetails;
