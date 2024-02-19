@@ -63,41 +63,41 @@ async function findStudentRowIndex(student, spreadsheetId, sheetName) {
 
 //new - update to write to one cell
 async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData) {
-  const sheets = google.sheets({version: 'v4', auth}); // Make sure you have defined 'google' and 'auth' appropriately
-  const requests = [];
-  
+  const studentAbsences = {};
+
+  // Group absences by student
   for (const absenceEntry of absenceData) {
     const student = absenceEntry.student;
+    if (!studentAbsences[student]) {
+      studentAbsences[student] = [];
+    }
+    studentAbsences[student].push(absenceEntry);
+  }
+
+  const requests = [];
+
+  for (const [student, absences] of Object.entries(studentAbsences)) {
     const rowIndex = await findStudentRowIndex(student, spreadsheetId, sheetName);
     if (rowIndex === null) {
       console.warn(`Student not found: ${student}`);
       continue;
     }
 
-    // Define the range to read the existing value from
-    const range = `${sheetName}!B${rowIndex}:B${rowIndex}`; // Assuming data is in column B
-    
-    // Read the current value of the cell
-    const currentCell = await sheets.spreadsheets.values.get({
-      spreadsheetId,
-      range,
-    });
+    // Sort absences by date from new to old
+    absences.sort((a, b) => b.date.localeCompare(a.date));
 
-    // Get the current content of the cell, or an empty string if the cell is empty
-    const currentContent = currentCell.data.values ? currentCell.data.values[0][0] : "";
+    // Format each absence and join them into a single string
+    const absencesInfo = absences
+      .map(absence => `${absence.eventName} - ${absence.date}`)
+      .join(', ');
 
-    // Prepare the new content by prepending the new data
-    const classInfo = `${absenceEntry.eventName} - ${absenceEntry.date}`;
-    const newContent = `${classInfo}\n${currentContent}`; // Adding new data on top
-
-    // Prepare the request to update the cell with the new content
     requests.push({
       updateCells: {
         range: {
           sheetId: sheetId,
           startRowIndex: rowIndex - 1,
           endRowIndex: rowIndex,
-          startColumnIndex: 1,
+          startColumnIndex: 1, // Assuming you want to write to the second column (index 1)
           endColumnIndex: 2,
         },
         rows: [
@@ -105,7 +105,7 @@ async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData
             values: [
               {
                 userEnteredValue: {
-                  stringValue: newContent,
+                  stringValue: absencesInfo, // Use the formatted string of absences
                 },
               },
             ],
@@ -116,7 +116,6 @@ async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData
     });
   }
 
-  // Batch update to apply all requests
   const response = await sheets.spreadsheets.batchUpdate({
     spreadsheetId,
     requestBody: {
