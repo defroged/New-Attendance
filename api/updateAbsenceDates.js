@@ -1,4 +1,3 @@
-console.log("Received absence data:", JSON.stringify(data, null, 2));
 const sheetHandler = require("./sheetHandler");
 
 module.exports = async (req, res) => {
