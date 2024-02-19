@@ -55,8 +55,12 @@ function iconClicked(event) {
 
 async function saveAttendance() {
 	
-  const dateOfAbsence = new Date().toLocaleDateString();
-	
+ // old  
+ /*const dateOfAbsence = new Date().toLocaleDateString(); */
+ 
+// new 
+  const dateOfAbsence = new Date(event.start.dateTime || event.start.date).toLocaleDateString('en-US'); 
+// end new
   const className = document.querySelector("h4").innerText.slice(6);
   
   const saveChangesBtn = document.getElementById("saveChangesBtn");
