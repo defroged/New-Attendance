@@ -61,7 +61,7 @@ async function findStudentRowIndex(student, spreadsheetId, sheetName) {
   return null;
 }
 
-//new 
+//new - update to write to one cell
 async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData) {
   const requests = [];
   for (const absenceEntry of absenceData) {
