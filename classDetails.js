@@ -97,7 +97,7 @@ async function saveAttendance() {
 
 // new
 const absenceData = xMarkedStudents.map((student) => {
-  return { student, eventName, date: dateOfAbsence };
+  return { student, eventName: className, date: dateOfAbsence };
 });
 
 const updateAbsenceResponse = await fetch("/api/updateAbsenceDates", {
