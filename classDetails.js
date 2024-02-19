@@ -113,10 +113,10 @@ const updateAbsenceResponse = await fetch("/api/updateAbsenceDates", {
   },
  body: JSON.stringify({
   spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-  sheetId,
-  sheetName,
-  data: absenceData,
-}),
+  sheetId: 759358030, 
+    sheetName: "absence", 
+    data: absenceData,
+  }),
 });
 
 if (!updateAbsenceResponse.ok) {
