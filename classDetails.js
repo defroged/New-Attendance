@@ -55,7 +55,8 @@ function iconClicked(event) {
 
 async function saveAttendance() {
 	
- const dateOfAbsence = new Date().toLocaleDateString(); 
+  const dateOfAbsence = new Date().toLocaleDateString();
+	
   const className = document.querySelector("h4").innerText.slice(6);
   
   const saveChangesBtn = document.getElementById("saveChangesBtn");
@@ -80,7 +81,7 @@ async function saveAttendance() {
   if (xMarkedStudents.includes(row[0])) {
     row[2] = parseInt(row[2], 10) + 1;
   }
-  return row.slice(0, 3); 
+  return row.slice(0, 3); // This will only return columns A to C
 });
 	  console.log('Updated values:', updatedValues);
 

@@ -63,48 +63,36 @@ async function findStudentRowIndex(student, spreadsheetId, sheetName) {
 
 //new - update to write to one cell
 async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData) {
-  const studentAbsences = {};
-
+  const requests = [];
   for (const absenceEntry of absenceData) {
     const student = absenceEntry.student;
-    if (!studentAbsences[student]) {
-      studentAbsences[student] = [];
-    }
-    studentAbsences[student].push(absenceEntry);
-  }
-
-  const requests = [];
-
-  for (const [student, absences] of Object.entries(studentAbsences)) {
     const rowIndex = await findStudentRowIndex(student, spreadsheetId, sheetName);
     if (rowIndex === null) {
       console.warn(`Student not found: ${student}`);
       continue;
     }
 
-    absences.sort((a, b) => b.date.localeCompare(a.date));
-
-    const absencesInfo = absences
-      .map(absence => `${absence.eventName} - ${absence.date}`)
-      .join(', ');
+    // Concatenate the eventName and date with a separator (e.g., " - ")
+    const classInfo = `${absenceEntry.eventName} - ${absenceEntry.date}`;
 
     requests.push({
       updateCells: {
         range: {
-          sheetId: sheetId,
+          sheetId: sheetId, // Use the sheetId parameter instead of a hardcoded value
           startRowIndex: rowIndex - 1,
           endRowIndex: rowIndex,
-          startColumnIndex: 1, 
-          endColumnIndex: 2,
+          startColumnIndex: 1, // Assuming you want to write to the second column (index 1)
+          endColumnIndex: 2, // Only need to increase this by 1 as we are writing to a single cell
         },
         rows: [
           {
             values: [
               {
                 userEnteredValue: {
-                  stringValue: absencesInfo, 
+                  stringValue: classInfo, // Use the concatenated classInfo as the value
                 },
               },
+              // Remove the second cell value since we're combining the data into one cell
             ],
           },
         ],
@@ -122,7 +110,6 @@ async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData
 
   return response.data;
 }
-
 
 
 module.exports = {
