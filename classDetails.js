@@ -1,7 +1,7 @@
 let modalInstance;
 const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 
-function fetchClassDetails(eventSummary, eventDate) {
+function fetchClassDetails(className, eventDate) {
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
