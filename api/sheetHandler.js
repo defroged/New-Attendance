@@ -61,7 +61,7 @@ async function findStudentRowIndex(student, spreadsheetId, sheetName) {
   return null;
 }
 
-//new - update to write to one cell
+//new - add to next empty column
 async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData) {
   const requests = [];
   for (const absenceEntry of absenceData) {
@@ -72,6 +72,16 @@ async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData
       continue;
     }
 
+    // Retrieve the row for the given student
+    const rowResponse = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: `${sheetName}!${rowIndex}:${rowIndex}`,
+    });
+    const rowValues = rowResponse.data.values[0] || [];
+
+    // Find the next empty column index
+    const emptyColumnIndex = rowValues.length;
+
     const classInfo = `${absenceEntry.eventName} - ${absenceEntry.date}`;
 
     requests.push({
@@ -80,15 +90,15 @@ async function updateAbsenceDates(spreadsheetId, sheetId, sheetName, absenceData
           sheetId: sheetId,
           startRowIndex: rowIndex - 1,
           endRowIndex: rowIndex,
-          startColumnIndex: 1, 
-          endColumnIndex: 2, 
+          startColumnIndex: emptyColumnIndex, // Use the empty column index
+          endColumnIndex: emptyColumnIndex + 1,
         },
         rows: [
           {
             values: [
               {
                 userEnteredValue: {
-                  stringValue: classInfo, 
+                  stringValue: classInfo,
                 },
               },
             ],
