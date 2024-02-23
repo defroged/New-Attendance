@@ -88,7 +88,7 @@ h1 {
 
 div {
     background-color: #ffffff;
-    padding: 40px; 
+    padding: 41px; 
     margin: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -105,7 +105,7 @@ label {
 select {
     width: calc(100% - 20px);
     padding: 8px; 
-    margin-bottom: 20px;
+    margin-bottom: 3px;
     border-radius: 8px;
     border: 1px solid #dfe3e8;
     font-size: .9em; 
@@ -196,7 +196,7 @@ li:hover {
         margin-left: 199px; /* Adjust according to the width of your h1 */
         margin-top: 40px; /* Adjust for spacing from the top */
         width: calc(100% - 200px); /* Take remaining width minus h1 width */
-        max-width: 611px; /* Adjust max width for larger screens if necessary */
+        max-width: 598px; /* Adjust max width for larger screens if necessary */
     }
     
     .remove-replacement-button {
@@ -222,9 +222,11 @@ li:hover {
 
     .container, select, button {
         padding: 5px;
+        width: 244px;
+        margin-left: -13px;
     }
 
-    h1, label, select, button, li {
+    h1 {
         font-size: 1.9em; /* Only do this if you want to change font size for all these elements */
     }
 
