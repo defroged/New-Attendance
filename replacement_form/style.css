@@ -88,7 +88,7 @@ h1 {
 
 div {
     background-color: #ffffff;
-    padding: 41px; 
+    padding: 39px; 
     margin: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -100,6 +100,9 @@ label {
     font-weight: bold;
     display: block;
     margin-bottom: .5em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 27%;
 }
 
 select {
@@ -117,12 +120,14 @@ button {
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 8px;
+    border-radius: 24px;
     cursor: pointer;
     font-size: .9em; 
     transition: background-color 0.3s ease;
     display: block;
-    width: 100%;
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 button:hover {
@@ -245,6 +250,10 @@ li:hover {
     /* You may also want to adjust the margin for the bottom of your form elements to match the top */
     .container > *:last-child {
         margin-bottom: 20px;
+    }
+    
+    label {
+        width: 50%
     }
     
         .remove-replacement-button {
