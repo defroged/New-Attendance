@@ -49,7 +49,7 @@ function fetchClassNames() {
   }
   
 function initializeReplacementForm() {
-	
+  document.getElementById("main-container").style.display = "none";
   fetchClassNames();
   document.getElementById("password-input").addEventListener("input", handlePasswordInputChange); 
   document.getElementById("step-one").style.display = "none"; 
@@ -91,6 +91,7 @@ async function fetchStudentNameByPassword(password) {
 }
 
 async function handleLogin() {
+  document.getElementById("main-container").style.display = "none";
   const passwordInput = document.getElementById("password-input");
   const password = passwordInput.value;
 
@@ -98,9 +99,6 @@ async function handleLogin() {
 
   if (studentName) {
     await handleStudentNameMatch(studentName);
-
-    // Call the new function to hide the container
-    toggleContainerDisplay(true);
   } else {
     alert("ID番号が違います。再度ご入力お願いします。");
     passwordInput.value = "";
@@ -110,14 +108,12 @@ async function handleLogin() {
 
 //new
 async function handleStudentNameMatch(studentName) {
+  document.getElementById("main-container").style.display = "block";
   document.getElementById("login-section").style.display = "none";
   document.getElementById("step-one").style.display = "none";
   document.getElementById("step-two").style.display = "none";
   document.getElementById("step-three").style.display = "block";
   document.getElementById("replacement-list").style.display = "block";
-
-  // Call the new function to show the container
-  toggleContainerDisplay(false);
 
   const studentSelect = document.getElementById("student-select");
   const matchedOption = Array.from(studentSelect.options).find(option => option.value === studentName);
@@ -136,15 +132,6 @@ async function handleStudentNameMatch(studentName) {
   
   const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
   displayAvailableSlots(availableSlots);
-}
-
-function toggleContainerDisplay(hide) {
-  const containerElement = document.querySelector('.container');
-  if (hide) {
-    containerElement.style.display = 'none';
-  } else {
-    containerElement.style.display = 'block';
-  }
 }
 
 function displaySubmitSectionIfRequired() {
