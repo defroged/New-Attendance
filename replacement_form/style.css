@@ -8,7 +8,7 @@ body {
     flex-direction: column; /* Stack elements vertically on mobile */
     justify-content: center; /* Center children vertically */
     align-items: center; /* Center children horizontally */
-    min-height: 100vh;
+    min-height: 59vh;
 }
 
 h1 {
@@ -88,11 +88,12 @@ h1 {
 
 div {
     background-color: #ffffff;
-    padding: 15px; 
+    padding: 40px; 
     margin: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 271px;
+    /*! width: 30%; */
+    max-width: 442px;
 }
 
 label {
@@ -184,8 +185,8 @@ li:hover {
 
     h1 {
         position: absolute; /* Take out of flow to align to the left */
-        left: 20px; /* Spacing from the left edge */
-        top: 20px; /* Spacing from the top edge */
+        left: 192px; /* Spacing from the left edge */
+        top: 194px; /* Spacing from the top edge */
         width: auto; /* Shrink to fit content */
         margin: 0; /* Remove margin */
     }
@@ -224,7 +225,7 @@ li:hover {
     }
 
     h1, label, select, button, li {
-        font-size: 0.8em; /* Only do this if you want to change font size for all these elements */
+        font-size: 1.9em; /* Only do this if you want to change font size for all these elements */
     }
 
     /* Assuming .container flex-direction is set to column outside of the media query */
