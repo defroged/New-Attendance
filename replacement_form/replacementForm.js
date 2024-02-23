@@ -530,7 +530,9 @@ async function handleSubmit() {
 
     replacements.added = [];
     replacements.removed = [];
-    document.getElementById("submit-section").style.display = "none";
+    // Hide the main container and display the success message
+    document.getElementById("main-container").style.display = "none";
+    document.getElementById("success-message").style.display = "block";
   } catch (error) {
     console.error("Error in handleSubmit()", error);
   }
