@@ -19,6 +19,10 @@ h1 {
     width: 100%; /* Full width */
 }
 
+#available-slots {
+  text-align: center;
+  margin: 0 auto;
+}
 .spinner {
   display: none;
   border: 8px solid #f3f3f3;
@@ -102,7 +106,7 @@ label {
     margin-bottom: .5em;
     margin-left: auto;
     margin-right: auto;
-    width: 27%;
+    width: 100%;
 }
 
 select {
@@ -253,7 +257,7 @@ li:hover {
     }
     
     label {
-        width: 50%
+        width: 100%;
     }
     
         .remove-replacement-button {

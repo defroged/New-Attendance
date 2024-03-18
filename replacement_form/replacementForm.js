@@ -165,9 +165,21 @@ async function handleReplacementChange() {
   }
 }
   
-  function displayAvailableSlots(availableSlots) {
+async function displayAvailableSlots(availableSlots) {
+  const studentSelect = document.getElementById("student-select");
+  const studentNameToSearch = studentSelect.value;
+
+  // Fetch student name from spreadsheet
+  let studentName = await fetchStudentNameFromSpreadsheet(studentNameToSearch);
+
+  // Error handling:
+  if (!studentName) {
+     console.error("Student name not found. Please check the spreadsheet.");
+     // Optionally display a message to the user here
+  }
+
   const availableSlotsElement = document.getElementById("available-slots");
-  availableSlotsElement.innerHTML = `可能な振替レッスンは${availableSlots}枠が残っています`;
+  availableSlotsElement.innerHTML = `${studentName}の可能な振替レッスンは${availableSlots}枠が残っています`;
   availableSlotsElement.setAttribute("data-count", availableSlots);
 
   const stepThreeElement = document.getElementById("step-three");
@@ -175,6 +187,25 @@ async function handleReplacementChange() {
     stepThreeElement.style.display = "block";
   } else {
     stepThreeElement.style.display = "none";
+  }
+}
+
+async function fetchStudentNameFromSpreadsheet(studentNameToSearch) {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
+
+    for (let i = 0; i < values.length; i++) {
+      if (values[i][0] === studentNameToSearch) { 
+        return values[i][0]; // Column A contains the name
+      }
+    }
+
+    return null; // Student not found
+  } catch (error) {
+    console.error('Error fetching student name from spreadsheet:', error);
+    return null;
   }
 }
 
@@ -530,7 +561,6 @@ async function handleSubmit() {
 
     replacements.added = [];
     replacements.removed = [];
-    // Hide the main container and display the success message
     document.getElementById("main-container").style.display = "none";
     document.getElementById("success-message").style.display = "block";
   } catch (error) {
