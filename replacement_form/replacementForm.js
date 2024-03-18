@@ -538,6 +538,7 @@ async function removeReplacement(eventId) {
 
 async function handleSubmit() {
   try {
+	  showSpinner();
     const studentSelect = document.getElementById("student-select");
     const studentName = studentSelect.value;
 
@@ -563,6 +564,7 @@ async function handleSubmit() {
     replacements.removed = [];
     document.getElementById("main-container").style.display = "none";
     document.getElementById("success-message").style.display = "block";
+	hideSpinner();
   } catch (error) {
     console.error("Error in handleSubmit()", error);
   }
