@@ -179,7 +179,7 @@ async function displayAvailableSlots(availableSlots) {
   }
 
   const availableSlotsElement = document.getElementById("available-slots");
-  availableSlotsElement.innerHTML = `${studentName}の予約可能な振替レッスンは${availableSlots.toString().bold()}枠が残っています`;
+  availableSlotsElement.innerHTML = `${studentName}の予約可能な振り替えレッスンは${availableSlots.toString().bold()}枠が残っています`;
   availableSlotsElement.setAttribute("data-count", availableSlots);
 
   const stepThreeElement = document.getElementById("step-three");
@@ -466,7 +466,7 @@ function fetchCalendarEventsForClasses(classes) {
 function populateReplacementClassDropdown(events) {
   const replacementSelect = document.getElementById("replacement-select");
 
-  replacementSelect.innerHTML = '<option value="" disabled selected>振替レッスンを選択してください</option>';
+  replacementSelect.innerHTML = '<option value="" disabled selected>振り替えレッスンを選択してください</option>';
 
   events.forEach((event) => {
     const option = document.createElement("option");

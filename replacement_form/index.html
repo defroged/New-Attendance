@@ -10,7 +10,7 @@
 </head>
 <body onload="initializeReplacementForm()">
 
-    <h1>振替レッスン<br>申込フォーム</h1>
+    <h1>振り替えレッスン<br>予約フォーム（ベータ版）</h1>
 	<div id="login-section">
     <label for="password-input">4桁のID番号を記入してください</label>
     <input type="password" id="password-input" maxlength="4" pattern="\d{4}" autocomplete="off" oninput="handlePasswordInputChange()">
@@ -35,13 +35,13 @@
 </div>
 <p id="available-slots"></p>
 	 <div id="step-three" style="display: none;">
-        <label for="replacement-select">振替レッスン</label>
+        <label for="replacement-select">振り替えレッスン</label>
         <select id="replacement-select">
-            <option value="" disabled selected>振替レッスンを選択してください</option>
+            <option value="" disabled selected>振り替えレッスンを選択してください</option>
         </select>
     </div>
 	<div id="replacement-list" style="display: none;">
-  <h3>選択された振替レッスン：</h3>
+  <h3>選択された振り替えレッスン：</h3>
   <ul id="replacement-dates"></ul>
 </div>
 <div id="submit-section" style="display: none;">
@@ -51,7 +51,7 @@
 </div>
 
 <div id="success-message" style="display: none;">
-  <h2>振替レッスンの予約が保存されました！</h2>
+  <h2>振り替えレッスンの予約が保存されました！</h2>
 </div>
     <script src="classDetails.js"></script>
     <script src="replacement_form/replacementForm.js"></script>
