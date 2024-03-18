@@ -11,14 +11,13 @@
 <body onload="initializeReplacementForm()">
 
     <h1>振替レッスン<br>申込フォーム</h1>
-	<div class="container" id="main-container">
 	<div id="login-section">
     <label for="password-input">4桁のID番号を記入してください</label>
     <input type="password" id="password-input" maxlength="4" pattern="\d{4}" autocomplete="off" oninput="handlePasswordInputChange()">
     <button id="login-button" style="display: none;" disabled>確定</button>
 </div>
 
-	
+	<div class="container" id="main-container">
 
     <div id="step-one">
         <label for="class-select">お子様のクラスを選択してください</label>
@@ -49,11 +48,10 @@
 <div id="spinner" class="spinner"></div>
   <button id="submit-button">保存する</button>
 </div>
-
+</div>
 
 <div id="success-message" style="display: none;">
   <h2>振替レッスンの予約が保存されました！</h2>
-</div>
 </div>
     <script src="classDetails.js"></script>
     <script src="replacement_form/replacementForm.js"></script>
