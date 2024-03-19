@@ -473,8 +473,11 @@ function populateReplacementClassDropdown(events) {
     option.value = event.id;
     const eventName = event.summary;
     const eventDate = event.start.dateTime || event.start.date;
-    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP"); // Change here
-    option.textContent = `${eventName} - ${formattedDate}`;
+    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP"); 
+	const dayOfWeekIndex = new Date(eventDate).getDay();
+    const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
+    const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex]; 
+    option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji})`;
     replacementSelect.appendChild(option);
 });
 }
