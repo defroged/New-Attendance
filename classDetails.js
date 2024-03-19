@@ -31,13 +31,10 @@ function findStudentsByClassName(className, data) {
 function showModalWithClassDetails(className, students, eventDate) {
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
   students.forEach(function (student) {
-// new
-	modalContent += '<input type="hidden" id="eventDate" value="' + eventDate + '">';
-// end new    
+	modalContent += '<input type="hidden" id="eventDate" value="' + eventDate + '">';  
 	modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
   });
   modalContent += '</ul>';
-  // Save Changes button
   modalContent += '<button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
 
   modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
@@ -58,7 +55,7 @@ function iconClicked(event) {
 
 async function saveAttendance() {
   const eventDateField = document.getElementById('eventDate');
-  const dateOfAbsence = new Date(eventDateField.value).toLocaleDateString();
+  const dateOfAbsence = new Date(eventDateField.value).toISOString().slice(0, 10);
 	
   const className = document.querySelector("h4").innerText.slice(6);
   
@@ -101,7 +98,7 @@ async function saveAttendance() {
     data: dataWithoutHeader,
   }),
 });
-// new
+
 const absenceData = xMarkedStudents.map((student) => {
   return { student, eventName: className, date: dateOfAbsence };
 });
@@ -130,7 +127,6 @@ if (!updateAbsenceResponse.ok) {
   }
   throw new Error(`Failed to update Google Sheet data: ${updateAbsenceResponse.statusText}`);
 }
-// end new
 
     resetState(saveChangesBtn, spinner, overlay);
     
