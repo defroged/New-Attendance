@@ -198,11 +198,11 @@ async function fetchStudentNameFromSpreadsheet(studentNameToSearch) {
 
     for (let i = 0; i < values.length; i++) {
       if (values[i][0] === studentNameToSearch) { 
-        return values[i][0]; // Column A contains the name
+        return values[i][0]; 
       }
     }
 
-    return null; // Student not found
+    return null; 
   } catch (error) {
     console.error('Error fetching student name from spreadsheet:', error);
     return null;
@@ -473,10 +473,10 @@ function populateReplacementClassDropdown(events) {
     option.value = event.id;
     const eventName = event.summary;
     const eventDate = event.start.dateTime || event.start.date;
-    const formattedDate = new Date(eventDate).toLocaleDateString("en-US");
+    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP"); // Change here
     option.textContent = `${eventName} - ${formattedDate}`;
     replacementSelect.appendChild(option);
-  });
+});
 }
 
 function filterEventsByClassNames(events, classNames) {
