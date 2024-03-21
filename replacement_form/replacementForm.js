@@ -149,10 +149,12 @@ async function handleStudentNameMatch(studentName) {
 }
 
 function displaySubmitSectionIfRequired() {
+	showSpinner();
   if (replacements.added.length > 0 || replacements.removed.length > 0) {
     document.getElementById("submit-section").style.display = "block";
   } else {
     document.getElementById("submit-section").style.display = "none";
+	hideSpinner();
   }
 }
 
@@ -252,6 +254,7 @@ function generateUniqueID() {
 }
 
 function fetchAvailableSlots(studentName) {
+	showSpinner();
   return fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -263,6 +266,7 @@ function fetchAvailableSlots(studentName) {
       const availableSlots = findAvailableSlotsByStudentName(studentName, data.values);
       displayAvailableSlots(availableSlots);
     })
+	hideSpinner();
     .catch((error) => {
       console.error('Error fetching available slots:', error);
     });
@@ -270,6 +274,7 @@ function fetchAvailableSlots(studentName) {
 
 async function updateStudentAvailableSlots(studentName) {
   try {
+	  showSpinner();
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
@@ -305,6 +310,7 @@ async function updateStudentAvailableSlots(studentName) {
     });
 
     if (!updateResponse.ok) {
+		hideSpinner();
       throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
     }
 
@@ -315,6 +321,7 @@ async function updateStudentAvailableSlots(studentName) {
 
 async function incrementStudentAvailableSlots(studentName, count) {
   try {
+	  showSpinner();
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
@@ -351,9 +358,11 @@ console.log("Starting to increment slots", {
   } catch (error) {
     console.error("Error incrementing student available slots:", error);
   }
+  hideSpinner();
 }
 
 async function handleStudentChange() {
+	showSpinner();
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
 
@@ -368,9 +377,11 @@ async function handleStudentChange() {
   } else {
     replacementList.style.display = "none"; 
   }
+  hideSpinner();
 }
 
 function populateStudentNames(students) {
+	showSpinner();
   const studentSelect = document.getElementById("student-select");
 
   studentSelect.innerHTML = '<option value="" disabled selected>Please select a student</option>';
@@ -381,6 +392,7 @@ function populateStudentNames(students) {
     option.textContent = student;
     studentSelect.appendChild(option);
   });
+  hideSpinner();
 }
 
 function handleClassChange() {
