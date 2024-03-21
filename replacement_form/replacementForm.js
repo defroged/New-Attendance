@@ -41,6 +41,7 @@ function fetchClassNames() {
 }
   
   function populateClassNames(classNames) {
+	  showSpinner();
     const classSelect = document.getElementById("class-select");
     
     classNames.forEach((className) => {
@@ -49,9 +50,11 @@ function fetchClassNames() {
       option.textContent = className;
       classSelect.appendChild(option);
     });
+	hideSpinner();
   }
   
 function initializeReplacementForm() {
+	showSpinner();
   document.getElementById("main-container").style.display = "none";
   fetchClassNames();
   document.getElementById("password-input").addEventListener("input", handlePasswordInputChange); 
@@ -61,9 +64,11 @@ function initializeReplacementForm() {
   document.getElementById("student-select").addEventListener("change", handleStudentChange);
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
+  hideSpinner();
 }
 
 function handlePasswordInputChange() {
+	showSpinner();
   const passwordInput = document.getElementById("password-input");
   const loginButton = document.getElementById("login-button");
   if (passwordInput.value.length === 4) {
@@ -73,10 +78,12 @@ function handlePasswordInputChange() {
     loginButton.style.display = 'none'; 
     loginButton.disabled = true; 
   }
+  hideSpinner();
 }
 
 async function fetchStudentNameByPassword(password) {
   try {
+	  showSpinner();
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
@@ -88,12 +95,14 @@ async function fetchStudentNameByPassword(password) {
     }
   } catch (error) {
     console.error('Error fetching student name by password:', error);
+	hideSpinner();
   }
 
   return null;
 }
 
 async function handleLogin() {
+	showSpinner();
   document.getElementById("main-container").style.display = "none";
   const passwordInput = document.getElementById("password-input");
   const password = passwordInput.value;
@@ -106,6 +115,7 @@ async function handleLogin() {
     alert("ID番号が違います。再度ご入力お願いします。");
     passwordInput.value = "";
     passwordInput.focus();
+	hideSpinner();
   }
 }
 
