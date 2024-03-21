@@ -91,6 +91,7 @@ async function fetchStudentNameByPassword(password) {
 }
 
 async function handleLogin() {
+	showSpinner();
   document.getElementById("main-container").style.display = "none";
   const passwordInput = document.getElementById("password-input");
   const password = passwordInput.value;
@@ -98,6 +99,7 @@ async function handleLogin() {
   const studentName = await fetchStudentNameByPassword(password);
 
   if (studentName) {
+	  hideSpinner();
     await handleStudentNameMatch(studentName);
   } else {
     alert("ID番号が違います。再度ご入力お願いします。");
@@ -106,7 +108,6 @@ async function handleLogin() {
   }
 }
 
-//new
 async function handleStudentNameMatch(studentName) {
   document.getElementById("main-container").style.display = "block";
   document.getElementById("login-section").style.display = "none";
