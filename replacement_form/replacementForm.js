@@ -138,7 +138,7 @@ async function handleStudentNameMatch(studentName) {
   
   const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
   displayAvailableSlots(availableSlots);
-  hideSpinner();
+  
 }
 
 function displaySubmitSectionIfRequired() {
@@ -146,6 +146,7 @@ function displaySubmitSectionIfRequired() {
     document.getElementById("submit-section").style.display = "block";
   } else {
     document.getElementById("submit-section").style.display = "none";
+	hideSpinner();
   }
 }
 
