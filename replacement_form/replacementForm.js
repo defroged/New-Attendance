@@ -146,7 +146,7 @@ function displaySubmitSectionIfRequired() {
     document.getElementById("submit-section").style.display = "block";
   } else {
     document.getElementById("submit-section").style.display = "none";
-	hideSpinner();
+	
   }
 }
 
@@ -345,8 +345,9 @@ async function handleStudentChange() {
 showSpinner();
   await fetchAvailableSlots(studentName);
   await fetchAvailableClasses(studentName);
-  await populateBookedSlots(studentName);
-  hideSpinner(); 
+   await populateBookedSlots(studentName).then(() => {
+    hideSpinner(); 
+  });
   displaySubmitSectionIfRequired();
 
   const replacementList = document.getElementById("replacement-list");
@@ -508,18 +509,22 @@ function filterEventsByClassNames(events, classNames) {
   return filteredEvents;
 }
 
-async function populateBookedSlots(studentName) {
-  const bookedSlots = await fetchBookedSlots(studentName);
-
-  const newBookedSlots = bookedSlots.filter(
-    (slot) => !replacements.added.some((addedEvent) => addedEvent.name === slot)
-  );
-
-  newBookedSlots.forEach((slot) => {
-    const eventId = generateUniqueID(); 
-    const eventData = { id: eventId, name: slot };
-    replacements.added.push(eventData);
-    addReplacementToDatesList(eventData);
+function populateBookedSlots(studentName) {
+  return new Promise(async (resolve) => {
+    const bookedSlots = await fetchBookedSlots(studentName);
+  
+    const newBookedSlots = bookedSlots.filter(
+      (slot) => !replacements.added.some((addedEvent) => addedEvent.name === slot)
+    );
+  
+    newBookedSlots.forEach((slot) => {
+      const eventId = generateUniqueID();
+      const eventData = { id: eventId, name: slot };
+      replacements.added.push(eventData);
+      addReplacementToDatesList(eventData);
+    });
+    
+    resolve();
   });
 }
 
