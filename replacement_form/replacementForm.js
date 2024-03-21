@@ -97,15 +97,18 @@ async function handleLogin() {
   document.getElementById("main-container").style.display = "none";
   const passwordInput = document.getElementById("password-input");
   const password = passwordInput.value;
+  showSpinner();
 
   const studentName = await fetchStudentNameByPassword(password);
 
   if (studentName) {
     await handleStudentNameMatch(studentName);
+	 hideSpinner();
   } else {
     alert("ID番号が違います。再度ご入力お願いします。");
     passwordInput.value = "";
     passwordInput.focus();
+	hideSpinner();
   }
 }
 
@@ -336,10 +339,11 @@ console.log("Starting to increment slots", {
 async function handleStudentChange() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
-
+showSpinner();
   await fetchAvailableSlots(studentName);
   await fetchAvailableClasses(studentName);
   await populateBookedSlots(studentName);
+  hideSpinner(); 
   displaySubmitSectionIfRequired();
 
   const replacementList = document.getElementById("replacement-list");
