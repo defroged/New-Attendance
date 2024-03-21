@@ -157,6 +157,7 @@ function displaySubmitSectionIfRequired() {
 }
 
 async function handleReplacementChange() {
+	showSpinner();
   const replacementSelect = document.getElementById("replacement-select");
   const eventId = replacementSelect.value;
   const selectedOption = replacementSelect.options[replacementSelect.selectedIndex];
@@ -175,11 +176,13 @@ async function handleReplacementChange() {
     const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) - 1;
 
     document.getElementById("available-slots").setAttribute("data-count", availableSlots);
-    displayAvailableSlots(availableSlots);
+    hideSpinner();
+	displayAvailableSlots(availableSlots);
   }
 }
   
 async function displayAvailableSlots(availableSlots) {
+	showSpinner();
   const studentSelect = document.getElementById("student-select");
   const studentNameToSearch = studentSelect.value;
 
@@ -199,10 +202,12 @@ async function displayAvailableSlots(availableSlots) {
   } else {
     stepThreeElement.style.display = "none";
   }
+  hideSpinner();
 }
 
 async function fetchStudentNameFromSpreadsheet(studentNameToSearch) {
   try {
+	  showSpinner();
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
@@ -214,6 +219,7 @@ async function fetchStudentNameFromSpreadsheet(studentNameToSearch) {
     }
 
     return null; 
+	hideSpinner();
   } catch (error) {
     console.error('Error fetching student name from spreadsheet:', error);
     return null;
@@ -222,6 +228,7 @@ async function fetchStudentNameFromSpreadsheet(studentNameToSearch) {
 
  async function fetchBookedSlots(studentName) {
   try {
+	  showSpinner();
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
@@ -232,6 +239,7 @@ async function fetchStudentNameFromSpreadsheet(studentNameToSearch) {
       const bookedSlots = values[rowIndex].slice(6, 12).filter((slot) => slot !== '');
       return bookedSlots;
     }
+	hideSpinner();
   } catch (error) {
     console.error('Error fetching booked slots: ', error);
   }
