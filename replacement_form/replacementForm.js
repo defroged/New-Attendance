@@ -41,7 +41,6 @@ function fetchClassNames() {
 }
   
   function populateClassNames(classNames) {
-	  showSpinner();
     const classSelect = document.getElementById("class-select");
     
     classNames.forEach((className) => {
@@ -50,11 +49,9 @@ function fetchClassNames() {
       option.textContent = className;
       classSelect.appendChild(option);
     });
-	hideSpinner();
   }
   
 function initializeReplacementForm() {
-	showSpinner();
   document.getElementById("main-container").style.display = "none";
   fetchClassNames();
   document.getElementById("password-input").addEventListener("input", handlePasswordInputChange); 
@@ -64,11 +61,9 @@ function initializeReplacementForm() {
   document.getElementById("student-select").addEventListener("change", handleStudentChange);
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
-  hideSpinner();
 }
 
 function handlePasswordInputChange() {
-	showSpinner();
   const passwordInput = document.getElementById("password-input");
   const loginButton = document.getElementById("login-button");
   if (passwordInput.value.length === 4) {
@@ -78,12 +73,10 @@ function handlePasswordInputChange() {
     loginButton.style.display = 'none'; 
     loginButton.disabled = true; 
   }
-  hideSpinner();
 }
 
 async function fetchStudentNameByPassword(password) {
   try {
-	  showSpinner();
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
@@ -95,14 +88,12 @@ async function fetchStudentNameByPassword(password) {
     }
   } catch (error) {
     console.error('Error fetching student name by password:', error);
-	hideSpinner();
   }
 
   return null;
 }
 
 async function handleLogin() {
-	showSpinner();
   document.getElementById("main-container").style.display = "none";
   const passwordInput = document.getElementById("password-input");
   const password = passwordInput.value;
@@ -115,12 +106,10 @@ async function handleLogin() {
     alert("ID番号が違います。再度ご入力お願いします。");
     passwordInput.value = "";
     passwordInput.focus();
-	hideSpinner();
   }
 }
 
 async function handleStudentNameMatch(studentName) {
-		showSpinner();
   document.getElementById("main-container").style.display = "block";
   document.getElementById("login-section").style.display = "none";
   document.getElementById("step-one").style.display = "none";
@@ -145,21 +134,17 @@ async function handleStudentNameMatch(studentName) {
   
   const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
   displayAvailableSlots(availableSlots);
-  hideSpinner(); 
 }
 
 function displaySubmitSectionIfRequired() {
-	showSpinner();
   if (replacements.added.length > 0 || replacements.removed.length > 0) {
     document.getElementById("submit-section").style.display = "block";
   } else {
     document.getElementById("submit-section").style.display = "none";
-	hideSpinner();
   }
 }
 
 async function handleReplacementChange() {
-	showSpinner();
   const replacementSelect = document.getElementById("replacement-select");
   const eventId = replacementSelect.value;
   const selectedOption = replacementSelect.options[replacementSelect.selectedIndex];
@@ -178,13 +163,11 @@ async function handleReplacementChange() {
     const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) - 1;
 
     document.getElementById("available-slots").setAttribute("data-count", availableSlots);
-    hideSpinner();
-	displayAvailableSlots(availableSlots);
+    displayAvailableSlots(availableSlots);
   }
 }
   
 async function displayAvailableSlots(availableSlots) {
-	showSpinner();
   const studentSelect = document.getElementById("student-select");
   const studentNameToSearch = studentSelect.value;
 
@@ -204,12 +187,10 @@ async function displayAvailableSlots(availableSlots) {
   } else {
     stepThreeElement.style.display = "none";
   }
-  hideSpinner();
 }
 
 async function fetchStudentNameFromSpreadsheet(studentNameToSearch) {
   try {
-	  showSpinner();
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
@@ -221,7 +202,6 @@ async function fetchStudentNameFromSpreadsheet(studentNameToSearch) {
     }
 
     return null; 
-	hideSpinner();
   } catch (error) {
     console.error('Error fetching student name from spreadsheet:', error);
     return null;
@@ -230,7 +210,6 @@ async function fetchStudentNameFromSpreadsheet(studentNameToSearch) {
 
  async function fetchBookedSlots(studentName) {
   try {
-	  showSpinner();
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
@@ -241,7 +220,6 @@ async function fetchStudentNameFromSpreadsheet(studentNameToSearch) {
       const bookedSlots = values[rowIndex].slice(6, 12).filter((slot) => slot !== '');
       return bookedSlots;
     }
-	hideSpinner();
   } catch (error) {
     console.error('Error fetching booked slots: ', error);
   }
@@ -254,7 +232,6 @@ function generateUniqueID() {
 }
 
 function fetchAvailableSlots(studentName) {
-	showSpinner();
   return fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -266,7 +243,6 @@ function fetchAvailableSlots(studentName) {
       const availableSlots = findAvailableSlotsByStudentName(studentName, data.values);
       displayAvailableSlots(availableSlots);
     })
-	hideSpinner();
     .catch((error) => {
       console.error('Error fetching available slots:', error);
     });
@@ -274,7 +250,6 @@ function fetchAvailableSlots(studentName) {
 
 async function updateStudentAvailableSlots(studentName) {
   try {
-	  showSpinner();
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
@@ -310,7 +285,6 @@ async function updateStudentAvailableSlots(studentName) {
     });
 
     if (!updateResponse.ok) {
-		hideSpinner();
       throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
     }
 
@@ -321,7 +295,6 @@ async function updateStudentAvailableSlots(studentName) {
 
 async function incrementStudentAvailableSlots(studentName, count) {
   try {
-	  showSpinner();
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
@@ -358,11 +331,9 @@ console.log("Starting to increment slots", {
   } catch (error) {
     console.error("Error incrementing student available slots:", error);
   }
-  hideSpinner();
 }
 
 async function handleStudentChange() {
-	showSpinner();
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
 
@@ -377,11 +348,9 @@ async function handleStudentChange() {
   } else {
     replacementList.style.display = "none"; 
   }
-  hideSpinner();
 }
 
 function populateStudentNames(students) {
-	showSpinner();
   const studentSelect = document.getElementById("student-select");
 
   studentSelect.innerHTML = '<option value="" disabled selected>Please select a student</option>';
@@ -392,7 +361,6 @@ function populateStudentNames(students) {
     option.textContent = student;
     studentSelect.appendChild(option);
   });
-  hideSpinner();
 }
 
 function handleClassChange() {
@@ -549,7 +517,6 @@ async function populateBookedSlots(studentName) {
 }
 
 function addReplacementToDatesList(eventData) {
-	showSpinner();
   const listElement = document.createElement("li");
   listElement.setAttribute("id", `replacement-date-${eventData.id}`);
   
@@ -566,11 +533,9 @@ function addReplacementToDatesList(eventData) {
   
   const replacementDatesList = document.getElementById("replacement-dates");
   replacementDatesList.appendChild(listElement);
-  hideSpinner();
 }
 
 async function removeReplacement(eventId) {
-	showSpinner();
   const listElementToRemove = document.getElementById(`replacement-date-${eventId}`);
   const eventText = listElementToRemove.firstElementChild.textContent;
   listElementToRemove.remove();
@@ -582,7 +547,6 @@ async function removeReplacement(eventId) {
   const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) + 1;
   document.getElementById("available-slots").setAttribute("data-count", availableSlots);
   displayAvailableSlots(availableSlots);
-  hideSpinner();
 }
 
 async function handleSubmit() {
