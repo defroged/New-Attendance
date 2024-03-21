@@ -342,20 +342,35 @@ console.log("Starting to increment slots", {
 async function handleStudentChange() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
-showSpinner();
-  await fetchAvailableSlots(studentName);
-  await fetchAvailableClasses(studentName);
-   await populateBookedSlots(studentName).then(() => {
-    hideSpinner(); 
-  });
-  displaySubmitSectionIfRequired();
 
-  const replacementList = document.getElementById("replacement-list");
-  if (studentName) {
-    replacementList.style.display = "block"; 
-  } else {
-    replacementList.style.display = "none"; 
-  }
+  let completedSteps = 0;
+  const totalSteps = 3;
+  const updateCompletedSteps = () => {
+    completedSteps++;
+    if (completedSteps === totalSteps) {
+      hideSpinner();
+      displaySubmitSectionIfRequired();
+
+      const replacementList = document.getElementById("replacement-list");
+      if (studentName) {
+        replacementList.style.display = "block";
+      } else {
+        replacementList.style.display = "none";
+      }
+    }
+  };
+
+  showSpinner();
+
+  await fetchAvailableSlots(studentName);
+  updateCompletedSteps();
+
+  await fetchAvailableClasses(studentName);
+  updateCompletedSteps();
+
+  await populateBookedSlots(studentName).then(() => {
+    updateCompletedSteps();
+  });
 }
 
 function populateStudentNames(students) {
