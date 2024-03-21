@@ -474,12 +474,24 @@ function populateReplacementClassDropdown(events) {
     const eventName = event.summary;
     const eventDate = event.start.dateTime || event.start.date;
     const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP"); 
-	const dayOfWeekIndex = new Date(eventDate).getDay();
+    const dayOfWeekIndex = new Date(eventDate).getDay();
     const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
     const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex]; 
-    option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji})`;
+
+    // Extract time
+    let eventTime = "";
+    if (event.start.dateTime) {
+        const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", { 
+            hour: '2-digit', 
+            minute: '2-digit'
+        });
+        eventTime = ` ${formattedTime}`; 
+    }
+
+    option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`; 
     replacementSelect.appendChild(option);
 });
+
 }
 
 function filterEventsByClassNames(events, classNames) {
