@@ -14,6 +14,7 @@ function hideSpinner() {
 }
 
 function fetchClassNames() {
+	showSpinner();
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -33,7 +34,10 @@ function fetchClassNames() {
     })
     .catch((error) => {
       console.error('Error fetching class names:', error);
-    });
+    })
+	 .finally(() => {
+      hideSpinner();
+	  });
 }
   
   function populateClassNames(classNames) {
@@ -90,8 +94,6 @@ async function fetchStudentNameByPassword(password) {
 }
 
 async function handleLogin() {
-	  try {
-    showSpinner();
   document.getElementById("main-container").style.display = "none";
   const passwordInput = document.getElementById("password-input");
   const password = passwordInput.value;
@@ -102,19 +104,12 @@ async function handleLogin() {
     await handleStudentNameMatch(studentName);
   } else {
     alert("ID番号が違います。再度ご入力お願いします。");
-    }
-  } catch (error) {
-    alert(error.message);
-    const passwordInput = document.getElementById("password-input");
     passwordInput.value = "";
     passwordInput.focus();
-  } finally {
-    hideSpinner();
   }
 }
 
 async function handleStudentNameMatch(studentName) {
-	showSpinner();
   document.getElementById("main-container").style.display = "block";
   document.getElementById("login-section").style.display = "none";
   document.getElementById("step-one").style.display = "none";
@@ -139,7 +134,6 @@ async function handleStudentNameMatch(studentName) {
   
   const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
   displayAvailableSlots(availableSlots);
-  hideSpinner(); 
 }
 
 function displaySubmitSectionIfRequired() {
@@ -340,7 +334,6 @@ console.log("Starting to increment slots", {
 }
 
 async function handleStudentChange() {
-	showSpinner();
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
 
@@ -355,7 +348,6 @@ async function handleStudentChange() {
   } else {
     replacementList.style.display = "none"; 
   }
-  hideSpinner(); 
 }
 
 function populateStudentNames(students) {
