@@ -14,7 +14,6 @@ function hideSpinner() {
 }
 
 function fetchClassNames() {
-	showSpinner();
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -34,10 +33,7 @@ function fetchClassNames() {
     })
     .catch((error) => {
       console.error('Error fetching class names:', error);
-    })
-	 .finally(() => {
-      hideSpinner();
-	  });
+    });
 }
   
   function populateClassNames(classNames) {
@@ -94,6 +90,7 @@ async function fetchStudentNameByPassword(password) {
 }
 
 async function handleLogin() {
+  showSpinner(); // Add this line to show the spinner first
   document.getElementById("main-container").style.display = "none";
   const passwordInput = document.getElementById("password-input");
   const password = passwordInput.value;
@@ -107,6 +104,7 @@ async function handleLogin() {
     passwordInput.value = "";
     passwordInput.focus();
   }
+  hideSpinner(); // Add this line to hide the spinner after everything
 }
 
 async function handleStudentNameMatch(studentName) {
