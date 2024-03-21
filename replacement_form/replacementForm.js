@@ -91,21 +91,21 @@ async function fetchStudentNameByPassword(password) {
 }
 
 async function handleLogin() {
-	showSpinner();
   document.getElementById("main-container").style.display = "none";
+  showSpinner();
   const passwordInput = document.getElementById("password-input");
   const password = passwordInput.value;
 
   const studentName = await fetchStudentNameByPassword(password);
 
   if (studentName) {
-	  hideSpinner();
     await handleStudentNameMatch(studentName);
   } else {
     alert("ID番号が違います。再度ご入力お願いします。");
     passwordInput.value = "";
     passwordInput.focus();
   }
+  hideSpinner();
 }
 
 async function handleStudentNameMatch(studentName) {
