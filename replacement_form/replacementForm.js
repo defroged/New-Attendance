@@ -537,6 +537,7 @@ async function populateBookedSlots(studentName) {
 }
 
 function addReplacementToDatesList(eventData) {
+	showSpinner();
   const listElement = document.createElement("li");
   listElement.setAttribute("id", `replacement-date-${eventData.id}`);
   
@@ -553,9 +554,11 @@ function addReplacementToDatesList(eventData) {
   
   const replacementDatesList = document.getElementById("replacement-dates");
   replacementDatesList.appendChild(listElement);
+  hideSpinner();
 }
 
 async function removeReplacement(eventId) {
+	showSpinner();
   const listElementToRemove = document.getElementById(`replacement-date-${eventId}`);
   const eventText = listElementToRemove.firstElementChild.textContent;
   listElementToRemove.remove();
@@ -567,6 +570,7 @@ async function removeReplacement(eventId) {
   const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) + 1;
   document.getElementById("available-slots").setAttribute("data-count", availableSlots);
   displayAvailableSlots(availableSlots);
+  hideSpinner();
 }
 
 async function handleSubmit() {
