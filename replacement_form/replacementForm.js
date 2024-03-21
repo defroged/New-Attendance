@@ -13,8 +13,8 @@ function hideSpinner() {
   document.getElementById("spinner").style.display = "none";
 }
 
-
 function fetchClassNames() {
+	showSpinner();
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -34,7 +34,10 @@ function fetchClassNames() {
     })
     .catch((error) => {
       console.error('Error fetching class names:', error);
-    });
+    })
+	 .finally(() => {
+      hideSpinner();
+	  });
 }
   
   function populateClassNames(classNames) {
@@ -92,7 +95,6 @@ async function fetchStudentNameByPassword(password) {
 
 async function handleLogin() {
   document.getElementById("main-container").style.display = "none";
-  showSpinner();
   const passwordInput = document.getElementById("password-input");
   const password = passwordInput.value;
 
@@ -105,7 +107,6 @@ async function handleLogin() {
     passwordInput.value = "";
     passwordInput.focus();
   }
-  hideSpinner();
 }
 
 async function handleStudentNameMatch(studentName) {
@@ -170,13 +171,10 @@ async function displayAvailableSlots(availableSlots) {
   const studentSelect = document.getElementById("student-select");
   const studentNameToSearch = studentSelect.value;
 
-  // Fetch student name from spreadsheet
   let studentName = await fetchStudentNameFromSpreadsheet(studentNameToSearch);
 
-  // Error handling:
   if (!studentName) {
      console.error("Student name not found. Please check the spreadsheet.");
-     // Optionally display a message to the user here
   }
 
   const availableSlotsElement = document.getElementById("available-slots");
@@ -479,7 +477,6 @@ function populateReplacementClassDropdown(events) {
     const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
     const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex]; 
 
-    // Extract time
     let eventTime = "";
     if (event.start.dateTime) {
         const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", { 
