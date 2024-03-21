@@ -97,23 +97,19 @@ async function handleLogin() {
   document.getElementById("main-container").style.display = "none";
   const passwordInput = document.getElementById("password-input");
   const password = passwordInput.value;
-  showSpinner();
 
   const studentName = await fetchStudentNameByPassword(password);
 
   if (studentName) {
     await handleStudentNameMatch(studentName);
-	 hideSpinner();
   } else {
     alert("ID番号が違います。再度ご入力お願いします。");
     passwordInput.value = "";
     passwordInput.focus();
-	hideSpinner();
   }
 }
 
 async function handleStudentNameMatch(studentName) {
-	showSpinner();
   document.getElementById("main-container").style.display = "block";
   document.getElementById("login-section").style.display = "none";
   document.getElementById("step-one").style.display = "none";
@@ -138,7 +134,6 @@ async function handleStudentNameMatch(studentName) {
   
   const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
   displayAvailableSlots(availableSlots);
-  
 }
 
 function displaySubmitSectionIfRequired() {
@@ -146,7 +141,6 @@ function displaySubmitSectionIfRequired() {
     document.getElementById("submit-section").style.display = "block";
   } else {
     document.getElementById("submit-section").style.display = "none";
-	
   }
 }
 
@@ -343,34 +337,17 @@ async function handleStudentChange() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
 
-  let completedSteps = 0;
-  const totalSteps = 3;
-  const updateCompletedSteps = () => {
-    completedSteps++;
-    if (completedSteps === totalSteps) {
-      hideSpinner();
-      displaySubmitSectionIfRequired();
-
-      const replacementList = document.getElementById("replacement-list");
-      if (studentName) {
-        replacementList.style.display = "block";
-      } else {
-        replacementList.style.display = "none";
-      }
-    }
-  };
-
-  showSpinner();
-
   await fetchAvailableSlots(studentName);
-  updateCompletedSteps();
-
   await fetchAvailableClasses(studentName);
-  updateCompletedSteps();
+  await populateBookedSlots(studentName);
+  displaySubmitSectionIfRequired();
 
-  await populateBookedSlots(studentName).then(() => {
-    updateCompletedSteps();
-  });
+  const replacementList = document.getElementById("replacement-list");
+  if (studentName) {
+    replacementList.style.display = "block"; 
+  } else {
+    replacementList.style.display = "none"; 
+  }
 }
 
 function populateStudentNames(students) {
@@ -524,22 +501,18 @@ function filterEventsByClassNames(events, classNames) {
   return filteredEvents;
 }
 
-function populateBookedSlots(studentName) {
-  return new Promise(async (resolve) => {
-    const bookedSlots = await fetchBookedSlots(studentName);
-  
-    const newBookedSlots = bookedSlots.filter(
-      (slot) => !replacements.added.some((addedEvent) => addedEvent.name === slot)
-    );
-  
-    newBookedSlots.forEach((slot) => {
-      const eventId = generateUniqueID();
-      const eventData = { id: eventId, name: slot };
-      replacements.added.push(eventData);
-      addReplacementToDatesList(eventData);
-    });
-    
-    resolve();
+async function populateBookedSlots(studentName) {
+  const bookedSlots = await fetchBookedSlots(studentName);
+
+  const newBookedSlots = bookedSlots.filter(
+    (slot) => !replacements.added.some((addedEvent) => addedEvent.name === slot)
+  );
+
+  newBookedSlots.forEach((slot) => {
+    const eventId = generateUniqueID(); 
+    const eventData = { id: eventId, name: slot };
+    replacements.added.push(eventData);
+    addReplacementToDatesList(eventData);
   });
 }
 
