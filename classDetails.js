@@ -29,6 +29,17 @@ function findStudentsByClassName(className, data) {
   return students;
 }
 
+function parseDateFromReplacementText(text) {
+  const dateString = text.match(/\(([^)]+)\)/);
+  if (dateString && dateString[1]) {
+    const [year, month, day] = dateString[1].split('/').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.toISOString().slice(0, 10);
+  } else {
+    return null;
+  }
+}
+
 function findStudentReplacements(eventDate, data) {
   const replacements = [];
   const searchDate = new Date(eventDate).toISOString().slice(0, 10);
@@ -36,8 +47,8 @@ function findStudentReplacements(eventDate, data) {
     for (let i = 6; i <= 11; i++) { 
       if (row[i]) {
         const studentInfo = row[i].split(' - ');
-        const replacementDate = new Date(studentInfo[1]).toISOString().slice(0, 10);
-        if (searchDate === replacementDate) {
+        const replacementDate = parseDateFromReplacementText(studentInfo[1]);
+        if (replacementDate && searchDate === replacementDate) {
           replacements.push(studentInfo[0]);
         }
       }
