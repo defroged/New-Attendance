@@ -10,10 +10,12 @@ function fetchClassDetails(className, eventDate) {
       return response.json();
     })
     .then((data) => {
-  const students = findStudentsByClassName(className, data.values);
-  const replacements = findStudentReplacements(eventDate, data.values);
-  showModalWithClassDetails(className, students, eventDate, replacements);
-})
+      const students = findStudentsByClassName(className, data.values);
+      console.log("Found Students: ", students); // Add this line
+      const replacements = findStudentReplacements(eventDate, data.values);
+      console.log("Found Replacements: ", replacements); // Add this line
+      showModalWithClassDetails(className, students, eventDate, replacements);
+    })
     .catch((error) => {
       console.error('Error fetching class details:', error);
     });
