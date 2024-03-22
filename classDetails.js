@@ -30,10 +30,12 @@ function findStudentsByClassName(className, data) {
 }
 
 function parseDateFromReplacementText(text) {
-  const dateString = text.match(/\(([^)]+)\)/);
-  if (dateString && dateString[1]) {
-    const dateParts = dateString[1].split(' ')[0].split('/').map(Number);
-    const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+  const dateString = text.match(/\d{4}\/\d{1,2}\/\d{1,2}/); 
+  if (dateString && dateString[0]) {
+    const dateParts = dateString[0].split('/').map(Number); 
+    console.log('dateParts:', dateParts); // Log the output here
+
+    const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); 
     return date.toISOString().slice(0, 10);
   } else {
     return null;
