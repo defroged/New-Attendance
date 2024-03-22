@@ -183,7 +183,6 @@ eventElement.addEventListener('click', function () {
     fetchClassDetails(event.summary, strippedDate);
 });
 });  
-});
 }
 
     document.getElementById('prevWeek').addEventListener('click', function() {
