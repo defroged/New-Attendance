@@ -32,25 +32,25 @@ function findStudentsByClassName(className, data) {
   });
   return students;
 }
-
+//this function
 function parseDateFromReplacementText(text) {
-  const dateString = text.match(/\d{4}\/\d{1,2}\/\d{1,2}/); 
-  if (dateString && dateString[0]) {
-    const dateParts = dateString[0].split('/').map(Number); 
-    console.log('dateParts:', dateParts); 
-
-    const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); 
-	console.log('Parsed Date:', date.toISOString().slice(0, 10)); 
-    return date.toISOString().slice(0, 10);
+  const dateTimeString = text.match(/\d{4}\/\d{1,2}\/\d{1,2} \(\S\) +\d{1,2}:\d{2}/);
+  if (dateTimeString && dateTimeString[0]) {
+    const dateTimeParts = dateTimeString[0].replace(/\(\S\)/, "").trim().split(" ");
+    const dateParts = dateTimeParts[0].split('/').map(Number);
+    const timeParts = dateTimeParts[1].split(':').map(Number);
+    
+    const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], timeParts[0], timeParts[1]);
+    return date.toISOString();
   } else {
     return null;
   }
 }
-
+// this function
 function findStudentReplacements(className, eventDate, data) {
   const replacements = [];
-  const searchDate = new Date(eventDate);
-  searchDate.setHours(0, 0, 0, 0);
+  eventDate = new Date(eventDate);
+  eventDate.setSeconds(0, 0);
   className = className.toLowerCase().trim();
   
   data.forEach(function (row) {
@@ -59,11 +59,10 @@ function findStudentReplacements(className, eventDate, data) {
       for (let i = 6; i <= 11; i++) {
         if (row[i]) {
           const replacementDate = new Date(parseDateFromReplacementText(row[i]));
-          replacementDate.setHours(0, 0, 0, 0);
 
           if (
-            searchDate.toISOString().slice(0, 10) ===
-            replacementDate.toISOString().slice(0, 10)
+            eventDate.toISOString() ===
+            replacementDate.toISOString()
           ) {
             replacements.push(row[0]); // Get the student's name from column A
           }
