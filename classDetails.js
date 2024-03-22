@@ -50,8 +50,7 @@ function parseDateFromReplacementText(text) {
 function findStudentReplacements(eventDate, data) {
   const replacements = [];
   const searchDate = new Date(eventDate);
-  searchDate.setHours(0, 0, 0, 0); 
-  console.log('Search date:', searchDate); 
+  searchDate.setHours(0, 0, 0, 0);
 
   data.forEach(function (row) {
     for (let i = 6; i <= 11; i++) {
@@ -60,11 +59,9 @@ function findStudentReplacements(eventDate, data) {
         const replacementDate = new Date(parseDateFromReplacementText(row[i]));
         replacementDate.setHours(0, 0, 0, 0);
 
-        if (searchDate.getTime() === replacementDate.getTime()) {
-			 console.log('Matched Replacement:', studentInfo[0]);
+        // Update the date comparison
+        if (searchDate.toISOString().slice(0, 10) === replacementDate.toISOString().slice(0, 10)) {
           replacements.push(studentInfo[0]);
-        } else {
-          console.log('Non-matching replacement:', studentInfo[0], 'Replacement Date:', replacementDate); // Add this line
         }
       }
     }
