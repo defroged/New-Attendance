@@ -54,19 +54,19 @@ function findStudentReplacements(className, eventDate, data) {
   className = className.toLowerCase().trim();
   
   data.forEach(function (row) {
-    for (let i = 6; i <= 11; i++) {
-      if (row[i]) {
-        const studentInfo = row[i].split(' - ');
-        const parsedClassName = studentInfo[0].toLowerCase().trim();
-        const replacementDate = new Date(parseDateFromReplacementText(row[i]));
-        replacementDate.setHours(0, 0, 0, 0);
+    const dataClassName = row[1].toLowerCase().trim();
+    if (dataClassName === className) {
+      for (let i = 6; i <= 11; i++) {
+        if (row[i]) {
+          const replacementDate = new Date(parseDateFromReplacementText(row[i]));
+          replacementDate.setHours(0, 0, 0, 0);
 
-        if (
-          searchDate.toISOString().slice(0, 10) ===
-            replacementDate.toISOString().slice(0, 10) &&
-          className === parsedClassName
-        ) {
-          replacements.push(row[0]); // Get the student's name from column A
+          if (
+            searchDate.toISOString().slice(0, 10) ===
+            replacementDate.toISOString().slice(0, 10)
+          ) {
+            replacements.push(row[0]); // Get the student's name from column A
+          }
         }
       }
     }
