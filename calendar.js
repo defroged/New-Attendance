@@ -90,14 +90,17 @@ function fetchClassReplacements() {
     fetch(`/api/calendar-events?timeMin=${timeMin}&timeMax=${timeMax}`)
         .then(response => response.json())
         .then(data => {
-            displayEvents(data.items);
-        fetchClassReplacements()
-    .then(replacements => {
-        displayEvents(data.items, replacements);
-    })
-    .catch(error => {
-        console.error('Error fetching replacements:', error);
-    });
+            fetchClassReplacements()
+                .then(replacements => {
+                    displayEvents(data.items, replacements);
+                })
+                .catch(error => {
+                    console.error('Error fetching replacements:', error);
+                });
+        })
+        .catch(error => {
+            console.error('Error fetching events:', error);
+        });
 }
 
 function displayEvents(events) {
@@ -165,20 +168,21 @@ function displayEvents(events) {
     today.setHours(0, 0, 0, 0);
 
     while (eventStart < eventEnd) {
-        if (eventStart >= today) {
-            const eventDateStr = eventStart.toISOString().slice(0, 10);
-const replacementsForEvent = replacements[eventDateStr] || [];
-displayEventForDay(eventStart, eventEnd, eventElement, replacementsForEvent);
-        }
-        eventStart.setDate(eventStart.getDate() + 1);
-        eventStart.setHours(0, 0, 0, 0); 
+    if (eventStart >= today) {
+        const eventDateStr = eventStart.toISOString().slice(0, 10);
+        const replacementsForEvent = replacements[eventDateStr] || [];
+        displayEventForDay(eventStart, eventEnd, eventElement, replacementsForEvent);
     }
-    eventElement.addEventListener('click', function () {
-        const date = new Date(eventStart);
-        date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-        const strippedDate = date.toISOString().slice(0, 10);
-        fetchClassDetails(event.summary, strippedDate);
-    });
+    eventStart.setDate(eventStart.getDate() + 1);
+    eventStart.setHours(0, 0, 0, 0);
+}
+eventElement.addEventListener('click', function () {
+    const date = new Date(eventStart);
+    date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+    const strippedDate = date.toISOString().slice(0, 10);
+    fetchClassDetails(event.summary, strippedDate);
+});
+});  
 });
 }
 
