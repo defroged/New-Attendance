@@ -47,7 +47,7 @@ function parseDateFromReplacementText(text) {
   }
 }
 
-function function findStudentReplacements(eventDate, data) {
+function findStudentReplacements(eventDate, data) {
   const replacements = [];
   const searchDate = new Date(eventDate);
   searchDate.setHours(0, 0, 0, 0);
@@ -59,7 +59,18 @@ function function findStudentReplacements(eventDate, data) {
         const replacementDate = new Date(parseDateFromReplacementText(row[i]));
         replacementDate.setHours(0, 0, 0, 0);
 
-        if (searchDate.getTime() === replacementDate.getTime()) {
+        // Adding the timezone offset to fix timezone issues
+        const searchDateWithOffset = new Date(
+          searchDate.getTime() - searchDate.getTimezoneOffset() * 60 * 1000
+        );
+        const replacementDateWithOffset = new Date(
+          replacementDate.getTime() - replacementDate.getTimezoneOffset() * 60 * 1000
+        );
+
+        if (
+          searchDateWithOffset.toISOString().slice(0, 10) ===
+          replacementDateWithOffset.toISOString().slice(0, 10)
+        ) {
           replacements.push(studentInfo[0]);
         }
       }
