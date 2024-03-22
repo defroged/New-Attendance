@@ -1,3 +1,4 @@
+const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 window.onload = function() {
      const days = document.querySelectorAll('.day');
     const today = new Date();
@@ -47,6 +48,35 @@ window.onload = function() {
         return daysInJapanese[dayIndex];
     }
 
+function fetchClassReplacements() {
+    return new Promise((resolve, reject) => {
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const replacements = {};
+                data.values.forEach(row => {
+                    for (let i = 6; i <= 11; i++) {
+                        if (row[i]) {
+                            const studentInfo = row[i].split(' - ');
+                            const replacementDateStr = parseDateFromReplacementText(row[i]);
+                            if (replacementDateStr) {
+                                if (!replacements[replacementDateStr]) {
+                                    replacements[replacementDateStr] = [];
+                                }
+                                replacements[replacementDateStr].push(studentInfo[0]);
+                            }
+                        }
+                    }
+                });
+                resolve(replacements);
+            })
+            .catch(error => {
+                console.error("Error fetching class replacements:", error);
+                reject(error);
+            });
+    });
+}
+
     function fetchEvents() {
     const weekStartDate = new Date(currentWeekStart);
     weekStartDate.setHours(0, 0, 0, 0);
@@ -61,10 +91,13 @@ window.onload = function() {
         .then(response => response.json())
         .then(data => {
             displayEvents(data.items);
-        })
-        .catch(error => {
-            console.error('Error fetching events:', error);
-        });
+        fetchClassReplacements()
+    .then(replacements => {
+        displayEvents(data.items, replacements);
+    })
+    .catch(error => {
+        console.error('Error fetching replacements:', error);
+    });
 }
 
 function displayEvents(events) {
@@ -101,34 +134,41 @@ function displayEvents(events) {
     summaryElement.innerText = event.summary;
     eventElement.appendChild(summaryElement);
 
-    function displayEventForDay(eventStart, eventEnd, eventElement) {
-        const startHour = eventStart.getHours();
-        const eventDay = eventStart.getDay();
-        const dayElement = days[eventDay];
-        const timeSlot = dayElement.querySelector(
-            `.time-slot[data-hour="${startHour}"]`
-        );
+    function displayEventForDay(eventStart, eventEnd, eventElement, replacements) {
+    const startHour = eventStart.getHours();
+    const eventDay = eventStart.getDay();
+    const dayElement = days[eventDay];
+    const timeSlot = dayElement.querySelector(
+        `.time-slot[data-hour="${startHour}"]`
+    );
 
-        if (timeSlot) {
-            const clonedEventElement = eventElement.cloneNode(true);
-            clonedEventElement.addEventListener('click', function () {
-                const date = new Date(eventStart);
-                date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
-                const strippedDate = date.toISOString().slice(0, 10);
-                fetchClassDetails(event.summary, strippedDate);
-            });
-            timeSlot.appendChild(clonedEventElement);
-        } else {
-            console.error('No time slot found for event:', event);
-        }
+    if (timeSlot) {
+      const clonedEventElement = eventElement.cloneNode(true);
+      if (replacements && replacements.length > 0) {
+        const replacementText = ` (${replacements.join(', ')} replacement)`;
+        const eventSummaryElement = clonedEventElement.querySelector('.event-summary');
+        eventSummaryElement.innerText += replacementText;
+      }
+      clonedEventElement.addEventListener('click', function () {
+        const date = new Date(eventStart);
+        date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+        const strippedDate = date.toISOString().slice(0, 10);
+        fetchClassDetails(event.summary, strippedDate);
+      });
+      timeSlot.appendChild(clonedEventElement);
+    } else {
+      console.error('No time slot found for event:', event);
     }
+}
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
     while (eventStart < eventEnd) {
         if (eventStart >= today) {
-            displayEventForDay(eventStart, eventEnd, eventElement);
+            const eventDateStr = eventStart.toISOString().slice(0, 10);
+const replacementsForEvent = replacements[eventDateStr] || [];
+displayEventForDay(eventStart, eventEnd, eventElement, replacementsForEvent);
         }
         eventStart.setDate(eventStart.getDate() + 1);
         eventStart.setHours(0, 0, 0, 0); 
