@@ -12,7 +12,7 @@ function fetchClassDetails(className, eventDate) {
     .then((data) => {
       const students = findStudentsByClassName(className, data.values);
       console.log("Found Students: ", students); 
-      const replacements = findStudentReplacements(eventDate, data.values);
+      const replacements = findStudentReplacements(className, eventDate, data.values);
       console.log("Found Replacements: ", replacements); 
       showModalWithClassDetails(className, students, eventDate, replacements);
     })
@@ -47,31 +47,26 @@ function parseDateFromReplacementText(text) {
   }
 }
 
-function findStudentReplacements(eventDate, data) {
+function findStudentReplacements(className, eventDate, data) {
   const replacements = [];
   const searchDate = new Date(eventDate);
   searchDate.setHours(0, 0, 0, 0);
-
+  className = className.toLowerCase().trim();
+  
   data.forEach(function (row) {
     for (let i = 6; i <= 11; i++) {
       if (row[i]) {
         const studentInfo = row[i].split(' - ');
+        const parsedClassName = studentInfo[0].toLowerCase().trim();
         const replacementDate = new Date(parseDateFromReplacementText(row[i]));
         replacementDate.setHours(0, 0, 0, 0);
 
-        // Adding the timezone offset to fix timezone issues
-        const searchDateWithOffset = new Date(
-          searchDate.getTime() - searchDate.getTimezoneOffset() * 60 * 1000
-        );
-        const replacementDateWithOffset = new Date(
-          replacementDate.getTime() - replacementDate.getTimezoneOffset() * 60 * 1000
-        );
-
         if (
-          searchDateWithOffset.toISOString().slice(0, 10) ===
-          replacementDateWithOffset.toISOString().slice(0, 10)
+          searchDate.toISOString().slice(0, 10) ===
+            replacementDate.toISOString().slice(0, 10) &&
+          className === parsedClassName
         ) {
-          replacements.push(studentInfo[0]);
+          replacements.push(row[0]); // Get the student's name from column A
         }
       }
     }
