@@ -11,10 +11,7 @@ function fetchClassDetails(className, eventDate) {
     })
     .then((data) => {
       const students = findStudentsByClassName(className, data.values);
-      console.log("Found Students: ", students); 
-      const replacements = findStudentReplacements(className, eventDate, data.values);
-      console.log("Found Replacements: ", replacements); 
-      showModalWithClassDetails(className, students, eventDate, replacements);
+      showModalWithClassDetails(className, students, eventDate);
     })
     .catch((error) => {
       console.error('Error fetching class details:', error);
@@ -23,73 +20,21 @@ function fetchClassDetails(className, eventDate) {
 
 function findStudentsByClassName(className, data) {
   let students = [];
-  className = className.toLowerCase().trim(); 
   data.forEach(function (row) {
-    const dataClassName = row[1].toLowerCase().trim();
-    if (dataClassName === className) { 
+    if (row[1] === className) { 
       students.push(row[0]); 
     }
   });
   return students;
 }
-//this function
-function parseDateFromReplacementText(text) {
-  const dateTimeString = text.match(/\d{4}\/\d{1,2}\/\d{1,2} \(\S\) +\d{1,2}:\d{2}/);
-  if (dateTimeString && dateTimeString[0]) {
-    const dateTimeParts = dateTimeString[0].replace(/\(\S\)/, "").trim().split(" ");
-    const dateParts = dateTimeParts[0].split('/').map(Number);
-    const timeParts = dateTimeParts[1].split(':').map(Number);
-    
-    const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], timeParts[0], timeParts[1]);
-    return date.toISOString();
-  } else {
-    return null;
-  }
-}
-// this function
-function findStudentReplacements(className, eventDate, data) {
-  const replacements = [];
-  eventDate = new Date(eventDate);
-  eventDate.setSeconds(0, 0);
-  className = className.toLowerCase().trim();
-  
-  data.forEach(function (row) {
-    const dataClassName = row[1].toLowerCase().trim();
-    if (dataClassName === className) {
-      for (let i = 6; i <= 11; i++) {
-        if (row[i]) {
-          const replacementDate = new Date(parseDateFromReplacementText(row[i]));
 
-          if (
-            eventDate.toISOString() ===
-            replacementDate.toISOString()
-          ) {
-            replacements.push(row[0]); // Get the student's name from column A
-          }
-        }
-      }
-    }
-  });
-  return replacements;
-}
-
-function showModalWithClassDetails(className, students, eventDate, replacements) {
+function showModalWithClassDetails(className, students, eventDate) {
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
-  modalContent += '<input type="hidden" id="eventDate" value="' + eventDate + '">';
-
   students.forEach(function (student) {
-    modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
+	modalContent += '<input type="hidden" id="eventDate" value="' + eventDate + '">';  
+	modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
   });
   modalContent += '</ul>';
-
-  if (replacements.length > 0) {
-    modalContent += '<h4>Replacement Students:</h4><ul>';
-    replacements.forEach(function (replacement) {
-      modalContent += '<li>' + replacement + ' (replacement)</li>';
-    });
-    modalContent += '</ul>';
-  }
-  
   modalContent += '<button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
 
   modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
