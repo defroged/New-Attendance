@@ -31,13 +31,13 @@ function findStudentsByClassName(className, data) {
 
 function findStudentReplacements(eventDate, data) {
   const replacements = [];
-  const searchDate = new Date(eventDate);
+  const searchDate = new Date(eventDate).toISOString().slice(0, 10);
   data.forEach(function (row) {
     for (let i = 6; i <= 11; i++) { 
       if (row[i]) {
         const studentInfo = row[i].split(' - ');
-        const replacementDate = new Date(studentInfo[1]);
-        if (searchDate.getTime() === replacementDate.getTime()) {
+        const replacementDate = new Date(studentInfo[1]).toISOString().slice(0, 10);
+        if (searchDate === replacementDate) {
           replacements.push(studentInfo[0]);
         }
       }
