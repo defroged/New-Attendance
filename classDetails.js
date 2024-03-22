@@ -44,13 +44,17 @@ function parseDateFromReplacementText(text) {
 
 function findStudentReplacements(eventDate, data) {
   const replacements = [];
-  const searchDate = new Date(eventDate).toISOString().slice(0, 10);
+  const searchDate = new Date(eventDate);
+  searchDate.setHours(0, 0, 0, 0); // Set time to the start of the day to ignore timezone discrepancy.
+
   data.forEach(function (row) {
     for (let i = 6; i <= 11; i++) {
       if (row[i]) {
         const studentInfo = row[i].split(' - ');
-        const replacementDate = parseDateFromReplacementText(row[i]);
-        if (replacementDate && searchDate === replacementDate) {
+        const replacementDate = new Date(parseDateFromReplacementText(row[i]));
+        replacementDate.setHours(0, 0, 0, 0);
+
+        if (searchDate.getTime() === replacementDate.getTime()) {
           replacements.push(studentInfo[0]);
         }
       }
