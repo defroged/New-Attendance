@@ -23,8 +23,10 @@ function fetchClassDetails(className, eventDate) {
 
 function findStudentsByClassName(className, data) {
   let students = [];
+  className = className.toLowerCase().trim(); // Add this line
   data.forEach(function (row) {
-    if (row[1] === className) { 
+    const dataClassName = row[1].toLowerCase().trim(); // Add this line
+    if (dataClassName === className) { 
       students.push(row[0]); 
     }
   });
