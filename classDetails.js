@@ -10,9 +10,10 @@ function fetchClassDetails(className, eventDate) {
       return response.json();
     })
     .then((data) => {
-      const students = findStudentsByClassName(className, data.values);
-      showModalWithClassDetails(className, students, eventDate);
-    })
+  const students = findStudentsByClassName(className, data.values);
+  const replacements = findStudentReplacements(eventDate, data.values);
+  showModalWithClassDetails(className, students, eventDate, replacements);
+})
     .catch((error) => {
       console.error('Error fetching class details:', error);
     });
@@ -28,13 +29,40 @@ function findStudentsByClassName(className, data) {
   return students;
 }
 
-function showModalWithClassDetails(className, students, eventDate) {
+function findStudentReplacements(eventDate, data) {
+  const replacements = [];
+  const searchDate = new Date(eventDate);
+  data.forEach(function (row) {
+    for (let i = 6; i <= 11; i++) { 
+      if (row[i]) {
+        const studentInfo = row[i].split(' - ');
+        const replacementDate = new Date(studentInfo[1]);
+        if (searchDate.getTime() === replacementDate.getTime()) {
+          replacements.push(studentInfo[0]);
+        }
+      }
+    }
+  });
+  return replacements;
+}
+
+function showModalWithClassDetails(className, students, eventDate, replacements) {
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
+  modalContent += '<input type="hidden" id="eventDate" value="' + eventDate + '">';
+
   students.forEach(function (student) {
-	modalContent += '<input type="hidden" id="eventDate" value="' + eventDate + '">';  
-	modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
+    modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
   });
   modalContent += '</ul>';
+
+  if (replacements.length > 0) {
+    modalContent += '<h4>Replacement Students:</h4><ul>';
+    replacements.forEach(function (replacement) {
+      modalContent += '<li>' + replacement + ' (replacement)</li>';
+    });
+    modalContent += '</ul>';
+  }
+  
   modalContent += '<button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
 
   modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
