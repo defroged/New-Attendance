@@ -44,10 +44,10 @@ function findStudentReplacements(eventDate, data) {
   const replacements = [];
   const searchDate = new Date(eventDate).toISOString().slice(0, 10);
   data.forEach(function (row) {
-    for (let i = 6; i <= 11; i++) { 
+    for (let i = 6; i <= 11; i++) {
       if (row[i]) {
         const studentInfo = row[i].split(' - ');
-        const replacementDate = parseDateFromReplacementText(studentInfo[1]);
+        const replacementDate = parseDateFromReplacementText(row[i]);
         if (replacementDate && searchDate === replacementDate) {
           replacements.push(studentInfo[0]);
         }
