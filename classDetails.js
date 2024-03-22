@@ -32,8 +32,8 @@ function findStudentsByClassName(className, data) {
 function parseDateFromReplacementText(text) {
   const dateString = text.match(/\(([^)]+)\)/);
   if (dateString && dateString[1]) {
-    const [year, month, day] = dateString[1].split('/').map(Number);
-    const date = new Date(year, month - 1, day);
+    const dateParts = dateString[1].split(' ')[0].split('/').map(Number);
+    const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
     return date.toISOString().slice(0, 10);
   } else {
     return null;
