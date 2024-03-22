@@ -11,9 +11,9 @@ function fetchClassDetails(className, eventDate) {
     })
     .then((data) => {
       const students = findStudentsByClassName(className, data.values);
-      console.log("Found Students: ", students); // Add this line
+      console.log("Found Students: ", students); 
       const replacements = findStudentReplacements(eventDate, data.values);
-      console.log("Found Replacements: ", replacements); // Add this line
+      console.log("Found Replacements: ", replacements); 
       showModalWithClassDetails(className, students, eventDate, replacements);
     })
     .catch((error) => {
@@ -23,9 +23,9 @@ function fetchClassDetails(className, eventDate) {
 
 function findStudentsByClassName(className, data) {
   let students = [];
-  className = className.toLowerCase().trim(); // Add this line
+  className = className.toLowerCase().trim(); 
   data.forEach(function (row) {
-    const dataClassName = row[1].toLowerCase().trim(); // Add this line
+    const dataClassName = row[1].toLowerCase().trim();
     if (dataClassName === className) { 
       students.push(row[0]); 
     }
@@ -37,7 +37,7 @@ function parseDateFromReplacementText(text) {
   const dateString = text.match(/\d{4}\/\d{1,2}\/\d{1,2}/); 
   if (dateString && dateString[0]) {
     const dateParts = dateString[0].split('/').map(Number); 
-    console.log('dateParts:', dateParts); // Log the output here
+    console.log('dateParts:', dateParts); 
 
     const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); 
 	console.log('Parsed Date:', date.toISOString().slice(0, 10)); 
@@ -59,7 +59,7 @@ function findStudentReplacements(eventDate, data) {
         const replacementDate = new Date(parseDateFromReplacementText(row[i]));
         replacementDate.setHours(0, 0, 0, 0);
 
-        // Update the date comparison
+
         if (searchDate.toISOString().slice(0, 10) === replacementDate.toISOString().slice(0, 10)) {
           replacements.push(studentInfo[0]);
         }
