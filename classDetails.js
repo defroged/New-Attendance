@@ -58,6 +58,7 @@ function findReplacementStudents(data, date) {
    });
 
    return replacementStudents;
+   console.log(replacementStudents);
 }
 
 function showModalWithClassDetails(className, students, eventDate, replacementStudents) {
