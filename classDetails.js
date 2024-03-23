@@ -12,10 +12,32 @@ function fetchClassDetails(className, eventDate) {
     .then((data) => {
       const students = findStudentsByClassName(className, data.values);
       showModalWithClassDetails(className, students, eventDate);
+	  const replacementStudents = findReplacementStudents(className, eventDate, data.values); 
+	  showModalWithClassDetails(className, students, replacementStudents, eventDate);
     })
     .catch((error) => {
       console.error('Error fetching class details:', error);
     });
+}
+
+function findReplacementStudents(className, eventDate, data) {
+  const formattedEventDate = formatDate(new Date(eventDate)); // Assuming format is YYYY/MM/DD
+
+  const replacementStudents = [];
+  data.forEach((row) => {
+    for (let i = 6; i <= 11; i += 2) { // Columns G to L
+      const bookingData = row[i];
+      if (bookingData) {
+        const [studentName, bookingDate] = bookingData.split(' - ');
+        if (studentName === className && bookingDate === formattedEventDate) {
+          replacementStudents.push(row[0]); // Column A has student name
+          break; // Stop searching this row if a match is found
+        }
+      }
+    }
+  });
+
+  return replacementStudents;
 }
 
 function findStudentsByClassName(className, data) {
@@ -28,12 +50,19 @@ function findStudentsByClassName(className, data) {
   return students;
 }
 
-function showModalWithClassDetails(className, students, eventDate) {
+function showModalWithClassDetails(className, students, replacementStudents, eventDate) {
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
   students.forEach(function (student) {
 	modalContent += '<input type="hidden" id="eventDate" value="' + eventDate + '">';  
 	modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
   });
+  if (replacementStudents.length > 0) {
+    modalContent += '<h5>Replacement Students:</h5><ul>';
+    replacementStudents.forEach((student) => {
+      modalContent += '<li>' + student + '</li>';
+    });
+    modalContent += '</ul>';
+  }
   modalContent += '</ul>';
   modalContent += '<button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
 
