@@ -45,9 +45,11 @@ function findReplacementStudents(data, date) {
     // Check columns G through L (6 to 11) for replacements
     for (let i = 6; i <= 11; i++) { 
       if (row[i] && row[i].includes(dateFormat)) {
+		   console.log("Replacement found:", row[i]);
         const replacementInfo = row[i].split("-"); 
         const className = replacementInfo[0].trim();
-        const studentName = row[0]; // Get student name from column A
+        const studentName = row[0]; 
+		console.log("Class:", className, "Student:", studentName);
 
         if (!replacementStudents[className]) {
           replacementStudents[className] = [];
