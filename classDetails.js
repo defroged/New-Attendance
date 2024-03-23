@@ -52,6 +52,7 @@ function findReplacementStudents(data, date) {
             }
             replacementStudents[className].push(studentName);
          }
+		 }
       }
    });
 
