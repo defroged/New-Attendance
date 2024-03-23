@@ -34,7 +34,9 @@ function findStudentsByClassName(className, data) {
 }
 
 function findReplacementStudents(data, date) {
-  const replacementStudents = {};
+  const replacementStudents = {
+        "Panda": ["John"] // Hardcoded test data
+    };
 
   const dateFormat = `<span class="math-inline">\{date\.getFullYear\(\)\}/</span>{String(date.getMonth() + 1).padStart(
    2,
@@ -71,12 +73,10 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
   modalContent += '</ul>';
 
-  // Add this line to have the correct date format
   const date = new Date(eventDate.replace(/-/g, '/'));
 
   const replacements = replacementStudents[className] || [];
 
-  // Display replacement students only if there are any
   if (replacements.length) {
     modalContent += "<h5>Replacement Students:</h5><ul>";
     replacements.forEach((student) => {
@@ -84,7 +84,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
     });
     modalContent += "</ul>";
   }
-
+console.log(modalContent);
   modalContent += '<button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
 
   modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
