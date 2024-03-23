@@ -34,31 +34,31 @@ function findStudentsByClassName(className, data) {
 }
 
 function findReplacementStudents(data, date) {
-	console.log(data);
-   const replacementStudents = {};
-   const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
+  const replacementStudents = {};
+  const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
 
-   data.forEach((row, index) => { // Include 'index' to track row number
-       if (index > 0) { // Skip the first row (headers)
-           for (let i = 6; i <= 11; i++) { 
-               if (row[i] && row[i].includes(dateFormat)) {
-                   console.log("Replacement found:", row[i]);
-            const replacementInfo = row[i].split("-"); 
-            const className = replacementInfo[0].trim();
-            const studentName = row[0]; // Get student name from column A
-            console.log("Class:", className, "Student:", studentName); // Log extracted data
+  data.forEach((row, index) => { 
+    if (index > 0) { 
+      for (let i = 6; i <= 11; i++) { 
+        if (row[i] && row[i].includes(dateFormat)) {
+          const replacementInfo = row[i].split("-"); 
+          const className = replacementInfo[0].trim();
+          const studentName = row[0]; 
 
-            if (!replacementStudents[className]) {
-               replacementStudents[className] = [];
-            }
-            replacementStudents[className].push(studentName);
-         }
-		 }
+          if (!replacementStudents[className]) {
+            replacementStudents[className] = [];
+          }
+          replacementStudents[className].push({
+            studentName: studentName,
+            // Extract the date from the cell string
+            replacementDate: row[i].substr(row[i].indexOf("(") + 1, 10) // assuming date format is 'YYYY/MM/DD'
+          }); 
+        }
       }
-   });
+    }
+  });
 
-   return replacementStudents;
-   console.log(replacementStudents);
+  return replacementStudents; 
 }
 
 function showModalWithClassDetails(className, students, eventDate, replacementStudents) {
@@ -73,23 +73,27 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
   const date = new Date(eventDate.replace(/-/g, '/'));
 
-  const replacements = replacementStudents[className] || [];
-  console.log(replacements);
+  const replacements = replacementStudents[className] || []; 
 
   if (replacements.length) {
     modalContent += "<h5>Replacement Students:</h5><ul>";
-    replacements.forEach((student) => {
-      modalContent += "<li>" + student + "</li>";
+
+    replacements.forEach((replacement) => {
+      // Only show replacements for the modal's specific eventDate
+      if (replacement.replacementDate === eventDate) {
+        modalContent += "<li>" + replacement.studentName + "</li>";
+      } 
     });
     modalContent += "</ul>";
   }
-console.log(modalContent);
+
   modalContent += '<button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
 
   modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
   document.getElementById('myModalContent').innerHTML = modalContent;
   modalInstance.show();
 }
+
 
 
 function iconClicked(event) {
