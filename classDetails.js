@@ -36,8 +36,7 @@ function findStudentsByClassName(className, data) {
 function findReplacementStudents(data, date) {
 	console.log(data);
    const replacementStudents = {};
-   const dateFormat = "2024/03/26"; // Hardcoded for testing
-   //const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
+   const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
 
    data.forEach((row, index) => { // Include 'index' to track row number
        if (index > 0) { // Skip the first row (headers)
@@ -74,6 +73,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
   const date = new Date(eventDate.replace(/-/g, '/'));
 
   const replacements = replacementStudents[className] || [];
+  console.log(replacements);
 
   if (replacements.length) {
     modalContent += "<h5>Replacement Students:</h5><ul>";
