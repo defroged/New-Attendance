@@ -58,11 +58,17 @@ function findReplacementStudents(data, date) {
 function showModalWithClassDetails(className, students, eventDate, replacementStudents) {
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
   students.forEach(function (student) {
-	modalContent += '<input type="hidden" id="eventDate" value="' + eventDate + '">';  
-	modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
+    modalContent += '<input type="hidden" id="eventDate" value="' + eventDate + '">';
+    modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
   });
+  modalContent += '</ul>';
+
+  // Add this line to have the correct date format
+  const date = new Date(eventDate.replace(/-/g, '/'));
+
   const replacements = replacementStudents[className] || [];
 
+  // Display replacement students only if there are any
   if (replacements.length) {
     modalContent += "<h5>Replacement Students:</h5><ul>";
     replacements.forEach((student) => {
@@ -70,8 +76,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
     });
     modalContent += "</ul>";
   }
-  
-  modalContent += '</ul>';
+
   modalContent += '<button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
 
   modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
