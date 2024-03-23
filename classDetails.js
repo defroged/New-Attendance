@@ -37,10 +37,11 @@ function findReplacementStudents(data, date) {
    const replacementStudents = {};
    const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
 
-   data.forEach((row) => {
-      for (let i = 6; i <= 11; i++) { 
-         if (row[i] && row[i].includes(dateFormat)) {
-            console.log("Replacement found:", row[i]); // Log the raw data
+   data.forEach((row, index) => { // Include 'index' to track row number
+       if (index > 0) { // Skip the first row (headers)
+           for (let i = 6; i <= 11; i++) { 
+               if (row[i] && row[i].includes(dateFormat)) {
+                   console.log("Replacement found:", row[i]);
             const replacementInfo = row[i].split("-"); 
             const className = replacementInfo[0].trim();
             const studentName = row[0]; // Get student name from column A
