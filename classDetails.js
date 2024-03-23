@@ -34,33 +34,27 @@ function findStudentsByClassName(className, data) {
 }
 
 function findReplacementStudents(data, date) {
-  const replacementStudents = {
-        "Panda": ["John"] // Hardcoded test data
-    };
+   const replacementStudents = {};
+   const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
 
-  const dateFormat = `<span class="math-inline">\{date\.getFullYear\(\)\}/</span>{String(date.getMonth() + 1).padStart(
-   2,
-   "0"
- )}/${String(date.getDate()).padStart(2, "0")}`;
+   data.forEach((row) => {
+      for (let i = 6; i <= 11; i++) { 
+         if (row[i] && row[i].includes(dateFormat)) {
+            console.log("Replacement found:", row[i]); // Log the raw data
+            const replacementInfo = row[i].split("-"); 
+            const className = replacementInfo[0].trim();
+            const studentName = row[0]; // Get student name from column A
+            console.log("Class:", className, "Student:", studentName); // Log extracted data
 
-  data.forEach((row) => {
-    // Check columns G through L (6 to 11) for replacements
-    for (let i = 6; i <= 11; i++) { 
-      if (row[i] && row[i].includes(dateFormat)) {
-		   console.log("Replacement found:", row[i]);
-        const replacementInfo = row[i].split("-"); 
-        const className = replacementInfo[0].trim();
-        const studentName = row[0]; 
-		console.log("Class:", className, "Student:", studentName);
-
-        if (!replacementStudents[className]) {
-          replacementStudents[className] = [];
-        }
-        replacementStudents[className].push(studentName);
+            if (!replacementStudents[className]) {
+               replacementStudents[className] = [];
+            }
+            replacementStudents[className].push(studentName);
+         }
       }
-    }
-  });
-  return replacementStudents;
+   });
+
+   return replacementStudents;
 }
 
 function showModalWithClassDetails(className, students, eventDate, replacementStudents) {
