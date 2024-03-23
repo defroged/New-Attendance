@@ -36,19 +36,23 @@ function findStudentsByClassName(className, data) {
 function findReplacementStudents(data, date) {
   const replacementStudents = {};
 
-  const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(
-    2,
-    "0"
-  )}/${String(date.getDate()).padStart(2, "0")}`;
+  const dateFormat = `<span class="math-inline">\{date\.getFullYear\(\)\}/</span>{String(date.getMonth() + 1).padStart(
+   2,
+   "0"
+ )}/${String(date.getDate()).padStart(2, "0")}`;
 
   data.forEach((row) => {
-    for (let i = 6; i <= 11; i++) {
+    // Check columns G through L (6 to 11) for replacements
+    for (let i = 6; i <= 11; i++) { 
       if (row[i] && row[i].includes(dateFormat)) {
-        const className = row[i].substr(0, row[i].indexOf("-")).trim();
+        const replacementInfo = row[i].split("-"); 
+        const className = replacementInfo[0].trim();
+        const studentName = row[0]; // Get student name from column A
+
         if (!replacementStudents[className]) {
           replacementStudents[className] = [];
         }
-        replacementStudents[className].push(row[0]);
+        replacementStudents[className].push(studentName);
       }
     }
   });
@@ -57,10 +61,12 @@ function findReplacementStudents(data, date) {
 
 function showModalWithClassDetails(className, students, eventDate, replacementStudents) {
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
+
   students.forEach(function (student) {
     modalContent += '<input type="hidden" id="eventDate" value="' + eventDate + '">';
     modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
   });
+
   modalContent += '</ul>';
 
   // Add this line to have the correct date format
@@ -83,6 +89,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
   document.getElementById('myModalContent').innerHTML = modalContent;
   modalInstance.show();
 }
+
 
 function iconClicked(event) {
   const iconElement = event.target;
