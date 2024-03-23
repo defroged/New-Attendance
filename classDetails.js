@@ -13,7 +13,7 @@ function fetchClassDetails(className, eventDate) {
     })
     .then((data) => {
       const students = findStudentsByClassName(className, data.values);
-      const date = new Date(eventDate);
+	  const date = new Date(eventDate.replace(/-/g, '/'));
       const replacementStudents = findReplacementStudents(data.values, date);
 
       showModalWithClassDetails(className, students, eventDate, replacementStudents);
