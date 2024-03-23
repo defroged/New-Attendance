@@ -36,9 +36,10 @@ function findStudentsByClassName(className, data) {
 function findReplacementStudents(data, date) {
   const replacementStudents = {};
 
-  const dateFormat = `${date.getFullYear()}/${
-    date.getMonth() + 1
-  }/${date.getDate()}`;
+  const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(
+    2,
+    "0"
+  )}/${String(date.getDate()).padStart(2, "0")}`;
 
   data.forEach((row) => {
     for (let i = 6; i <= 11; i++) {
