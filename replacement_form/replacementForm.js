@@ -441,7 +441,7 @@ function findAvailableClassesByStudentName(studentName, data) {
 
 function fetchCalendarEventsForClasses(classes) {
   const timeMin = new Date();
-  const timeMax = new Date(Date.now() + 3 * 30 * 24 * 60 * 60 * 1000);
+  const timeMax = new Date(Date.now() + 2 * 30 * 24 * 60 * 60 * 1000);
 
   const encodedTimeMin = encodeURIComponent(timeMin.toISOString());
   const encodedTimeMax = encodeURIComponent(timeMax.toISOString());
