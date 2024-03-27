@@ -302,6 +302,7 @@ li:hover {
   border-radius: 4px; 
   cursor: pointer; 
   position: relative;
+  max-width: 220px;
 }
     
     .container > *:last-child {
@@ -310,6 +311,7 @@ li:hover {
     
     label {
         width: 100%;
+        font-size: 15px;
     }
     
         .remove-replacement-button {
