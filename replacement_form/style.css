@@ -5,9 +5,9 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: column; /* Stack elements vertically on mobile */
-    justify-content: center; /* Center children vertically */
-    align-items: center; /* Center children horizontally */
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
     min-height: 59vh;
 }
 
@@ -15,8 +15,8 @@ h1 {
     color: #2c3e50;
     text-align: center;
     font-size: 1.8em;
-    margin: 20px 10px; /* Adjust top and bottom margin as needed */
-    width: 100%; /* Full width */
+    margin: 20px 10px; 
+    width: 100%; 
 }
 
 #available-slots {
@@ -24,13 +24,13 @@ h1 {
   margin: 0 auto;
 }
 .spinner {
-  display: none; /* Keep hidden initially */
-  border: 4px solid #f3f3f3; /* Thinner border */
-  border-top: 4px solid #3498db; /* Your existing accent color */
+  display: none; 
+  border: 4px solid #f3f3f3; 
+  border-top: 4px solid #3498db; 
   border-radius: 50%;
-  width: 30px; /* Smaller width */
-  height: 30px; /* Smaller height */
-  animation: spin 1.2s linear infinite; /* Slightly faster animation */
+  width: 30px; 
+  height: 30px; 
+  animation: spin 1.2s linear infinite; 
   position: fixed;
   top: 50%;
   left: 50%;
@@ -45,47 +45,45 @@ h1 {
 }
 
 
-/* Style for the password input */
 #password-input {
-  width: 100%; /* Makes the input stretch to the full width of its container */
-  padding: 10px; /* Adds some space inside the input, making it taller and the text not touch the edges */
-  margin: 8px 0; /* Adds some space above and below the input */
-  display: inline-block; /* Allows you to specify width and padding */
-  border: 1px solid #ccc; /* A light grey border */
-  box-sizing: border-box; /* Makes sure padding doesn't affect the overall width */
-  border-radius: 4px; /* Slightly rounded corners */
+  width: 100%; 
+  padding: 10px; 
+  margin: 8px 0; 
+  display: inline-block; 
+  border: 1px solid #ccc; 
+  box-sizing: border-box; 
+  border-radius: 4px; 
 }
 
-/* Style for the login button */
 #login-button {
-  width: 100%; /* Makes the button stretch to the full width of its container */
-  padding: 14px 20px; /* Larger padding to make the button taller and wider */
-  margin: 8px 0; /* Adds some space above and below the button */
-  border: none; /* No border for the button */
-  background-color: #4CAF50; /* A nice shade of green */
-  color: white; /* White text */
-  text-align: center; /* Centers the text in the button */
-  text-decoration: none; /* Removes any underline from text */
-  display: inline-block; /* Allows you to specify width and padding */
-  font-size: 16px; /* Slightly larger font size */
-  border-radius: 4px; /* Slightly rounded corners */
-  cursor: pointer; /* Changes the mouse cursor to a pointer when hovered */
+  width: 100%; 
+  padding: 14px 20px; 
+  margin: 8px 0; 
+  border: none; 
+  background-color: #4CAF50; 
+  color: white; 
+  text-align: center; 
+  text-decoration: none; 
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 4px; 
+  cursor: pointer; 
 }
 
 #login-button:hover {
-  background-color: #45a049; /* A darker green for hover effect */
+  background-color: #45a049; 
 }
 
 
 .container {
     width: 90%;
-    max-width: 500px; /* Adjust max width for larger screens if necessary */
-    margin: 0; /* Remove margin to allow centering */
+    max-width: 500px; 
+    margin: 0; 
     padding: 20px;
     box-sizing: border-box;
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    align-items: center; /* Center elements horizontally */
+    flex-direction: column; 
+    align-items: center; 
 }
 
 
@@ -95,7 +93,6 @@ div {
     margin: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    /*! width: 30%; */
     max-width: 442px;
 }
 
@@ -156,74 +153,69 @@ li:hover {
 }
 
 #replacement-dates li {
-    display: flex;             /* Enables flexbox layout */
-    justify-content: space-between; /* Spaces text and button apart */
-    align-items: center;       /* Centers items vertically */
-    background-color: #76B947; /* Example background color, replace with your own */
-    border-radius: 25px;       /* Rounded corners for list items */
-    padding: 5px 10px;         /* Padding within each list item */
-    margin-bottom: 5px;        /* Space between list items */
+    display: flex;             
+    justify-content: space-between; 
+    align-items: center;       
+    background-color: #76B947; 
+    border-radius: 25px;       
+    padding: 5px 10px;         
+    margin-bottom: 5px;        
 }
 
-/* Styles for the text within the list items */
 #replacement-dates li span {
-    /* Add styles for the text here, for example: */
-    color: white;              /* Sets the text color */
-    flex-grow: 1;              /* Allows the text to take up available space */
+    color: white;              
+    flex-grow: 1;              
 }
 
-/* Styles for the remove button within the list items */
 .remove-replacement-button {
     box-sizing: border-box;
-    border: none;              /* Removes the border */
-    border-radius: 10%;        /* Keeps the button round */
+    border: none;              
+    border-radius: 10%;        
     width: 20px;
     height: 20px;
-    cursor: pointer;           /* Changes the cursor to indicate it's clickable */
-    background-color: #d9534f; /* Sets a different background color for the button */
-    color: white;              /* Sets the text color for the button */
-    margin-left: 10px;         /* Adds space between the text and the button */ 
+    cursor: pointer;           
+    background-color: #d9534f; 
+    color: white;              
+    margin-left: 10px;         
 }
 
-/* Desktop view */
 @media (min-width: 769px) {
     body {
-        justify-content: flex-start; /* Align to the top of the viewport */
+        justify-content: flex-start; 
     }
 
     h1 {
-        position: absolute; /* Take out of flow to align to the left */
-        left: 192px; /* Spacing from the left edge */
-        top: 194px; /* Spacing from the top edge */
-        width: auto; /* Shrink to fit content */
-        margin: 0; /* Remove margin */
+        position: absolute; 
+        left: 192px; 
+        top: 194px; 
+        width: auto; 
+        margin: 0; 
     }
 
     .container {
-        position: relative; /* Ensure container is positioned relative to body */
-        margin-left: 199px; /* Adjust according to the width of your h1 */
-        margin-top: 40px; /* Adjust for spacing from the top */
-        width: calc(100% - 200px); /* Take remaining width minus h1 width */
-        max-width: 598px; /* Adjust max width for larger screens if necessary */
+        position: relative; 
+        margin-left: 199px; 
+        margin-top: 40px; 
+        width: calc(100% - 200px); 
+        max-width: 598px; 
     }
     
     .remove-replacement-button {
     box-sizing: border-box;
-    border: none;              /* Removes the border */
-    border-radius: 92%;        /* Keeps the button round */
+    border: none;              
+    border-radius: 92%;        
     width: 24px;
     height: 21px;
-    cursor: pointer;           /* Changes the cursor to indicate it's clickable */
-    background-color: #d9534f; /* Sets a different background color for the button */
-    color: white;              /* Sets the text color for the button */
-    margin-left: 10px;         /* Adds space between the text and the button */ 
+    cursor: pointer;           
+    background-color: #d9534f; 
+    color: white;              
+    margin-left: 10px;         
     padding: 0;
 }
 }
 
 
 @media (max-width: 768px) {
-    /* It's usually better to target specific elements rather than all divs, selects, etc. */
     body {
         padding: 5px;
     }
@@ -235,22 +227,20 @@ li:hover {
     }
 
     h1 {
-        font-size: 1.9em; /* Only do this if you want to change font size for all these elements */
+        font-size: 1.9em; 
     }
 
-    /* Assuming .container flex-direction is set to column outside of the media query */
     .container {
-        margin: 20px auto; /* auto horizontally centers the container */
-        width: calc(100% - 10px); /* Full width minus the body padding */
+        margin: 20px auto; 
+        width: calc(100% - 10px); 
     }
 
     h1 {
         text-align: center;
-        margin-top: 20px; /* Adjust as needed */
-        margin-bottom: 0; /* Prevents too much space between the h1 and the form */
+        margin-top: 20px; 
+        margin-bottom: 0; 
     }
 
-    /* You may also want to adjust the margin for the bottom of your form elements to match the top */
     .container > *:last-child {
         margin-bottom: 20px;
     }
@@ -261,14 +251,14 @@ li:hover {
     
         .remove-replacement-button {
     box-sizing: border-box;
-    border: none;              /* Removes the border */
-    border-radius: 92%;        /* Keeps the button round */
+    border: none;             
+    border-radius: 92%;       
     width: 24px;
     height: 21px;
-    cursor: pointer;           /* Changes the cursor to indicate it's clickable */
-    background-color: #d9534f; /* Sets a different background color for the button */
-    color: white;              /* Sets the text color for the button */
-    margin-left: 10px;         /* Adds space between the text and the button */ 
+    cursor: pointer;          
+    background-color: #d9534f;
+    color: white;             
+    margin-left: 10px;        
     padding: 0;
 }
 }
