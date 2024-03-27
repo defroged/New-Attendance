@@ -21,10 +21,10 @@ h1 {
 
 .title-section {
     text-align: center;
-    width: 100%;
+    /*! width: 100%; */
     max-width: 600px; /* Adjust this value based on your design preference */
     margin: 20px auto;
-    max-width: 67%;
+    max-width: 75%;
     padding: 19px;
 }
 
@@ -211,6 +211,17 @@ li:hover {
         margin: 0 auto; /* Centers the title */
     }
 
+    #login-section {
+        
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    width: 90%;
+    max-width: 764px;
+    left: 226px; 
+    }
+    
     .container {
         position: relative;
         margin-left: auto;
@@ -248,7 +259,7 @@ li:hover {
     }
 
     h1 {
-        font-size: 1.9em; 
+        font-size: 1.4em; 
     }
 
     .container {
