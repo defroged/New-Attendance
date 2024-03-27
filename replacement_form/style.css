@@ -15,7 +15,7 @@ h1 {
     color: #2c3e50;
     text-align: center;
     font-size: 1.8em;
-    margin: 20px 10px; 
+    margin: 20px 0px; 
     width: 100%; 
 }
 
@@ -24,11 +24,13 @@ h1 {
     width: 100%;
     max-width: 600px; /* Adjust this value based on your design preference */
     margin: 20px auto;
+    max-width: 67%;
+    padding: 19px;
 }
 
 #available-slots {
   text-align: center;
-  margin: 0 auto;
+  margin: 25px;
 }
 .spinner {
   display: none; 
@@ -192,9 +194,13 @@ li:hover {
     }
 	
 	.title-section {
-        position: relative; /* Ensures that the container is positioned in relation to its normal flow */
-        margin-top: 40px; /* Adjust the margin-top as needed */
-        width: auto; /* Adjusts the width to fit content */
+        position: absolute; /* Ensures that the container is positioned in relation to its normal flow */
+        margin-top: 0px; /* Adjust the margin-top as needed */
+         /* Adjusts the width to fit content */
+        left: 148px;
+        top: 21px;
+        width: auto;
+        margin-left: -53px;
     }
 
     h1 {
@@ -248,8 +254,8 @@ li:hover {
 
     h1 {
         text-align: center;
-        margin-top: 20px; 
-        margin-bottom: 0; 
+        margin-top: 0px; 
+        margin-bottom: auto; 
     }
 
     .container > *:last-child {
