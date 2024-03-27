@@ -11,8 +11,10 @@
 <body onload="initializeReplacementForm()">
 
     <h1>振り替えレッスン<br>予約フォーム（ベータ版）</h1>
+	<p>説明1</p>
+	<p>説明2</p>
+	<p>説明3</p>
 	<div id="login-section">
-	<div id="spinner" class="spinner"></div>
     <label for="password-input">4桁のID番号を入力してください</label>
     <input type="password" id="password-input" maxlength="4" pattern="\d{4}" autocomplete="off" oninput="handlePasswordInputChange()">
     <button id="login-button" style="display: none;" disabled>確定</button>
@@ -21,7 +23,6 @@
 	<div class="container" id="main-container">
 
     <div id="step-one">
-	<div id="spinner" class="spinner"></div>
         <label for="class-select">お子様のクラスを選択してください</label>
         <select id="class-select">
             <option value="" disabled selected>クラスを選択してください</option>
@@ -29,7 +30,6 @@
         <br>
     </div>
 <div id="step-two" style="display: none;">
-<div id="spinner" class="spinner"></div>
     <label for="student-select">お子様のお名前を選択してください</label>
     <select id="student-select">
         <option value="" disabled selected>お名前を選択してください</option>
@@ -38,14 +38,12 @@
 </div>
 <p id="available-slots"></p>
 	 <div id="step-three" style="display: none;">
-	 <div id="spinner" class="spinner"></div>
         <label for="replacement-select">振り替えレッスン</label>
         <select id="replacement-select">
             <option value="" disabled selected>振り替えレッスンを選択してください</option>
         </select>
     </div>
 	<div id="replacement-list" style="display: none;">
-	<div id="spinner" class="spinner"></div>
   <h3>選択された振り替えレッスン：</h3>
   <ul id="replacement-dates"></ul>
 </div>
