@@ -19,6 +19,13 @@ h1 {
     width: 100%; 
 }
 
+.title-section {
+    text-align: center;
+    width: 100%;
+    max-width: 600px; /* Adjust this value based on your design preference */
+    margin: 20px auto;
+}
+
 #available-slots {
   text-align: center;
   margin: 0 auto;
@@ -183,21 +190,25 @@ li:hover {
     body {
         justify-content: flex-start; 
     }
+	
+	.title-section {
+        position: relative; /* Ensures that the container is positioned in relation to its normal flow */
+        margin-top: 40px; /* Adjust the margin-top as needed */
+        width: auto; /* Adjusts the width to fit content */
+    }
 
     h1 {
-        position: absolute; 
-        left: 192px; 
-        top: 194px; 
-        width: auto; 
-        margin: 0; 
+        position: relative; /* Adjusts the position to be relative within the .title-section */
+        margin: 0 auto; /* Centers the title */
     }
 
     .container {
-        position: relative; 
-        margin-left: 199px; 
-        margin-top: 40px; 
-        width: calc(100% - 200px); 
-        max-width: 598px; 
+        position: relative;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 20px; /* Adjusts the spacing between the title-section and the rest of the content */
+        width: 90%;
+        max-width: 500px; /* Adjusts the container's max width for alignment */
     }
     
     .remove-replacement-button {
