@@ -193,11 +193,14 @@ li:hover {
         justify-content: flex-start; 
     }
 	
+    div {
+        margin: 20px 20px 20px 100px;
+    }
 	.title-section {
         position: absolute; /* Ensures that the container is positioned in relation to its normal flow */
         margin-top: 0px; /* Adjust the margin-top as needed */
          /* Adjusts the width to fit content */
-        left: 148px;
+        left: 217px;
         top: 21px;
         width: auto;
         margin-left: -53px;
@@ -214,7 +217,8 @@ li:hover {
         margin-right: auto;
         margin-top: 20px; /* Adjusts the spacing between the title-section and the rest of the content */
         width: 90%;
-        max-width: 500px; /* Adjusts the container's max width for alignment */
+        max-width: 764px; /* Adjusts the container's max width for alignment */
+        left: 226px;
     }
     
     .remove-replacement-button {
