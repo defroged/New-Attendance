@@ -27,6 +27,14 @@ h1 {
     padding: 19px;
 }
 
+.rules li {
+    text-align: left;    
+    font-size: 13px;
+    padding: 0px; 
+    background-color: white;
+    color: black;
+    list-style: circle
+    }
 #available-slots {
   text-align: center;
   margin: 25px;
@@ -77,6 +85,7 @@ h1 {
   font-size: 16px;
   border-radius: 4px; 
   cursor: pointer; 
+  max-width: 126px;
 }
 
 #login-button:hover {
@@ -102,7 +111,7 @@ div {
     margin: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 220px;
+    max-width: 314px;
 }
 
 label {
@@ -218,8 +227,8 @@ li:hover {
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
-    width: 90%;
-    max-width: 690px;
+    width: 91%;
+    max-width: 615px;
     left: 230px; 
     }
     
@@ -228,8 +237,8 @@ li:hover {
         margin-left: auto;
         margin-right: auto;
         margin-top: 20px; 
-        width: 90%;
-        max-width: 764px; 
+        /*! width: 90%; */
+        max-width: 678px; 
         left: 226px;
     }
     
@@ -265,7 +274,7 @@ li:hover {
 .rules li {
     text-align: left;    
     font-size: 13px;
-    padding: 3px; 
+    padding: 0px; 
     background-color: white;
     color: black;
     list-style: circle
