@@ -439,12 +439,15 @@ function findAvailableClassesByStudentName(studentName, data) {
     return availableClasses;
 }
 
-function fetchCalendarEventsForClasses(classes) {
+async function fetchCalendarEventsForClasses(classes) {
   const timeMin = new Date();
   const timeMax = new Date(Date.now() + 2 * 30 * 24 * 60 * 60 * 1000);
-
   const encodedTimeMin = encodeURIComponent(timeMin.toISOString());
   const encodedTimeMax = encodeURIComponent(timeMax.toISOString());
+  const studentSelect = document.getElementById("student-select");
+  const studentName = studentSelect.value;
+
+  const bookedSlots = await fetchBookedSlots(studentName);
 
   fetch(`/api/calendar-events?timeMin=${encodedTimeMin}&timeMax=${encodedTimeMax}`)
     .then((response) => {
@@ -455,41 +458,45 @@ function fetchCalendarEventsForClasses(classes) {
     })
     .then((data) => {
       const events = filterEventsByClassNames(data.items, classes);
-      populateReplacementClassDropdown(events);
+      populateReplacementClassDropdown(events, bookedSlots);
     })
     .catch((error) => {
       console.error('Error fetching calendar events:', error);
     });
 }
 
-function populateReplacementClassDropdown(events) {
+(events, bookedSlots) {
   const replacementSelect = document.getElementById("replacement-select");
 
   replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
 
   events.forEach((event) => {
     const option = document.createElement("option");
-    option.value = event.id;
+    if (bookedSlots.includes(event.summary)) {
+      option.disabled = true;
+      option.style.color = "grey";
+    } else {
+      option.value = event.id;
+    }
     const eventName = event.summary;
     const eventDate = event.start.dateTime || event.start.date;
-    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP"); 
+    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP");
     const dayOfWeekIndex = new Date(eventDate).getDay();
     const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
-    const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex]; 
+    const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex];
 
     let eventTime = "";
     if (event.start.dateTime) {
-        const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", { 
-            hour: '2-digit', 
-            minute: '2-digit'
-        });
-        eventTime = ` ${formattedTime}`; 
+      const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      eventTime = ` ${formattedTime}`;
     }
 
-    option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`; 
+    option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
     replacementSelect.appendChild(option);
-});
-
+  });
 }
 
 function filterEventsByClassNames(events, classNames) {
