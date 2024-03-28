@@ -29,6 +29,7 @@ async function fetchStructuredColumnData() {
     });
 
     console.log(filteredData);
+    return filteredData;
   } catch (error) {
     console.error("Error fetching structured column data:", error);
   }
