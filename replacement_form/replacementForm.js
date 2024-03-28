@@ -493,6 +493,7 @@ async function populateReplacementClassDropdown(events) {
 
   events.forEach((event) => {
     const option = document.createElement("option");
+    const wrapper = document.createElement("span");
     option.value = event.id;
     const eventName = event.summary;
     const eventDate = event.start.dateTime || event.start.date;
@@ -510,15 +511,19 @@ async function populateReplacementClassDropdown(events) {
         eventTime = ` ${formattedTime}`; 
     }
 
-    option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
+    wrapper.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
 
     // Checking if the option value matches the structured column data
-    if (structuredColumnData.includes(option.textContent)) {
+    if (structuredColumnData.includes(wrapper.textContent)) {
       option.disabled = true;
       option.style.color = "#898989";
-      option.textContent += " 満";
+      const redText = document.createElement("span");
+      redText.textContent = " 満";
+      redText.style.color = "red";
+      wrapper.appendChild(redText);
     }
-	
+
+    option.appendChild(wrapper);
     replacementSelect.appendChild(option);
   });
 
