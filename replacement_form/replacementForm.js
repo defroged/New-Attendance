@@ -427,30 +427,31 @@ function fetchAvailableClasses(studentName) {
     });
 }
 //edited
-function findAvailableClassesByStudentName(studentName, data) {
-    let availableClasses = [];
-    let previousBookings = {};
+(studentName, data) {
+  let availableClasses = [];
+  let previousBookings = {};
+  let allBookedSlots = [];
 
-    data.forEach(function (row) {
-      if (row[0] === studentName) {
-        if (row[3]) {
-          availableClasses.push(row[3]);
-          if (!previousBookings[row[3]]) previousBookings[row[3]] = [];
-          previousBookings[row[3]].push(...[row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean))
-        } 
-        if (row[4]) {
-          availableClasses.push(row[4]);
-          if (!previousBookings[row[4]]) previousBookings[row[4]] = [];
-          previousBookings[row[4]].push(...[row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean))
-        } 
-        if (row[5]) { 
-          availableClasses.push(row[5]); 
-          if (!previousBookings[row[5]]) previousBookings[row[5]] = [];
-          previousBookings[row[5]].push(...[row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean))
-        } 
+  data.forEach(function (row) {
+    if (row[0] === studentName) {
+      if (row[3]) {
+        availableClasses.push(row[3]);
+        previousBookings[row[3]] = [row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean);
       }
-    });
-    return { availableClasses, previousBookings };
+      if (row[4]) {
+        availableClasses.push(row[4]);
+        previousBookings[row[4]] = [row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean);
+      }
+      if (row[5]) {
+        availableClasses.push(row[5]);
+        previousBookings[row[5]] = [row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean);
+      }
+    } else {
+      allBookedSlots.push(...[row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean));
+    }
+  });
+
+  return { availableClasses, previousBookings, allBookedSlots };
 }
 
 function fetchCalendarEventsForClasses(classes) {
@@ -468,15 +469,16 @@ function fetchCalendarEventsForClasses(classes) {
       return response.json();
     })
     .then((data) => {
-      const events = filterEventsByClassNames(data.items, classes.availableClasses);
-      populateReplacementClassDropdown(events, classes.previousBookings);
+      const { availableClasses, previousBookings, allBookedSlots } = findAvailableClassesByStudentName(studentName, data.items);
+      const events = filterEventsByClassNames(data.items, availableClasses);
+      populateReplacementClassDropdown(events, previousBookings, allBookedSlots);
     })
     .catch((error) => {
-      console.error('Error fetching calendar events:', error);
+      console.error("Error fetching calendar events:", error);
     });
 }
 
-function populateReplacementClassDropdown(events, previousBookings) {
+function populateReplacementClassDropdown(events, previousBookings, allBookedSlots) {
   const replacementSelect = document.getElementById("replacement-select");
 
   replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
@@ -502,10 +504,15 @@ function populateReplacementClassDropdown(events, previousBookings) {
     const fullEventString = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
     const bookedSlots = previousBookings[event.summary];
     const isPreviouslyBooked = bookedSlots && bookedSlots.includes(fullEventString);
+    const isBookedForAll = allBookedSlots.includes(fullEventString);
+
+    if (isPreviouslyBooked) {
+      return; // Skip this slot for the corresponding student
+    }
 
     option.value = event.id;
-    option.disabled = isPreviouslyBooked;
-    if (isPreviouslyBooked) {
+    option.disabled = isBookedForAll;
+    if (isBookedForAll) {
       option.style.backgroundColor = "#e0e0e0";
     }
 
