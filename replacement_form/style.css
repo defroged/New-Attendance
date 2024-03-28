@@ -210,6 +210,8 @@ li:hover {
         margin: 0 auto; 
     }
 
+    
+    
     #login-section {
     display: flex;    
     position: relative;
@@ -260,7 +262,14 @@ li:hover {
     h1 {
         font-size: 1.4em; 
     }
-
+.rules li {
+    text-align: left;    
+    font-size: 13px;
+    padding: 3px; 
+    background-color: white;
+    color: black;
+    list-style: circle
+    }
     .container {
         margin: 20px auto; 
         width: calc(100% - 10px); 
