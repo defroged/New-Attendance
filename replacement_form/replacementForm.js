@@ -24,8 +24,8 @@ async function fetchStructuredColumnData() {
     });
 
     const filteredData = columnData.flat().filter(cell => {
-      const pattern = /^(?<planet>[A-Za-z]+) - (?<date>\d{4}\/\d{1,2}\/\d{1,2}) \((?<day>[日月火水木金土])\) (?<time>\d{2}:\d{2})$/
-      return pattern.test(cell);
+      const kanjiPattern = /[日月火水木金土]/;  // Matches any of the specified Kanji characters
+      return kanjiPattern.test(cell);
     });
 
     console.log(filteredData);
@@ -33,6 +33,7 @@ async function fetchStructuredColumnData() {
     console.error("Error fetching structured column data:", error);
   }
 }
+
 
 
 
