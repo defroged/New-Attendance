@@ -438,7 +438,22 @@ function findAvailableClassesByStudentName(studentName, data) {
     });
     return availableClasses;
 }
+//new
+function disableBookedSlotsInDropdown(bookedSlots) {
+  const replacementSelect = document.getElementById("replacement-select");
+  const options = replacementSelect.options;
 
+  bookedSlots.forEach((bookedSlot) => {
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].textContent.includes(bookedSlot)) {
+        options[i].disabled = true;
+        options[i].style.color = "grey";
+        break;
+      }
+    }
+  });
+}
+//end new
 function fetchCalendarEventsForClasses(classes) {
   const timeMin = new Date();
   const timeMax = new Date(Date.now() + 2 * 30 * 24 * 60 * 60 * 1000);
@@ -487,7 +502,10 @@ function populateReplacementClassDropdown(events) {
     }
 
     option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`; 
-    replacementSelect.appendChild(option);
+    
+	replacementSelect.appendChild(option);
+	fetchBookedSlots(studentSelect.value).then((bookedSlots) => {
+    disableBookedSlotsInDropdown(bookedSlots);
 });
 
 }
