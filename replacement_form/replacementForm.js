@@ -426,32 +426,17 @@ function fetchAvailableClasses(studentName) {
       console.error('Error fetching available classes:', error);
     });
 }
-//edited
-(studentName, data) {
-  let availableClasses = [];
-  let previousBookings = {};
-  let allBookedSlots = [];
 
-  data.forEach(function (row) {
-    if (row[0] === studentName) {
-      if (row[3]) {
-        availableClasses.push(row[3]);
-        previousBookings[row[3]] = [row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean);
+function findAvailableClassesByStudentName(studentName, data) {
+    let availableClasses = [];
+    data.forEach(function (row) {
+      if (row[0] === studentName) {
+        if (row[3]) availableClasses.push(row[3]); 
+        if (row[4]) availableClasses.push(row[4]); 
+        if (row[5]) availableClasses.push(row[5]); 
       }
-      if (row[4]) {
-        availableClasses.push(row[4]);
-        previousBookings[row[4]] = [row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean);
-      }
-      if (row[5]) {
-        availableClasses.push(row[5]);
-        previousBookings[row[5]] = [row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean);
-      }
-    } else {
-      allBookedSlots.push(...[row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean));
-    }
-  });
-
-  return { availableClasses, previousBookings, allBookedSlots };
+    });
+    return availableClasses;
 }
 
 function fetchCalendarEventsForClasses(classes) {
@@ -469,56 +454,42 @@ function fetchCalendarEventsForClasses(classes) {
       return response.json();
     })
     .then((data) => {
-      const { availableClasses, previousBookings, allBookedSlots } = findAvailableClassesByStudentName(studentName, data.items);
-      const events = filterEventsByClassNames(data.items, availableClasses);
-      populateReplacementClassDropdown(events, previousBookings, allBookedSlots);
+      const events = filterEventsByClassNames(data.items, classes);
+      populateReplacementClassDropdown(events);
     })
     .catch((error) => {
-      console.error("Error fetching calendar events:", error);
+      console.error('Error fetching calendar events:', error);
     });
 }
 
-function populateReplacementClassDropdown(events, previousBookings, allBookedSlots) {
+function populateReplacementClassDropdown(events) {
   const replacementSelect = document.getElementById("replacement-select");
 
   replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
 
   events.forEach((event) => {
     const option = document.createElement("option");
+    option.value = event.id;
     const eventName = event.summary;
     const eventDate = event.start.dateTime || event.start.date;
-    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP");
+    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP"); 
     const dayOfWeekIndex = new Date(eventDate).getDay();
     const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
-    const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex];
+    const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex]; 
 
     let eventTime = "";
     if (event.start.dateTime) {
-      const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      eventTime = ` ${formattedTime}`;
+        const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", { 
+            hour: '2-digit', 
+            minute: '2-digit'
+        });
+        eventTime = ` ${formattedTime}`; 
     }
 
-    const fullEventString = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
-    const bookedSlots = previousBookings[event.summary];
-    const isPreviouslyBooked = bookedSlots && bookedSlots.includes(fullEventString);
-    const isBookedForAll = allBookedSlots.includes(fullEventString);
-
-    if (isPreviouslyBooked) {
-      return; // Skip this slot for the corresponding student
-    }
-
-    option.value = event.id;
-    option.disabled = isBookedForAll;
-    if (isBookedForAll) {
-      option.style.backgroundColor = "#e0e0e0";
-    }
-
-    option.textContent = fullEventString;
+    option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`; 
     replacementSelect.appendChild(option);
-  });
+});
+
 }
 
 function filterEventsByClassNames(events, classNames) {
