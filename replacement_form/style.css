@@ -232,7 +232,8 @@ li:hover {
     }
 
     .responsive-header-image {
-	width: 100%;
+	width: 29%;
+	margin-bottom: 10px;
 }
     
     #login-section {
@@ -284,7 +285,8 @@ li:hover {
 
 
 .responsive-header-image {
-	width: 100%;
+	width: 35%;
+	margin-bottom: 13px;
 }
 
     h1 {
