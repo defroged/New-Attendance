@@ -337,7 +337,7 @@ async function handleStudentChange() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
 
-  const [_, allBookedSlots] = await Promise.all([
+  const [, allBookedSlots] = await Promise.all([
   fetchAvailableSlots(studentName),
   fetchAllBookedSlots(),
 ]);
