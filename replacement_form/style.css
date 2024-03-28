@@ -21,8 +21,7 @@ h1 {
 
 .title-section {
     text-align: center;
-    /*! width: 100%; */
-    max-width: 600px; /* Adjust this value based on your design preference */
+    max-width: 600px;
     margin: 20px auto;
     max-width: 75%;
     padding: 19px;
@@ -67,7 +66,6 @@ h1 {
 }
 
 #login-button {
-  /*! width: 30%; */ 
   padding: 8px; 
   margin: 0 0 0 0px; 
   border: none; 
@@ -199,9 +197,8 @@ li:hover {
         margin: 20px 20px 20px 100px;
     }
 	.title-section {
-        position: absolute; /* Ensures that the container is positioned in relation to its normal flow */
-        margin-top: 0px; /* Adjust the margin-top as needed */
-         /* Adjusts the width to fit content */
+        position: absolute; 
+        margin-top: 0px; 
         left: 217px;
         top: 21px;
         width: auto;
@@ -209,8 +206,8 @@ li:hover {
     }
 
     h1 {
-        position: relative; /* Adjusts the position to be relative within the .title-section */
-        margin: 0 auto; /* Centers the title */
+        position: relative; 
+        margin: 0 auto; 
     }
 
     #login-section {
@@ -228,9 +225,9 @@ li:hover {
         position: relative;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 20px; /* Adjusts the spacing between the title-section and the rest of the content */
+        margin-top: 20px; 
         width: 90%;
-        max-width: 764px; /* Adjusts the container's max width for alignment */
+        max-width: 764px; 
         left: 226px;
     }
     
