@@ -426,17 +426,28 @@ function fetchAvailableClasses(studentName) {
       console.error('Error fetching available classes:', error);
     });
 }
-
+//edited
 function findAvailableClassesByStudentName(studentName, data) {
     let availableClasses = [];
+    let previousBookings = {};
+
     data.forEach(function (row) {
       if (row[0] === studentName) {
-        if (row[3]) availableClasses.push(row[3]); 
-        if (row[4]) availableClasses.push(row[4]); 
-        if (row[5]) availableClasses.push(row[5]); 
+        if (row[3]) {
+          availableClasses.push(row[3]);
+          previousBookings[row[3]] = row[6] || row[7] || row[8] || row[9] || row[10] || row[11];
+        } 
+        if (row[4]) {
+          availableClasses.push(row[4]);
+          previousBookings[row[4]] = row[6] || row[7] || row[8] || row[9] || row[10] || row[11];
+        } 
+        if (row[5]) { 
+          availableClasses.push(row[5]); 
+          previousBookings[row[5]] = row[6] || row[7] || row[8] || row[9] || row[10] || row[11];
+        } 
       }
     });
-    return availableClasses;
+    return { availableClasses, previousBookings };
 }
 
 function fetchCalendarEventsForClasses(classes) {
@@ -454,22 +465,29 @@ function fetchCalendarEventsForClasses(classes) {
       return response.json();
     })
     .then((data) => {
-      const events = filterEventsByClassNames(data.items, classes);
-      populateReplacementClassDropdown(events);
+      const events = filterEventsByClassNames(data.items, classes.availableClasses);
+      populateReplacementClassDropdown(events, classes.previousBookings);
     })
     .catch((error) => {
       console.error('Error fetching calendar events:', error);
     });
 }
 
-function populateReplacementClassDropdown(events) {
+function populateReplacementClassDropdown(events, previousBookings) {
   const replacementSelect = document.getElementById("replacement-select");
 
   replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
 
   events.forEach((event) => {
+    const isPreviouslyBooked = previousBookings[event.summary];
+
     const option = document.createElement("option");
     option.value = event.id;
+    option.disabled = isPreviouslyBooked;
+    if (isPreviouslyBooked) {
+      option.style.backgroundColor = "#e0e0e0";
+    }
+
     const eventName = event.summary;
     const eventDate = event.start.dateTime || event.start.date;
     const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP"); 
@@ -488,8 +506,7 @@ function populateReplacementClassDropdown(events) {
 
     option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`; 
     replacementSelect.appendChild(option);
-});
-
+  });
 }
 
 function filterEventsByClassNames(events, classNames) {
