@@ -462,72 +462,34 @@ function fetchCalendarEventsForClasses(classes) {
     });
 }
 
-async function getBookedSlots(studentName) {
-    try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        const values = data.values;
-
-        const rowIndex = values.findIndex((row) => row[0] === studentName);
-
-        if (rowIndex < 0) {
-            return []; // Student not found
-        }
-
-        const bookedSlots = values[rowIndex].slice(6, 12).filter((slot) => slot !== ''); 
-
-        // Format booked slots to match the dropdown options 
-        return bookedSlots.map(slot => { 
-            // Assuming your booked slots also include date, time, etc.
-            // You would need to format them similarly to `eventLabel`.
-            return slot;
-        });
-
-    } catch (error) {
-        console.error('Error fetching booked slots: ', error);
-        return [];
-    }
-}
-
-
 function populateReplacementClassDropdown(events) {
-    const replacementSelect = document.getElementById("replacement-select");
-    const bookedSlots = getBookedSlots(); // Retrieve data from spreadsheet
+  const replacementSelect = document.getElementById("replacement-select");
 
-    replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
+  replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
 
-    events.forEach((event) => {
-        const option = document.createElement("option");
-        option.value = event.id;
+  events.forEach((event) => {
+    const option = document.createElement("option");
+    option.value = event.id;
+    const eventName = event.summary;
+    const eventDate = event.start.dateTime || event.start.date;
+    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP"); 
+    const dayOfWeekIndex = new Date(eventDate).getDay();
+    const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
+    const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex]; 
 
-        const eventName = event.summary;
-        const eventDate = event.start.dateTime || event.start.date;
-        const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP"); 
-        const dayOfWeekIndex = new Date(eventDate).getDay();
-        const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
-        const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex]; 
+    let eventTime = "";
+    if (event.start.dateTime) {
+        const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", { 
+            hour: '2-digit', 
+            minute: '2-digit'
+        });
+        eventTime = ` ${formattedTime}`; 
+    }
 
-        let eventTime = "";
-        if (event.start.dateTime) {
-            const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", { 
-                hour: '2-digit', 
-                minute: '2-digit'
-            });
-            eventTime = ` ${formattedTime}`; 
-        }
+    option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`; 
+    replacementSelect.appendChild(option);
+});
 
-        const eventLabel = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`; 
-
-        // Check if booked, disable, and style if so
-        if (bookedSlots.includes(eventLabel)) {
-            option.disabled = true;
-            option.style.color = "grey"; 
-            option.style.cursor = "not-allowed";
-        }
-
-        option.textContent = eventLabel; 
-        replacementSelect.appendChild(option);
-    });
 }
 
 function filterEventsByClassNames(events, classNames) {
