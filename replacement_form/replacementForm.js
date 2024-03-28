@@ -13,6 +13,28 @@ function hideSpinner() {
   document.getElementById("spinner").style.display = "none";
 }
 
+async function fetchColumnData(columns) {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
+
+    // Skip header row
+    const columnData = values.slice(1); 
+
+    // Extract specific columns
+    const selectedColumnData = columnData.map(row => {
+      return row.slice(columns.start - 1, columns.end); 
+    });
+
+    console.log(selectedColumnData);
+
+  } catch (error) {
+    console.error('Error fetching column data:', error);
+  }
+}
+
+
 function fetchClassNames() {
 	showSpinner();
   fetch(apiUrl)
