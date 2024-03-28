@@ -516,6 +516,7 @@ async function populateReplacementClassDropdown(events) {
     if (structuredColumnData.includes(option.textContent)) {
       option.disabled = true;
       option.style.color = "#898989";
+      option.textContent += " 満";
     }
 	
     replacementSelect.appendChild(option);
