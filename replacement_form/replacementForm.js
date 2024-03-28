@@ -13,26 +13,22 @@ function hideSpinner() {
   document.getElementById("spinner").style.display = "none";
 }
 
-async function fetchColumnData(columns) {
+async function fetchFilteredColumnData() {
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
 
-    // Skip header row
-    const columnData = values.slice(1); 
-
-    // Extract specific columns
-    const selectedColumnData = columnData.map(row => {
-      return row.slice(columns.start - 1, columns.end); 
+    const columnData = values.slice(1).map((row) => {
+      return row.slice(6, 12).filter((cell) => cell !== ""); // Extract columns G-L, filter out empty cells
     });
 
-    console.log(selectedColumnData);
-
+    console.log(columnData);
   } catch (error) {
-    console.error('Error fetching column data:', error);
+    console.error("Error fetching filtered column data:", error);
   }
 }
+
 
 
 function fetchClassNames() {
@@ -83,7 +79,7 @@ function initializeReplacementForm() {
   document.getElementById("student-select").addEventListener("change", handleStudentChange);
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
-   fetchColumnData({ start: 7, end: 12 });
+   fetchFilteredColumnData(); 
 }
 
 function handlePasswordInputChange() {
