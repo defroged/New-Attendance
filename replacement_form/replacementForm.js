@@ -435,15 +435,18 @@ function findAvailableClassesByStudentName(studentName, data) {
       if (row[0] === studentName) {
         if (row[3]) {
           availableClasses.push(row[3]);
-          previousBookings[row[3]] = row[6] || row[7] || row[8] || row[9] || row[10] || row[11];
+          if (!previousBookings[row[3]]) previousBookings[row[3]] = [];
+          previousBookings[row[3]].push(...[row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean))
         } 
         if (row[4]) {
           availableClasses.push(row[4]);
-          previousBookings[row[4]] = row[6] || row[7] || row[8] || row[9] || row[10] || row[11];
+          if (!previousBookings[row[4]]) previousBookings[row[4]] = [];
+          previousBookings[row[4]].push(...[row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean))
         } 
         if (row[5]) { 
           availableClasses.push(row[5]); 
-          previousBookings[row[5]] = row[6] || row[7] || row[8] || row[9] || row[10] || row[11];
+          if (!previousBookings[row[5]]) previousBookings[row[5]] = [];
+          previousBookings[row[5]].push(...[row[6], row[7], row[8], row[9], row[10], row[11]].filter(Boolean))
         } 
       }
     });
@@ -479,32 +482,34 @@ function populateReplacementClassDropdown(events, previousBookings) {
   replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
 
   events.forEach((event) => {
-    const isPreviouslyBooked = previousBookings[event.summary];
-
     const option = document.createElement("option");
+    const eventName = event.summary;
+    const eventDate = event.start.dateTime || event.start.date;
+    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP");
+    const dayOfWeekIndex = new Date(eventDate).getDay();
+    const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
+    const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex];
+
+    let eventTime = "";
+    if (event.start.dateTime) {
+      const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      eventTime = ` ${formattedTime}`;
+    }
+
+    const fullEventString = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
+    const bookedSlots = previousBookings[event.summary];
+    const isPreviouslyBooked = bookedSlots && bookedSlots.includes(fullEventString);
+
     option.value = event.id;
     option.disabled = isPreviouslyBooked;
     if (isPreviouslyBooked) {
       option.style.backgroundColor = "#e0e0e0";
     }
 
-    const eventName = event.summary;
-    const eventDate = event.start.dateTime || event.start.date;
-    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP"); 
-    const dayOfWeekIndex = new Date(eventDate).getDay();
-    const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
-    const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex]; 
-
-    let eventTime = "";
-    if (event.start.dateTime) {
-        const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", { 
-            hour: '2-digit', 
-            minute: '2-digit'
-        });
-        eventTime = ` ${formattedTime}`; 
-    }
-
-    option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`; 
+    option.textContent = fullEventString;
     replacementSelect.appendChild(option);
   });
 }
