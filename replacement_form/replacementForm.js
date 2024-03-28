@@ -19,15 +19,20 @@ async function fetchFilteredColumnData() {
     const data = await response.json();
     const values = data.values;
 
+    console.log("All values:", values); // View complete data
+
     const columnData = values.slice(1).map((row) => {
-      return row.slice(6, 12).filter((cell) => cell !== ""); // Extract columns G-L, filter out empty cells
+      const slicedRow = row.slice(6, 12);
+      console.log("Sliced row before filtering:", slicedRow); // View data after slicing
+      return slicedRow.filter((cell) => cell !== "");
     });
 
-    console.log(columnData);
+    console.log("Filtered column data:", columnData);
   } catch (error) {
     console.error("Error fetching filtered column data:", error);
   }
 }
+
 
 
 
