@@ -13,25 +13,27 @@ function hideSpinner() {
   document.getElementById("spinner").style.display = "none";
 }
 
-async function fetchFilteredColumnData() {
+async function fetchStructuredColumnData() {
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
 
-    console.log("All values:", values); // View complete data
-
     const columnData = values.slice(1).map((row) => {
-      const slicedRow = row.slice(6, 12);
-      console.log("Sliced row before filtering:", slicedRow); // View data after slicing
-      return slicedRow.filter((cell) => cell !== "");
+      return row.slice(6, 12);  // Extract columns G-L
     });
 
-    console.log("Filtered column data:", columnData);
+    const filteredData = columnData.flat().filter(cell => {
+      const pattern = /^(?<planet>[A-Za-z]+) - (?<date>\d{4}\/\d{1,2}\/\d{1,2}) \((?<day>[日月火水木金土])\) (?<time>\d{2}:\d{2})$/
+      return pattern.test(cell);
+    });
+
+    console.log(filteredData);
   } catch (error) {
-    console.error("Error fetching filtered column data:", error);
+    console.error("Error fetching structured column data:", error);
   }
 }
+
 
 
 
@@ -84,7 +86,7 @@ function initializeReplacementForm() {
   document.getElementById("student-select").addEventListener("change", handleStudentChange);
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
-   fetchFilteredColumnData(); 
+   fetchStructuredColumnData(); 
 }
 
 function handlePasswordInputChange() {
