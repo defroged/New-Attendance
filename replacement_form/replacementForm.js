@@ -337,16 +337,20 @@ async function handleStudentChange() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
 
-  await fetchAvailableSlots(studentName);
-  await fetchAvailableClasses(studentName);
+  const [_, bookedSlots] = await Promise.all([
+    fetchAvailableSlots(studentName),
+    fetchBookedSlots(studentName),
+  ]);
+
+  await fetchAvailableClasses(studentName, bookedSlots);
   await populateBookedSlots(studentName);
   displaySubmitSectionIfRequired();
 
   const replacementList = document.getElementById("replacement-list");
   if (studentName) {
-    replacementList.style.display = "block"; 
+  replacementList.style.display = "block";
   } else {
-    replacementList.style.display = "none"; 
+    replacementList.style.display = "none";
   }
 }
 
@@ -410,7 +414,7 @@ function findAvailableSlotsByStudentName(studentName, data) {
   return availableSlots;
 }
 
-function fetchAvailableClasses(studentName) {
+function fetchAvailableClasses(studentName, bookedSlots) {
   return fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -420,7 +424,24 @@ function fetchAvailableClasses(studentName) {
     })
     .then((data) => {
       const classes = findAvailableClassesByStudentName(studentName, data.values);
-      fetchCalendarEventsForClasses(classes);
+
+      const timeMin = new Date();
+      const timeMax = new Date(Date.now() + 2 * 30 * 24 * 60 * 60 * 1000);
+
+      const encodedTimeMin = encodeURIComponent(timeMin.toISOString());
+      const encodedTimeMax = encodeURIComponent(timeMax.toISOString());
+
+      return fetch(`/api/calendar-events?timeMin=${encodedTimeMin}&timeMax=${encodedTimeMax}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Failed to fetch calendar events: ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const events = filterEventsByClassNames(data.items, classes);
+          populateReplacementClassDropdown(events, bookedSlots);
+        });
     })
     .catch((error) => {
       console.error('Error fetching available classes:', error);
@@ -462,32 +483,39 @@ function fetchCalendarEventsForClasses(classes) {
     });
 }
 
-function populateReplacementClassDropdown(events) {
+function populateReplacementClassDropdown(events, bookedSlots) {
   const replacementSelect = document.getElementById("replacement-select");
 
   replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
 
   events.forEach((event) => {
-    const option = document.createElement("option");
-    option.value = event.id;
-    const eventName = event.summary;
-    const eventDate = event.start.dateTime || event.start.date;
-    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP"); 
-    const dayOfWeekIndex = new Date(eventDate).getDay();
-    const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
-    const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex]; 
+  const option = document.createElement("option");
+  option.value = event.id;
+  const eventName = event.summary;
+  const eventDate = event.start.dateTime || event.start.date;
+  const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP");
+  const dayOfWeekIndex = new Date(eventDate).getDay();
+  const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
+  const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex];
 
-    let eventTime = "";
-    if (event.start.dateTime) {
-        const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", { 
-            hour: '2-digit', 
-            minute: '2-digit'
-        });
-        eventTime = ` ${formattedTime}`; 
-    }
+  let eventTime = "";
+  if (event.start.dateTime) {
+    const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    eventTime = ` ${formattedTime}`;
+  }
 
-    option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`; 
-    replacementSelect.appendChild(option);
+  option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
+
+  // Check if the event date and name match any bookedSlot
+  if (bookedSlots.some(slot => slot === option.textContent)) {
+    option.disabled = true;
+    option.style.color = 'grey';
+  }
+
+  replacementSelect.appendChild(option);
 });
 
 }
