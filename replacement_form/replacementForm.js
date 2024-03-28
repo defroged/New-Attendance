@@ -465,7 +465,7 @@ function fetchCalendarEventsForClasses(classes) {
 function populateReplacementClassDropdown(events) {
   const replacementSelect = document.getElementById("replacement-select");
 
-  replacementSelect.innerHTML = '<option value="" disabled selected>振り替えレッスンを選択してください</option>';
+  replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
 
   events.forEach((event) => {
     const option = document.createElement("option");

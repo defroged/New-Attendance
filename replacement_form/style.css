@@ -30,11 +30,19 @@ h1 {
 .rules li {
     text-align: left;    
     font-size: 13px;
-    padding: 0px; 
+    padding: 0px;
+    margin: 8px;
     background-color: white;
     color: black;
     list-style: circle
     }
+
+.rules {
+    margin-left: 7px
+}
+.rules li:hover {
+    background-color: white;
+}
 #available-slots {
   text-align: center;
   margin: 25px;
