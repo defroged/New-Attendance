@@ -20,11 +20,11 @@ async function fetchStructuredColumnData() {
     const values = data.values;
 
     const columnData = values.slice(1).map((row) => {
-      return row.slice(6, 12);  // Extract columns G-L
+      return row.slice(6, 12);  
     });
 
     const filteredData = columnData.flat().filter(cell => {
-      const kanjiPattern = /[日月火水木金土]/;  // Matches any of the specified Kanji characters
+      const kanjiPattern = /[日月火水木金土]/; 
       return kanjiPattern.test(cell);
     });
 
@@ -32,13 +32,7 @@ async function fetchStructuredColumnData() {
   } catch (error) {
     console.error("Error fetching structured column data:", error);
   }
-return filteredData; // Return the fetched data
 }
-
-
-
-
-
 
 function fetchClassNames() {
 	showSpinner();
@@ -490,8 +484,10 @@ function fetchCalendarEventsForClasses(classes) {
     });
 }
 
-function populateReplacementClassDropdown(events, unavailableData) {
+async function populateReplacementClassDropdown(events) {
   const replacementSelect = document.getElementById("replacement-select");
+  const structuredColumnData = await fetchStructuredColumnData();
+
   replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
 
   events.forEach((event) => {
@@ -513,18 +509,18 @@ function populateReplacementClassDropdown(events, unavailableData) {
         eventTime = ` ${formattedTime}`; 
     }
 
-    option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`; 
+    option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
 
-    // Check if the event is unavailable
-    if (unavailableData.includes(option.textContent)) { 
+    // Checking if the option value matches the structured column data
+    if (structuredColumnData.includes(option.textContent)) {
       option.disabled = true;
-      option.style.color = 'grey'; // Grey out the option
+      option.style.color = "#898989";
     }
-
+	
     replacementSelect.appendChild(option);
   });
-}
 
+}
 
 function filterEventsByClassNames(events, classNames) {
   const filteredEvents = events.filter((event) => {
