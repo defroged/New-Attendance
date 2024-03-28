@@ -489,8 +489,6 @@ function populateReplacementClassDropdown(events, bookedSlots) {
   replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
 
   events.forEach((event) => {
-  const option = document.createElement("option");
-  option.value = event.id;
   const eventName = event.summary;
   const eventDate = event.start.dateTime || event.start.date;
   const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP");
@@ -507,15 +505,16 @@ function populateReplacementClassDropdown(events, bookedSlots) {
     eventTime = ` ${formattedTime}`;
   }
 
-  option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
+  const optionText = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
 
   // Check if the event date and name match any bookedSlot
-  if (bookedSlots.some(slot => slot === option.textContent)) {
-    option.disabled = true;
-    option.style.color = 'grey';
-  }
+  if (!bookedSlots.some(slot => slot === optionText)) {
+    const option = document.createElement("option");
+    option.value = event.id;
+    option.textContent = optionText;
 
-  replacementSelect.appendChild(option);
+    replacementSelect.appendChild(option);
+  }
 });
 
 }
