@@ -32,6 +32,7 @@ async function fetchStructuredColumnData() {
   } catch (error) {
     console.error("Error fetching structured column data:", error);
   }
+return filteredData; // Return the fetched data
 }
 
 
@@ -489,9 +490,8 @@ function fetchCalendarEventsForClasses(classes) {
     });
 }
 
-function populateReplacementClassDropdown(events) {
+function populateReplacementClassDropdown(events, unavailableData) {
   const replacementSelect = document.getElementById("replacement-select");
-
   replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
 
   events.forEach((event) => {
@@ -514,10 +514,17 @@ function populateReplacementClassDropdown(events) {
     }
 
     option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`; 
-    replacementSelect.appendChild(option);
-});
 
+    // Check if the event is unavailable
+    if (unavailableData.includes(option.textContent)) { 
+      option.disabled = true;
+      option.style.color = 'grey'; // Grey out the option
+    }
+
+    replacementSelect.appendChild(option);
+  });
 }
+
 
 function filterEventsByClassNames(events, classNames) {
   const filteredEvents = events.filter((event) => {
