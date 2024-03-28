@@ -83,6 +83,7 @@ function initializeReplacementForm() {
   document.getElementById("student-select").addEventListener("change", handleStudentChange);
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
+   fetchColumnData({ start: 7, end: 12 });
 }
 
 function handlePasswordInputChange() {
