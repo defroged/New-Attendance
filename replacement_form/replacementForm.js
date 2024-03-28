@@ -365,7 +365,7 @@ async function fetchAllBookedSlots() {
     
     for (let i = 0; i < values.length; i++) {
       const row = values[i];
-      const slots = row.slice(6, 12).filter((slot) => slot !== '');
+      const slots = row.slice(6, 12);
       bookedSlots.push(...slots);
     }
 
