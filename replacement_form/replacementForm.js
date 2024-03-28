@@ -438,6 +438,28 @@ function findAvailableClassesByStudentName(studentName, data) {
     });
     return availableClasses;
 }
+//new
+async function fetchBookedSlots() {
+  try {
+    const response = await fetch(apiUrl); // Ensure `apiUrl` points to the range G:L of your sheet
+    const data = await response.json();
+    const values = data.values;
+
+    const bookedSlots = [];
+    for (let row of values) {
+      for (let col = 6; col <= 11; col++) {
+        if (row[col]) {
+          bookedSlots.push(row[col].toString());
+        }
+      }
+    }
+    return bookedSlots;
+  } catch (error) {
+    console.error('Error fetching booked slots:', error);
+    return [];
+  }
+}
+//end new
 
 function fetchCalendarEventsForClasses(classes) {
   const timeMin = new Date();
@@ -462,8 +484,9 @@ function fetchCalendarEventsForClasses(classes) {
     });
 }
 
-function populateReplacementClassDropdown(events) {
+async function populateReplacementClassDropdown(events) {
   const replacementSelect = document.getElementById("replacement-select");
+  const bookedSlots = await fetchBookedSlots();
 
   replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
 
@@ -486,11 +509,18 @@ function populateReplacementClassDropdown(events) {
         eventTime = ` ${formattedTime}`; 
     }
 
-    option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`; 
+    const optionText = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
+    if (bookedSlots.includes(optionText)) {
+      option.textContent = `${optionText} (Booked)`;
+      option.disabled = true;
+      option.style.color = "grey";
+    } else {
+      option.textContent = optionText;
+    }
     replacementSelect.appendChild(option);
-});
-
+  });
 }
+
 
 function filterEventsByClassNames(events, classNames) {
   const filteredEvents = events.filter((event) => {
