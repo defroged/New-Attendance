@@ -11,6 +11,10 @@ body {
     min-height: 59vh;
 }
 
+.responsive-header-image {
+	width: 100%;
+}
+
 h1 {
     color: #2c3e50;
     text-align: center;
@@ -227,7 +231,9 @@ li:hover {
         margin: 0 auto; 
     }
 
-    
+    .responsive-header-image {
+	width: 100%;
+}
     
     #login-section {
     display: flex;    
@@ -276,9 +282,15 @@ li:hover {
         margin-left: -13px;
     }
 
+
+.responsive-header-image {
+	width: 100%;
+}
+
     h1 {
         font-size: 1.4em; 
     }
+	
 .rules li {
     text-align: left;    
     font-size: 13px;
