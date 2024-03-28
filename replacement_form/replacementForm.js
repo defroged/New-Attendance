@@ -337,12 +337,12 @@ async function handleStudentChange() {
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
 
-  const [_, bookedSlots] = await Promise.all([
-    fetchAvailableSlots(studentName),
-    fetchBookedSlots(studentName),
-  ]);
+  const [_, allBookedSlots] = await Promise.all([
+  fetchAvailableSlots(studentName),
+  fetchAllBookedSlots(),
+]);
 
-  await fetchAvailableClasses(studentName, bookedSlots);
+  await fetchAvailableClasses(studentName, allBookedSlots);
   await populateBookedSlots(studentName);
   displaySubmitSectionIfRequired();
 
@@ -353,6 +353,30 @@ async function handleStudentChange() {
     replacementList.style.display = "none";
   }
 }
+
+
+async function fetchAllBookedSlots() {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const values = data.values;
+
+    const bookedSlots = [];
+    
+    for (let i = 0; i < values.length; i++) {
+      const row = values[i];
+      const slots = row.slice(6, 12).filter((slot) => slot !== '');
+      bookedSlots.push(...slots);
+    }
+
+    return bookedSlots;
+  } catch (error) {
+    console.error('Error fetching all booked slots: ', error);
+  }
+
+  return [];
+}
+
 
 function populateStudentNames(students) {
   const studentSelect = document.getElementById("student-select");
@@ -507,14 +531,10 @@ function populateReplacementClassDropdown(events, bookedSlots) {
 
   const optionText = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
 
-  // Check if the event date and name match any bookedSlot
-  if (!bookedSlots.some(slot => slot === optionText)) {
-    const option = document.createElement("option");
-    option.value = event.id;
-    option.textContent = optionText;
-
-    replacementSelect.appendChild(option);
-  }
+  if (bookedSlots.some(slot => slot === optionText)) {
+  option.disabled = true;
+  option.style.color = 'grey';
+}
 });
 
 }
