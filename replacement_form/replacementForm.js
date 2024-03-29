@@ -83,7 +83,6 @@ function initializeReplacementForm() {
   document.getElementById("student-select").addEventListener("change", handleStudentChange);
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
-  document.getElementById("goback-button").addEventListener("click", handleGoBack);
    fetchStructuredColumnData(); 
 }
 
@@ -750,21 +749,6 @@ async function updateAddedReplacements(studentName, addedReplacements) {
     );
   }
   console.log("Successfully updated Google Sheet data for added replacements");
-}
-
-async function handleGoBack() {
-  document.getElementById("success-message").style.display = "none";
-  document.getElementById("login-section").style.display = "none";
-  document.getElementById("step-one").style.display = "block";
-  document.getElementById("step-two").style.display = "block";
-  document.getElementById("step-three").style.display = "block";
-  
-  // Reset the "goback-button" element
-  let studentElement = document.getElementById("student-select");
-  studentElement.selectedIndex = 0;
-  
-  await handleStudentChange();
-  displaySubmitSectionIfRequired();
 }
 
 window.initializeReplacementForm = initializeReplacementForm;
