@@ -178,6 +178,7 @@ async function handleReplacementChange() {
 
   if (eventId) {
     replacements.added.push(eventData);
+	console.log("Added replacement:", eventData);
     displaySubmitSectionIfRequired();
     
     addReplacementToDatesList(eventData);
@@ -527,7 +528,7 @@ async function populateReplacementClassDropdown(events) {
 function filterEventsByClassNames(events, classNames) {
   const filteredEvents = events.filter((event) => {
     const eventName = event.summary;
-    return classNames.includes(eventName);
+    return classNames.some((className) => eventName.includes(className));
   });
 
   return filteredEvents;
@@ -565,12 +566,15 @@ function addReplacementToDatesList(eventData) {
   
   const replacementDatesList = document.getElementById("replacement-dates");
   replacementDatesList.appendChild(listElement);
+  
+  console.log("Added replacement to dates list:", eventData);
 }
 
 async function removeReplacement(eventId) {
   const listElementToRemove = document.getElementById(`replacement-date-${eventId}`);
   const eventText = listElementToRemove.firstElementChild.textContent;
   listElementToRemove.remove();
+  console.log("Removed replacement:", { id: eventId, name: eventText });
 
   const eventData = { id: eventId, name: eventText };
   replacements.removed.push(eventData);
