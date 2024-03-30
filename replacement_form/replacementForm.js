@@ -170,14 +170,6 @@ function displaySubmitSectionIfRequired() {
 
 async function handleReplacementChange() {
   const replacementSelect = document.getElementById("replacement-select");
-  
-  if (isFirstRun) {
-    replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
-    isFirstRun = false;
-  } else {
-    replacementSelect.innerHTML = '';
-  }
-  
   const eventId = replacementSelect.value;
   const selectedOption = replacementSelect.options[replacementSelect.selectedIndex];
   const eventData = {
@@ -498,6 +490,13 @@ async function populateReplacementClassDropdown(events) {
   const replacementSelect = document.getElementById("replacement-select");
   const structuredColumnData = await fetchStructuredColumnData();
 
+  if (isFirstRun) {
+    replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
+    isFirstRun = false;
+  } else {
+    replacementSelect.innerHTML = '';
+  }
+
   events.forEach((event) => {
     const option = document.createElement("option");
     option.value = event.id;
@@ -528,6 +527,12 @@ async function populateReplacementClassDropdown(events) {
     replacementSelect.appendChild(option);
   });
 
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "選択してください";
+  replacementSelect.appendChild(defaultOption);
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
 }
 
 function filterEventsByClassNames(events, classNames) {
