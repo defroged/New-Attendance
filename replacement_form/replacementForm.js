@@ -1,3 +1,4 @@
+let isFirstRun = true;
 const replacements = {
   added: [],
   removed: [],
@@ -489,7 +490,12 @@ async function populateReplacementClassDropdown(events) {
   const replacementSelect = document.getElementById("replacement-select");
   const structuredColumnData = await fetchStructuredColumnData();
 
-  replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
+  if (isFirstRun) {
+    replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
+    isFirstRun = false;
+  } else {
+    replacementSelect.innerHTML = '';
+  }
 
   events.forEach((event) => {
     const option = document.createElement("option");
@@ -512,7 +518,6 @@ async function populateReplacementClassDropdown(events) {
 
     option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
 
-    // Checking if the option value matches the structured column data
     if (structuredColumnData.includes(option.textContent)) {
       option.disabled = true;
       option.style.color = "#898989";
@@ -711,7 +716,6 @@ async function updateRemovedReplacements(studentName, removedReplacement) {
 
   console.log("Successfully updated Google Sheet data for removed replacements");
 }
-
 
 async function updateAddedReplacements(studentName, addedReplacements) {
   const response = await fetch(apiUrl);
