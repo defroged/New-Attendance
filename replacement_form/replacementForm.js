@@ -572,9 +572,19 @@ async function removeReplacement(eventId) {
   const eventText = listElementToRemove.firstElementChild.textContent;
   listElementToRemove.remove();
 
+  // Remove the event from the added array
+  const removalIndex = replacements.added.findIndex((event) => event.id === eventId);
+  if (removalIndex !== -1) {
+    replacements.added.splice(removalIndex, 1);
+  }
+
+  // Add the removed event data to the dropdown menu
   const eventData = { id: eventId, name: eventText };
-  replacements.removed.push(eventData);
-  window.displaySubmitSectionIfRequired();
+  const replacementSelect = document.getElementById("replacement-select");
+  const option = document.createElement("option");
+  option.value = eventId;
+  option.textContent = eventText;
+  replacementSelect.appendChild(option);
 
   const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10) + 1;
   document.getElementById("available-slots").setAttribute("data-count", availableSlots);
