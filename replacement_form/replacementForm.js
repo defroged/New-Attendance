@@ -572,16 +572,7 @@ async function removeReplacement(eventId) {
   const eventText = listElementToRemove.firstElementChild.textContent;
   listElementToRemove.remove();
 
-  // Find the eventData from the removed list or added list to get the name and id
-  const eventData = replacements.removed.find(event => event.id === eventId) || replacements.added.find(event => event.id === eventId);
-  
-  // Re-add the removed event option back to the dropdown
-  const replacementSelect = document.getElementById("replacement-select");
-  const option = document.createElement("option");
-  option.value = eventData.id;
-  option.textContent = eventData.name;
-  replacementSelect.appendChild(option);
-
+  const eventData = { id: eventId, name: eventText };
   replacements.removed.push(eventData);
   window.displaySubmitSectionIfRequired();
 
