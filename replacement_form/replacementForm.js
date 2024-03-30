@@ -178,7 +178,6 @@ async function handleReplacementChange() {
 
   if (eventId) {
     replacements.added.push(eventData);
-	console.log("Added replacement:", eventData);
     displaySubmitSectionIfRequired();
     
     addReplacementToDatesList(eventData);
@@ -566,17 +565,23 @@ function addReplacementToDatesList(eventData) {
   
   const replacementDatesList = document.getElementById("replacement-dates");
   replacementDatesList.appendChild(listElement);
-  
-  console.log("Added replacement to dates list:", eventData);
 }
 
 async function removeReplacement(eventId) {
   const listElementToRemove = document.getElementById(`replacement-date-${eventId}`);
   const eventText = listElementToRemove.firstElementChild.textContent;
   listElementToRemove.remove();
-  console.log("Removed replacement:", { id: eventId, name: eventText });
 
-  const eventData = { id: eventId, name: eventText };
+  // Find the eventData from the removed list or added list to get the name and id
+  const eventData = replacements.removed.find(event => event.id === eventId) || replacements.added.find(event => event.id === eventId);
+  
+  // Re-add the removed event option back to the dropdown
+  const replacementSelect = document.getElementById("replacement-select");
+  const option = document.createElement("option");
+  option.value = eventData.id;
+  option.textContent = eventData.name;
+  replacementSelect.appendChild(option);
+
   replacements.removed.push(eventData);
   window.displaySubmitSectionIfRequired();
 
