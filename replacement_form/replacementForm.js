@@ -489,31 +489,25 @@ async function populateReplacementClassDropdown(events) {
   const replacementSelect = document.getElementById("replacement-select");
   const structuredColumnData = await fetchStructuredColumnData();
 
-  // Create the default option and set it as non-selectable and selected
-  const defaultOption = document.createElement("option");
-  defaultOption.value = "";
-  defaultOption.disabled = true;
-  defaultOption.selected = true;
-  defaultOption.textContent = "選択してください";
-  replacementSelect.appendChild(defaultOption);
+  replacementSelect.innerHTML = '<option value="" disabled selected>選択してください</option>';
 
   events.forEach((event) => {
     const option = document.createElement("option");
     option.value = event.id;
     const eventName = event.summary;
     const eventDate = event.start.dateTime || event.start.date;
-    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP");
+    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP"); 
     const dayOfWeekIndex = new Date(eventDate).getDay();
     const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
-    const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex];
+    const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex]; 
 
     let eventTime = "";
     if (event.start.dateTime) {
-        const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", {
-            hour: '2-digit',
+        const formattedTime = new Date(event.start.dateTime).toLocaleTimeString("ja-JP", { 
+            hour: '2-digit', 
             minute: '2-digit'
         });
-        eventTime = ` ${formattedTime}`;
+        eventTime = ` ${formattedTime}`; 
     }
 
     option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
@@ -524,15 +518,16 @@ async function populateReplacementClassDropdown(events) {
       option.style.color = "#898989";
       option.textContent += " 満";
     }
-    
+	
     replacementSelect.appendChild(option);
   });
+
 }
 
 function filterEventsByClassNames(events, classNames) {
   const filteredEvents = events.filter((event) => {
     const eventName = event.summary;
-    return classNames.some((className) => eventName.includes(className));
+    return classNames.includes(eventName);
   });
 
   return filteredEvents;
