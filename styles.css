@@ -68,7 +68,7 @@ button:hover {
 .time-slot {
     border: none;
     padding: 9px;
-    height: 64px;
+    height: 65px;
     background-color: #f9f9f9;
     display: flex;
     align-items: center;
@@ -144,7 +144,11 @@ button:hover {
     }
 
     .day-of-week, .date, .event, .event-time, .event-summary {
-        font-size: 1em; /* Reset font sizes if they were changed for portrait */
+        font-size: 1.3em; /* Reset font sizes if they were changed for portrait */
+        /*! margin-bottom: 34px; */
+        /*! margin-top: -55px; */
+        padding: 0px 30px 0px 30px;
+        text-align: center;
     }
 
     /* Hide the landscape message if it was added */
