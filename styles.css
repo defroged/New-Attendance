@@ -76,9 +76,9 @@ button:hover {
 }
 
 .event {
-    border: 1px solid #00bcd4;
+    border: 3px solid #00bcd4;
     padding: 4px;
-    border-radius: 4px;
+    border-radius: 8px;
     background-color: #e0f7fa;
     font-size: 1.2em;
     text-align: left;
@@ -96,6 +96,7 @@ button:hover {
 .event-summary {
     font-size: 0.85em;
     color: #333;
+    
 }
 
 /* darken screen on save */
@@ -112,8 +113,22 @@ button:hover {
 
 
 @media (max-width: 926px) {
-    /* Existing styles... */
 
+.time-slot {
+
+    display: flex;
+    flex-direction: column; /* Stack events vertically */
+    gap: 10px; /* This creates space between events within the same time slot */
+    height: 150px;
+}
+    .event {
+
+    margin-bottom: 10px; /* Add more space between events */
+    width: calc(100% - 8px); 
+    height: 115%;
+    overflow: visible;
+}
+    
 /* Styles for both landscape and portrait */
 .calendar {
     display: flex; /* Changed from grid to flex for horizontal scrolling */
@@ -144,11 +159,12 @@ button:hover {
     }
 
     .day-of-week, .date, .event, .event-time, .event-summary {
-        font-size: 1.3em; /* Reset font sizes if they were changed for portrait */
-        /*! margin-bottom: 34px; */
+        font-size: 1.2em; /* Reset font sizes if they were changed for portrait */
+        margin-bottom: 34px;
         /*! margin-top: -55px; */
         padding: 0px 30px 0px 30px;
         text-align: center;
+        margin-bottom: -10px;
     }
 
     /* Hide the landscape message if it was added */
