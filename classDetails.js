@@ -2,6 +2,7 @@ let modalInstance;
 const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 
 function fetchClassDetails(className, eventDate) {
+	  console.log(`Fetching details for class: ${className} on date: ${eventDate}`);
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -12,6 +13,7 @@ function fetchClassDetails(className, eventDate) {
       return response.json();
     })
     .then((data) => {
+		  console.log("Fetched data successfully:", data);
       const students = findStudentsByClassName(className, data.values);
 	  const date = new Date(eventDate.replace(/-/g, '/'));
       const replacementStudents = findReplacementStudents(data.values, date);
@@ -34,6 +36,7 @@ function findStudentsByClassName(className, data) {
 }
 
 function findReplacementStudents(data, date) {
+	  console.log(`Finding replacement students in fetched data for date: ${date.toISOString()}`);
   const replacementStudents = {};
   const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
 
@@ -57,11 +60,12 @@ function findReplacementStudents(data, date) {
       }
     }
   });
-
+console.log("Replacement students found:", replacementStudents);
   return replacementStudents; 
 }
 // work on this to add replacement students
 function showModalWithClassDetails(className, students, eventDate, replacementStudents) {
+	  console.log(`Showing modal for class: ${className}, Event Date: ${eventDate}`, {Students: students, ReplacementStudents: replacementStudents});
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
 
   students.forEach(function (student) {
@@ -75,6 +79,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
   modalContent += "<h5>Replacement Students:</h5><ul>";
 
   const replacements = replacementStudents[className] || [];
+  console.log(`Replacement students for class ${className}:`, replacements);
   if (replacements.length) {
     replacements.forEach((replacement) => {
       if (replacement.replacementDate === eventDate) {
@@ -82,6 +87,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
       }
     });
   } else {
+	    console.log(`No replacement students found for class ${className} on date ${eventDate}.`);
     // If there are no replacements, show a message
     modalContent += "<li>No replacement students for this class/date.</li>";
   }
