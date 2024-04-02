@@ -512,17 +512,20 @@ async function populateReplacementClassDropdown(events) {
 
     option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
 
-    // Checking if the option value matches the structured column data
-    if (structuredColumnData.includes(option.textContent)) {
-      option.disabled = true;
-      option.style.color = "#898989";
-      option.textContent += " 満";
+    // Check if the event name starts with "Ladybug". If not, apply the disabling logic.
+    if (!eventName.startsWith("Ladybug")) {
+        if (structuredColumnData.includes(option.textContent)) {
+            option.disabled = true;
+            option.style.color = "#898989";
+            option.textContent += " 満";
+        }
     }
 	
     replacementSelect.appendChild(option);
   });
 
 }
+
 
 function filterEventsByClassNames(events, classNames) {
   const filteredEvents = events.filter((event) => {
