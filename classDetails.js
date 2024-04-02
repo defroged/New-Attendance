@@ -64,7 +64,6 @@ function findReplacementStudents(data, date) {
 function showModalWithClassDetails(className, students, eventDate, replacementStudents) {
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
 
-  // Loop through students to add them to the modal content
   students.forEach(function (student) {
     modalContent += '<input type="hidden" id="eventDate" value="' + eventDate + '">';
     modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
@@ -72,31 +71,30 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
   modalContent += '</ul>';
 
-  // Prepare the "Replacement Students" section if there are any
-  const replacements = replacementStudents[className] || []; // Ensure we have an array to work with
+  // Always start the "Replacement Students" section
+  modalContent += "<h5>Replacement Students:</h5><ul>";
 
-  // Only add the "Replacement Students" section if there are any for this class
+  const replacements = replacementStudents[className] || [];
   if (replacements.length) {
-    modalContent += "<h5>Replacement Students:</h5><ul>";
-
     replacements.forEach((replacement) => {
-      // Ensure that the replacement student is for the specific event date
       if (replacement.replacementDate === eventDate) {
         modalContent += "<li>" + replacement.studentName + "</li>";
-      } 
+      }
     });
-
-    modalContent += "</ul>";
+  } else {
+    // If there are no replacements, show a message
+    modalContent += "<li>No replacement students for this class/date.</li>";
   }
 
-  // Add a button for saving changes
+  modalContent += "</ul>";
+
   modalContent += '<button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
 
-  // Display the modal with the content
   modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
   document.getElementById('myModalContent').innerHTML = modalContent;
   modalInstance.show();
 }
+
 
 
 
