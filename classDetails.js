@@ -139,13 +139,12 @@ async function saveAttendance() {
     const data = await response.json();
     const values = data.values;
 
-    const updatedValues = values.filter((row) => {
-      if (xMarkedStudents.includes(row[0])) {
-        row[2] = parseInt(row[2], 10) + 1;
-        return row.slice(0, 3); // Return only the first three columns
-      }
-      return false; // Return false for rows that are not updated
-    }).map(row => row.slice(0, 3)); // Filter out null values
+    const updatedValues = values.map((row) => {
+  if (xMarkedStudents.includes(row[0])) {
+    row[2] = parseInt(row[2], 10) + 1;
+  }
+  return row.slice(0, 3);
+});
 	  console.log('Updated values:', updatedValues);
 
     const dataWithoutHeader = updatedValues.slice(1);
