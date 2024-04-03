@@ -37,21 +37,22 @@ function findStudentsByClassName(className, data) {
 
 function findReplacementStudents(data, date) {
   console.log(`Finding replacement students in fetched data for date: ${date.toISOString()}`);
-  const replacementStudents = {};
-  const dateFormat = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  // Format date to match the spreadsheet format (YYYY/M/D) without leading zeros
+  const dateFormat = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
 
   data.forEach((row, index) => { 
     if (index > 0) { 
       for (let i = 6; i <= 11; i++) { 
-        // First, try to find a date within the string
+        // Use a regex to find dates in the spreadsheet format
         const dateMatch = row[i].match(/\d{4}\/\d{1,2}\/\d{1,2}/);
         if (dateMatch) {
-          const foundDate = dateMatch[0].replace(/\//g, '-'); // Convert found date to 'YYYY-MM-DD' format for comparison
+          const foundDate = dateMatch[0]; // This is already in the 'YYYY/M/D' format
           if (foundDate === dateFormat) {
             console.log(`Processing row ${index + 1}, column ${i}: ${row[i]}`);
             const replacementInfo = row[i].split("-"); 
             const className = replacementInfo[0].trim();
             const studentName = row[0];
+
             if (!replacementStudents[className]) {
               replacementStudents[className] = [];
             }
@@ -68,6 +69,7 @@ function findReplacementStudents(data, date) {
   console.log("Replacement students found:", replacementStudents);
   return replacementStudents; 
 }
+
 
 // work on this to add replacement students
 function showModalWithClassDetails(className, students, eventDate, replacementStudents) {
