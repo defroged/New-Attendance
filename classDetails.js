@@ -87,8 +87,7 @@ if (replacements.length) {
   });
 } else {
   console.log(`No replacement students found for class ${className} on date ${eventDate}.`);
-  // If there are no replacements, show a message
-  modalContent += "<li>No replacement students for this class/date.</li>";
+  modalContent += "<li>No replacement students today.</li>";
 }
 
   modalContent += "</ul>";
