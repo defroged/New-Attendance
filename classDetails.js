@@ -36,41 +36,34 @@ function findStudentsByClassName(className, data) {
 }
 
 function findReplacementStudents(data, date) {
-  console.log(`Finding replacement students in fetched data for date: ${date.toISOString()}`);
-  // Format date to match the spreadsheet format (YYYY/M/D) without leading zeros
-  const dateFormat = `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+	  console.log(`Finding replacement students in fetched data for date: ${date.toISOString()}`);
+  const replacementStudents = {};
+  const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
 
   data.forEach((row, index) => { 
     if (index > 0) { 
       for (let i = 6; i <= 11; i++) { 
-        // Use a regex to find dates in the spreadsheet format
-        const dateMatch = row[i].match(/\d{4}\/\d{1,2}\/\d{1,2}/);
-        if (dateMatch) {
-          const foundDate = dateMatch[0]; // This is already in the 'YYYY/M/D' format
-          if (foundDate === dateFormat) {
-            console.log(`Processing row ${index + 1}, column ${i}: ${row[i]}`);
-            const replacementInfo = row[i].split("-"); 
-            const className = replacementInfo[0].trim();
-            const studentName = row[0];
+        if (row[i] && row[i].includes(dateFormat)) {
+			console.log(`Processing row ${index + 1}, column ${i}: ${row[i]}`);
+          const replacementInfo = row[i].split("-"); 
+          const className = replacementInfo[0].trim();
+          const studentName = row[0]; 
 
-            if (!replacementStudents[className]) {
-              replacementStudents[className] = [];
-            }
-            replacementStudents[className].push({
-              studentName: studentName,
-              replacementDate: foundDate
-            }); 
+          if (!replacementStudents[className]) {
+            replacementStudents[className] = [];
           }
+          replacementStudents[className].push({
+            studentName: studentName,
+            // Extract the date from the cell string
+            replacementDate: row[i].substr(row[i].indexOf("(") + 1, 10) // assuming date format is 'YYYY/MM/DD'
+          }); 
         }
       }
     }
   });
-
-  console.log("Replacement students found:", replacementStudents);
+console.log("Replacement students found:", replacementStudents);
   return replacementStudents; 
 }
-
-
 // work on this to add replacement students
 function showModalWithClassDetails(className, students, eventDate, replacementStudents) {
 	  console.log(`Showing modal for class: ${className}, Event Date: ${eventDate}`, {Students: students, ReplacementStudents: replacementStudents});
