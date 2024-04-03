@@ -64,10 +64,10 @@ function findReplacementStudents(data, date) {
 console.log("function findReplacementStudents -", replacementStudents);  
   return replacementStudents; 
 }
-// work on this to add replacement students
+
 function showModalWithClassDetails(className, students, eventDate, replacementStudents) {
-  console.log(`Showing modal for class: ${className}, Event Date: ${eventDate}`, {Students: students, ReplacementStudents: replacementStudents});
-  
+  console.log(`Showing modal for class: ${className}, Event Date: ${eventDate}`, { Students: students, ReplacementStudents: replacementStudents });
+
   const formattedEventDate = eventDate.replace(/-/g, "/");
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
 
@@ -78,19 +78,20 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
   modalContent += '</ul>';
 
-  // Always start the "Replacement Students" section
+  // Replacement Students section
   modalContent += "<h5>Replacement Students:</h5><ul>";
-const replacements = replacementStudents[className] || [];
-if (replacements.length) {
-  replacements.forEach((replacement) => {
-    modalContent += "<li>" + replacement.studentName + "</li>";
-  });
-} else {
-  console.log(`No replacement students found for class ${className} on date ${eventDate}.`);
-  modalContent += "<li>No replacement students today.</li>";
-}
+  const replacements = replacementStudents[className] || [];
+  if (replacements.length) {
+    replacements.forEach((replacement) => {
+      modalContent += '<li>' + replacement.studentName + ' <i class="fas fa-check-circle text-success" data-student="' + replacement.studentName + '" onclick="iconClicked(event)"></i></li>';
+    });
+  } else {
+    console.log(`No replacement students found for class ${className} on date ${eventDate}.`);
+    // If there are no replacements, show a message
+    modalContent += "<li>No replacement students for this class/date.</li>";
+  }
 
-  modalContent += "</ul>";
+  modalContent += '</ul>';
 
   modalContent += '<button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
 
@@ -117,9 +118,9 @@ function iconClicked(event) {
 async function saveAttendance() {
   const eventDateField = document.getElementById('eventDate');
   const dateOfAbsence = new Date(eventDateField.value).toISOString().slice(0, 10);
-	
+
   const className = document.querySelector("h4").innerText.slice(6);
-  
+
   const saveChangesBtn = document.getElementById("saveChangesBtn");
   saveChangesBtn.disabled = true;
 
@@ -139,11 +140,12 @@ async function saveAttendance() {
     const values = data.values;
 
     const updatedValues = values.map((row) => {
-  if (xMarkedStudents.includes(row[0])) {
-    row[2] = parseInt(row[2], 10) + 1;
-  }
-  return row.slice(0, 3); 
-});
+      if (xMarkedStudents.includes(row[0])) {
+        row[2] = parseInt(row[2], 10) + 1;
+        return row.slice(0, 3); // Return only the first three columns
+      }
+      return null; // Return null for rows that are not updated
+    }).filter(Boolean); // Filter out null values
 	  console.log('Updated values:', updatedValues);
 
     const dataWithoutHeader = updatedValues.slice(1);
