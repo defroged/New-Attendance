@@ -4,6 +4,7 @@ const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 function fetchClassDetails(className, eventDate) {
 	  console.log(`Fetching details for class: ${className} on date: ${eventDate}`);
   fetch(apiUrl)
+  console.log("URL being fetched -", apiUrl);
     .then((response) => {
       if (!response.ok) {
         throw new Error(
@@ -54,14 +55,13 @@ function findReplacementStudents(data, date) {
           }
           replacementStudents[className].push({
             studentName: studentName,
-            // Extract the date from the cell string
-            replacementDate: row[i].substr(row[i].indexOf("(") + 1, 10) // assuming date format is 'YYYY/MM/DD'
+            replacementDate: row[i].substr(row[i].indexOf("(") + 1, 10) 
           }); 
         }
       }
     }
   });
-console.log("Replacement students found:", replacementStudents);
+console.log("function findReplacementStudents -", replacementStudents);  
   return replacementStudents; 
 }
 // work on this to add replacement students
@@ -78,7 +78,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
   // Always start the "Replacement Students" section
   modalContent += "<h5>Replacement Students:</h5><ul>";
-
+console.log("function showModalWithClassDetails -", replacementStudents);
   const replacements = replacementStudents[className] || [];
   console.log(`Replacement students for class ${className}:`, replacements);
   if (replacements.length) {
