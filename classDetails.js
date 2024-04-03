@@ -88,7 +88,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
   } else {
     console.log(`No replacement students found for class ${className} on date ${eventDate}.`);
     // If there are no replacements, show a message
-    modalContent += "<li>No replacement students for this class/date.</li>";
+    modalContent += "<li>No replacement students today.</li>";
   }
 
   modalContent += '</ul>';
@@ -156,8 +156,8 @@ async function saveAttendance() {
   },
   body: JSON.stringify({
     spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-    range: "Sheet1!A2:C", 
-    data: dataWithoutHeader,
+    range: "Sheet1!A2:C",
+    data: updatedValues.slice(1),
   }),
 });
 
