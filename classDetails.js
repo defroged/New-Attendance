@@ -85,7 +85,8 @@ console.log("function showModalWithClassDetails -", replacementStudents);
   console.log(`Replacement students for class ${className}:`, replacements);
   if (replacements.length) {
     replacements.forEach((replacement) => {
-  if (replacement.replacementDate === formattedEventDate) {
+  const datePart = replacement.replacementDate.substring(0, 10);
+  if (datePart === formattedEventDate) {
     modalContent += "<li>" + replacement.studentName + "</li>";
   }
 });
