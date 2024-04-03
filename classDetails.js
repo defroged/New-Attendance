@@ -85,10 +85,10 @@ console.log("function showModalWithClassDetails -", replacementStudents);
   console.log(`Replacement students for class ${className}:`, replacements);
   if (replacements.length) {
     replacements.forEach((replacement) => {
-      if (replacement.replacementDate === eventDate) {
-        modalContent += "<li>" + replacement.studentName + "</li>";
-      }
-    });
+  if (replacement.replacementDate === formattedEventDate) {
+    modalContent += "<li>" + replacement.studentName + "</li>";
+  }
+});
   } else {
 	    console.log(`No replacement students found for class ${className} on date ${eventDate}.`);
     // If there are no replacements, show a message
