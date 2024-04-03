@@ -2,8 +2,12 @@ let modalInstance;
 const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 
 function fetchClassDetails(className, eventDate) {
-	  console.log(`Fetching details for class: ${className} on date: ${eventDate}`);
-	  console.log("URL being fetched -", apiUrl);
+  console.log(`Fetching details for class: ${className} on date: ${eventDate}`);
+  
+  const dateObj = new Date(eventDate.replace(/-/g, '/'));
+  const offsetInHours = dateObj.getTimezoneOffset() / 60;
+  dateObj.setHours(dateObj.getHours() + offsetInHours);
+  
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
