@@ -66,11 +66,13 @@ console.log("function findReplacementStudents -", replacementStudents);
 }
 // work on this to add replacement students
 function showModalWithClassDetails(className, students, eventDate, replacementStudents) {
-	  console.log(`Showing modal for class: ${className}, Event Date: ${eventDate}`, {Students: students, ReplacementStudents: replacementStudents});
+  console.log(`Showing modal for class: ${className}, Event Date: ${eventDate}`, {Students: students, ReplacementStudents: replacementStudents});
+  
+  const formattedEventDate = eventDate.replace(/-/g, "/");
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
 
   students.forEach(function (student) {
-    modalContent += '<input type="hidden" id="eventDate" value="' + eventDate + '">';
+    modalContent += '<input type="hidden" id="eventDate" value="' + formattedEventDate + '">';
     modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
   });
 
