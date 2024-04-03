@@ -2,12 +2,8 @@ let modalInstance;
 const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 
 function fetchClassDetails(className, eventDate) {
-  console.log(`Fetching details for class: ${className} on date: ${eventDate}`);
-  
-  const dateObj = new Date(eventDate.replace(/-/g, '/'));
-  const offsetInHours = dateObj.getTimezoneOffset() / 60;
-  dateObj.setHours(dateObj.getHours() + offsetInHours);
-  
+	  console.log(`Fetching details for class: ${className} on date: ${eventDate}`);
+	  console.log("URL being fetched -", apiUrl);
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -43,7 +39,7 @@ function findStudentsByClassName(className, data) {
 function findReplacementStudents(data, date) {
 	  console.log(`Finding replacement students in fetched data for date: ${date.toISOString()}`);
   const replacementStudents = {};
-  const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getDate()).padStart(2, "0")}`;
+  const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1)}/${String(date.getDate())}`;
 
   data.forEach((row, index) => { 
     if (index > 0) { 
