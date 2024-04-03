@@ -80,20 +80,19 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
   // Always start the "Replacement Students" section
   modalContent += "<h5>Replacement Students:</h5><ul>";
-console.log("function showModalWithClassDetails -", replacementStudents);
-  const replacements = replacementStudents[className] || [];
-  console.log(`Replacement students for class ${className}:`, replacements);
-  if (replacements.length) {
-    replacements.forEach((replacement) => {
-  if (replacement.replacementDate === formattedEventDate) {
-    modalContent += "<li>" + replacement.studentName + "</li>";
-  }
-});
-  } else {
-	    console.log(`No replacement students found for class ${className} on date ${eventDate}.`);
-    // If there are no replacements, show a message
-    modalContent += "<li>No replacement students for this class/date.</li>";
-  }
+const replacements = replacementStudents[className] || [];
+if (replacements.length) {
+  replacements.forEach((replacement) => {
+    const replacementEventDate = replacement.replacementDate.replace(/\s/g, '');
+    if (replacementEventDate === formattedEventDate) {
+      modalContent += "<li>" + replacement.studentName + "</li>";
+    }
+  });
+} else {
+  console.log(`No replacement students found for class ${className} on date ${eventDate}.`);
+  // If there are no replacements, show a message
+  modalContent += "<li>No replacement students for this class/date.</li>";
+}
 
   modalContent += "</ul>";
 
