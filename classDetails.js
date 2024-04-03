@@ -3,8 +3,8 @@ const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 
 function fetchClassDetails(className, eventDate) {
 	  console.log(`Fetching details for class: ${className} on date: ${eventDate}`);
+	  console.log("URL being fetched -", apiUrl);
   fetch(apiUrl)
-  console.log("URL being fetched -", apiUrl);
     .then((response) => {
       if (!response.ok) {
         throw new Error(
