@@ -120,7 +120,7 @@ async function saveAttendance() {
   const dateOfAbsence = new Date(eventDateField.value).toISOString().slice(0, 10);
 
   const className = document.querySelector("h4").innerText.slice(6);
-  
+
   const saveChangesBtn = document.getElementById("saveChangesBtn");
   saveChangesBtn.disabled = true;
 
@@ -150,16 +150,47 @@ async function saveAttendance() {
     const dataWithoutHeader = updatedValues.slice(1);
 
     const updateResponse = await fetch("/api/updateAttendance", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-        range: "Sheet1!A2:C",
-        data: dataWithoutHeader,
-      }),
-    });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+    range: "Sheet1!A2:C", 
+    data: dataWithoutHeader,
+  }),
+});
+
+const absenceData = xMarkedStudents.map((student) => {
+  return { student, eventName: className, date: dateOfAbsence };
+});
+
+const sheetId = 759358030; 
+const sheetName = 'absence'; 
+
+const updateAbsenceResponse = await fetch("/api/updateAbsenceDates", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+ body: JSON.stringify({
+  spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+  sheetId: 759358030, 
+    sheetName: "absence", 
+    data: absenceData,
+  }),
+});
+
+if (!updateAbsenceResponse.ok) {
+  try {
+    console.error("Error response details:", await updateAbsenceResponse.json());
+  } catch (logErr) {
+    console.error("Error logging response details:", logErr);
+  }
+  throw new Error(`Failed to update Google Sheet data: ${updateAbsenceResponse.statusText}`);
+}
+    resetState(saveChangesBtn, spinner, overlay);
+
     if (!updateResponse.ok) {
       try {
         console.error('Error response details:', await updateResponse.json());
@@ -167,36 +198,6 @@ async function saveAttendance() {
         console.error('Error logging response details:', logErr);
       }
       throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
-    }
-
-    // Absence dates updating section
-    const absenceData = xMarkedStudents.map((student) => {
-      return { student, eventName: className, date: dateOfAbsence };
-    });
-
-    const sheetId = 759358030;
-    const sheetName = 'absence';
-
-    const updateAbsenceResponse = await fetch("/api/updateAbsenceDates", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-        sheetId: sheetId,
-        sheetName: sheetName,
-        data: absenceData,
-      }),
-    });
-
-    if (!updateAbsenceResponse.ok) {
-      try {
-        console.error("Error response details:", await updateAbsenceResponse.json());
-      } catch (logErr) {
-        console.error("Error logging response details:", logErr);
-      }
-      throw new Error(`Failed to update Google Sheet data: ${updateAbsenceResponse.statusText}`);
     }
 
     resetState(saveChangesBtn, spinner, overlay);
