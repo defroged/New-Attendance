@@ -83,10 +83,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 const replacements = replacementStudents[className] || [];
 if (replacements.length) {
   replacements.forEach((replacement) => {
-    const replacementEventDate = replacement.replacementDate.replace(/\s/g, '');
-    if (replacementEventDate === formattedEventDate) {
-      modalContent += "<li>" + replacement.studentName + "</li>";
-    }
+    modalContent += "<li>" + replacement.studentName + "</li>";
   });
 } else {
   console.log(`No replacement students found for class ${className} on date ${eventDate}.`);
