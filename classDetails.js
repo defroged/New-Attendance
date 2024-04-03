@@ -142,11 +142,10 @@ async function saveAttendance() {
     const updatedValues = values.map((row) => {
       if (xMarkedStudents.includes(row[0])) {
         row[2] = parseInt(row[2], 10) + 1;
-        return row.slice(0, 3); // Return only the first three columns
       }
-      return null; // Return null for rows that are not updated
-    }).filter(Boolean); // Filter out null values
-	  console.log('Updated values:', updatedValues);
+      return row;
+    });
+    console.log('Updated values:', updatedValues);
 
     const dataWithoutHeader = updatedValues.slice(1);
 
@@ -190,29 +189,26 @@ if (!updateAbsenceResponse.ok) {
   }
   throw new Error(`Failed to update Google Sheet data: ${updateAbsenceResponse.statusText}`);
 }
-
     resetState(saveChangesBtn, spinner, overlay);
-    
 
     if (!updateResponse.ok) {
-
-    try {
-      console.error('Error response details:', await updateResponse.json());
-    } catch (logErr) {
-      console.error('Error logging response details:', logErr);
+      try {
+        console.error('Error response details:', await updateResponse.json());
+      } catch (logErr) {
+        console.error('Error logging response details:', logErr);
+      }
+      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
     }
-    throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
-  }
 
-  resetState(saveChangesBtn, spinner, overlay); 
+    resetState(saveChangesBtn, spinner, overlay);
 
-  console.log("Attendance updated successfully");
-  showCustomAlert();
+    console.log("Attendance updated successfully");
+    showCustomAlert();
 
-  setTimeout(function () {
-    modalInstance.hide(); 
-    resetModalContent();
-  }, 2000);
+    setTimeout(function () {
+      modalInstance.hide();
+      resetModalContent();
+    }, 2000);
 
   } catch (error) {
     console.error("Error updating attendance:", error);
