@@ -491,13 +491,16 @@ async function populateReplacementClassDropdown(events) {
 
   replacementSelect.innerHTML = '<option value="">選択してください</option>';
 
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+
   events.forEach((event) => {
     const option = document.createElement("option");
     option.value = event.id;
     const eventName = event.summary;
-    const eventDate = event.start.dateTime || event.start.date;
-    const formattedDate = new Date(eventDate).toLocaleDateString("ja-JP"); 
-    const dayOfWeekIndex = new Date(eventDate).getDay();
+    const eventDate = new Date(event.start.dateTime || event.start.date);
+    const formattedDate = eventDate.toLocaleDateString("ja-JP"); 
+    const dayOfWeekIndex = eventDate.getDay();
     const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
     const dayOfWeekKanji = daysOfWeek[dayOfWeekIndex]; 
 
@@ -520,10 +523,11 @@ async function populateReplacementClassDropdown(events) {
             option.textContent += " 満";
         }
     }
-	
-    replacementSelect.appendChild(option);
-  });
 
+    if (eventDate > currentDate) { // Add this condition
+      replacementSelect.appendChild(option);
+    }
+  });
 }
 
 
