@@ -136,12 +136,10 @@ function displayEvents(events) {
         today.setHours(0, 0, 0, 0);
 
         while (eventStart < eventEnd) {
-            if (eventStart >= today) {
-                displayEventForDay(eventStart, eventEnd, eventElement);
-            }
-            eventStart.setDate(eventStart.getDate() + 1);
-            eventStart.setHours(0, 0, 0, 0); 
-        }
+    displayEventForDay(eventStart, eventEnd, eventElement);
+    eventStart.setDate(eventStart.getDate() + 1);
+    eventStart.setHours(0, 0, 0, 0);
+}
 		eventElement.addEventListener('click', function () {
             fetchClassDetails(event.summary, eventStart.toISOString());
         });
