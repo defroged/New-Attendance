@@ -117,6 +117,7 @@ async function fetchStudentNameByPassword(password) {
 }
 
 async function handleLogin() {
+	showSpinner(); 
   document.getElementById("main-container").style.display = "none";
   const passwordInput = document.getElementById("password-input");
   const password = passwordInput.value;
@@ -130,6 +131,7 @@ async function handleLogin() {
     passwordInput.value = "";
     passwordInput.focus();
   }
+  hideSpinner();
 }
 
 async function handleStudentNameMatch(studentName) {
@@ -357,6 +359,7 @@ console.log("Starting to increment slots", {
 }
 
 async function handleStudentChange() {
+	showSpinner()
   const studentSelect = document.getElementById("student-select");
   const studentName = studentSelect.value;
 
@@ -371,6 +374,7 @@ async function handleStudentChange() {
   } else {
     replacementList.style.display = "none"; 
   }
+  hideSpinner();
 }
 
 function populateStudentNames(students) {
@@ -491,7 +495,6 @@ async function populateReplacementClassDropdown(events) {
 
   replacementSelect.innerHTML = '<option value="">選択してください</option>';
 
-  // Create a new Date instance in Japan timezone
   const currentDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
   currentDate.setHours(0, 0, 0, 0);
 
@@ -499,8 +502,6 @@ async function populateReplacementClassDropdown(events) {
     const option = document.createElement("option");
     option.value = event.id;
     const eventName = event.summary;
-
-    // Convert event date to Japan timezone
     const eventDate = new Date(new Date(event.start.dateTime || event.start.date).toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
     eventDate.setHours(0, 0, 0, 0);
     
@@ -520,7 +521,6 @@ async function populateReplacementClassDropdown(events) {
 
     option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
 
-    // Check if the event name starts with "Ladybug". If not, apply the disabling logic.
     if (!eventName.startsWith("Ladybug")) {
         if (structuredColumnData.includes(option.textContent)) {
             option.disabled = true;
@@ -534,7 +534,6 @@ async function populateReplacementClassDropdown(events) {
     }
   });
 }
-
 
 function filterEventsByClassNames(events, classNames) {
   const filteredEvents = events.filter((event) => {

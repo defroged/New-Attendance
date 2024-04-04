@@ -72,7 +72,6 @@ h1 {
   100% { transform: rotate(360deg); }
 }
 
-
 #password-input {
   width: 100%; 
   max-width: 220px;  
