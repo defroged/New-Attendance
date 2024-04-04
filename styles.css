@@ -19,34 +19,22 @@ body {
     border-radius: 10px;
     overflow: hidden;
 }
-.day-of-week {
-    font-size: 1.5em; 
-    text-align: center;
-}
 
-.time-slot[data-hour="0"], .time-slot[data-hour="1"], .time-slot[data-hour="2"], 
-.time-slot[data-hour="3"], .time-slot[data-hour="4"], .time-slot[data-hour="5"],
-.time-slot[data-hour="6"], .time-slot[data-hour="7"], .time-slot[data-hour="8"],
-.time-slot[data-hour="19"],.time-slot[data-hour="20"], .time-slot[data-hour="21"],
-.time-slot[data-hour="22"],.time-slot[data-hour="23"] 
-{
-    display: none;
+.day-of-week {
+    font-size: 1.5em;
+    text-align: center;
+    padding: 5px;
 }
 
 .day {
     border-right: 1px solid #e0e0e0;
     padding: 10px;
-}
-
-
-.current-day {
-    border-left: 4px solid #00bcd4;
-    background-color: #e0f7fa;
+    box-sizing: border-box;
 }
 
 .date {
     margin-bottom: 10px;
-	font-size: 1em; 
+    font-size: 1em;
     text-align: center;
 }
 
@@ -80,7 +68,7 @@ button:hover {
     padding: 4px;
     border-radius: 8px;
     background-color: #e0f7fa;
-    font-size: 1.2em;
+    font-size: 12px;
     text-align: left;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -96,87 +84,34 @@ button:hover {
 .event-summary {
     font-size: 0.85em;
     color: #333;
-    
 }
 
-/* darken screen on save */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: none;
-  z-index: 999;
-}
-
-
-@media (max-width: 926px) {
-
-.time-slot {
-
-    display: flex;
-    flex-direction: column; /* Stack events vertically */
-    gap: 10px; /* This creates space between events within the same time slot */
-    height: 150px;
-}
-    .event {
-
-    margin-bottom: 10px; /* Add more space between events */
-    width: calc(100% - 8px); 
-    height: 115%;
-    overflow: visible;
-}
-    
-/* Styles for both landscape and portrait */
-.calendar {
-    display: flex; /* Changed from grid to flex for horizontal scrolling */
-    flex-wrap: nowrap; /* Prevent wrapping to a new line */
-    overflow-x: auto; /* Enable horizontal scrolling */
-    scroll-snap-type: x mandatory; /* Enable snapping */
-}
-
-.day {
-    flex: 0 0 100%; /* Each day takes full width of the viewport */
-    scroll-snap-align: start; /* Ensure snapping aligns to the start of each day */
-    border-right: 1px solid #e0e0e0; /* Existing border style */
-    padding: 10px; /* Existing padding style */
-    box-sizing: border-box; /* Ensure padding is included in width */
-}
-
-/* Smooth scrolling for browsers that support it */
-.calendar {
-    scroll-behavior: smooth;
-}
-
-/* Resetting any specific portrait styles since they're not needed anymore */
-@media screen and (orientation: portrait) {
+@media (max-width: 480px) {
     .calendar-container {
-        max-width: 100%; /* Take up full width */
-        margin: 0; /* Reset any specific margins if previously set */
-        padding: 0; /* Reset any specific paddings if previously set */
+        max-width: 100%;
+        margin: 10px auto;
+    }
+    
+    .day-of-week, .date {
+        font-size: 1em;
+    }
+    
+    .time-slot {
+        height: auto;
+    }
+    
+    .event {
+        font-size: 10px;
+        padding: 3px;
+        height: auto;
+        white-space: normal;
     }
 
-    .day-of-week, .date, .event, .event-time, .event-summary {
-        font-size: 1.2em; /* Reset font sizes if they were changed for portrait */
-        margin-bottom: 34px;
-        /*! margin-top: -55px; */
-        padding: 0px 30px 0px 30px;
-        text-align: center;
-        margin-bottom: -10px;
+    .event-time {
+        font-size: 0.7em;
     }
-
-    /* Hide the landscape message if it was added */
-    .landscape-message {
-        display: none;
-    }
-
-    /* Ensure body content is shown */
-    body {
-        display: block;
+    
+    .event-summary {
+        font-size: 0.8em;
     }
 }
-
-}
-   
