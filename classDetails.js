@@ -96,7 +96,12 @@ function iconClicked(event) {
 
 async function saveAttendance() {
   const eventDateField = document.getElementById('eventDate');
-  const dateOfAbsence = new Date(eventDateField.value).toISOString().slice(0, 10);
+  const eventDate = new Date(eventDateField.value);
+
+  // Fix for timezone differences
+  eventDate.setMinutes(eventDate.getMinutes() - eventDate.getTimezoneOffset());
+
+  const dateOfAbsence = eventDate.toISOString().slice(0, 10);
 
   const className = document.querySelector("h4").innerText.slice(6);
 
@@ -119,62 +124,62 @@ async function saveAttendance() {
     const values = data.values;
 
     const updatedValues = values.map((row) => {
-  if (xMarkedStudents.includes(row[0])) {
-    row[2] = parseInt(row[2], 10) + 1;
-  }
-  return row.slice(0, 3);
-});
+      if (xMarkedStudents.includes(row[0])) {
+        row[2] = parseInt(row[2], 10) + 1;
+      }
+      return row.slice(0, 3);
+    });
+    
     const dataWithoutHeader = updatedValues.slice(1);
     const updateResponse = await fetch("/api/updateAttendance", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-    range: "Sheet1!A2:C", 
-    data: dataWithoutHeader,
-  }),
-});
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+        range: "Sheet1!A2:C", 
+        data: dataWithoutHeader,
+      }),
+    });
 
-const absenceData = xMarkedStudents.map((student) => {
-  return { student, eventName: className, date: dateOfAbsence };
-});
+    const absenceData = xMarkedStudents.map((student) => {
+      return { student, eventName: className, date: dateOfAbsence };
+    });
 
-const sheetId = 759358030; 
-const sheetName = 'absence'; 
+    const sheetId = 759358030; 
+    const sheetName = 'absence'; 
 
-const updateAbsenceResponse = await fetch("/api/updateAbsenceDates", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
- body: JSON.stringify({
-  spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-  sheetId: 759358030, 
-    sheetName: "absence", 
-    data: absenceData,
-  }),
-});
+    const updateAbsenceResponse = await fetch("/api/updateAbsenceDates", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+        sheetId: 759358030, 
+        sheetName: "absence", 
+        data: absenceData,
+      }),
+    });
 
-if (!updateAbsenceResponse.ok) {
-  throw new Error(`Failed to update Google Sheet data: ${updateAbsenceResponse.statusText}`);
-}
+    if (!updateAbsenceResponse.ok) {
+      throw new Error(`Failed to update Google Sheet data: ${updateAbsenceResponse.statusText}`);
+    }
 
     resetState(saveChangesBtn, spinner, overlay);
-    
 
     if (!updateResponse.ok) {
-    throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
-  }
+      throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
+    }
 
-  resetState(saveChangesBtn, spinner, overlay); 
-  showCustomAlert();
+    resetState(saveChangesBtn, spinner, overlay); 
+    showCustomAlert();
 
-  setTimeout(function () {
-    modalInstance.hide(); 
-    resetModalContent();
-  }, 2000);
+    setTimeout(function () {
+      modalInstance.hide(); 
+      resetModalContent();
+    }, 2000);
 
   } catch (error) {}
 }
