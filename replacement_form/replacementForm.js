@@ -491,14 +491,19 @@ async function populateReplacementClassDropdown(events) {
 
   replacementSelect.innerHTML = '<option value="">選択してください</option>';
 
-  const currentDate = new Date();
+  // Create a new Date instance in Japan timezone
+  const currentDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
   currentDate.setHours(0, 0, 0, 0);
 
   events.forEach((event) => {
     const option = document.createElement("option");
     option.value = event.id;
     const eventName = event.summary;
-    const eventDate = new Date(event.start.dateTime || event.start.date);
+
+    // Convert event date to Japan timezone
+    const eventDate = new Date(new Date(event.start.dateTime || event.start.date).toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+    eventDate.setHours(0, 0, 0, 0);
+    
     const formattedDate = eventDate.toLocaleDateString("ja-JP"); 
     const dayOfWeekIndex = eventDate.getDay();
     const daysOfWeek = ["日", "月", "火", "水", "木", "金", "土"];
@@ -524,7 +529,7 @@ async function populateReplacementClassDropdown(events) {
         }
     }
 
-    if (eventDate > currentDate) { // Add this condition
+    if (eventDate > currentDate) {
       replacementSelect.appendChild(option);
     }
   });
