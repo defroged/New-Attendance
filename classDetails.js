@@ -2,8 +2,6 @@ let modalInstance;
 const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 
 function fetchClassDetails(className, eventDate) {
-	  console.log(`Fetching details for class: ${className} on date: ${eventDate}`);
-	  console.log("URL being fetched -", apiUrl);
   fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -14,16 +12,13 @@ function fetchClassDetails(className, eventDate) {
       return response.json();
     })
     .then((data) => {
-		  console.log("Fetched data successfully:", data);
       const students = findStudentsByClassName(className, data.values);
-	  const date = new Date(eventDate.replace(/-/g, '/'));
+      const date = new Date(eventDate.replace(/-/g, '/'));
       const replacementStudents = findReplacementStudents(data.values, date);
 
       showModalWithClassDetails(className, students, eventDate, replacementStudents);
     })
-    .catch((error) => {
-      console.error("Error fetching class details:", error);
-    });
+    .catch((error) => {});
 }
 
 function findStudentsByClassName(className, data) {
@@ -37,7 +32,6 @@ function findStudentsByClassName(className, data) {
 }
 
 function findReplacementStudents(data, date) {
-	  console.log(`Finding replacement students in fetched data for date: ${date.toISOString()}`);
   const replacementStudents = {};
   const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1)}/${String(date.getDate())}`;
 
@@ -45,7 +39,6 @@ function findReplacementStudents(data, date) {
     if (index > 0) { 
       for (let i = 6; i <= 11; i++) { 
         if (row[i] && row[i].includes(dateFormat)) {
-			console.log(`Processing row ${index + 1}, column ${i}: ${row[i]}`);
           const replacementInfo = row[i].split("-"); 
           const className = replacementInfo[0].trim();
           const studentName = row[0]; 
@@ -61,13 +54,10 @@ function findReplacementStudents(data, date) {
       }
     }
   });
-console.log("function findReplacementStudents -", replacementStudents);  
   return replacementStudents; 
 }
 
 function showModalWithClassDetails(className, students, eventDate, replacementStudents) {
-  console.log(`Showing modal for class: ${className}, Event Date: ${eventDate}`, { Students: students, ReplacementStudents: replacementStudents });
-
   const formattedEventDate = eventDate.replace(/-/g, "/");
   var modalContent = '<h4>Class: ' + className + '</h4><ul>';
 
@@ -77,8 +67,6 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
   });
 
   modalContent += '</ul>';
-
-  // Replacement Students section
   modalContent += "<h5>Replacement Students:</h5><ul>";
   const replacements = replacementStudents[className] || [];
   if (replacements.length) {
@@ -86,23 +74,14 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
       modalContent += '<li>' + replacement.studentName + ' <i class="fas fa-check-circle text-success" data-student="' + replacement.studentName + '" onclick="iconClicked(event)"></i></li>';
     });
   } else {
-    console.log(`No replacement students found for class ${className} on date ${eventDate}.`);
-    // If there are no replacements, show a message
     modalContent += "<li>No replacement students today.</li>";
   }
-
   modalContent += '</ul>';
-
   modalContent += '<button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
-
   modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
   document.getElementById('myModalContent').innerHTML = modalContent;
   modalInstance.show();
 }
-
-
-
-
 
 function iconClicked(event) {
   const iconElement = event.target;
@@ -145,10 +124,7 @@ async function saveAttendance() {
   }
   return row.slice(0, 3);
 });
-	  console.log('Updated values:', updatedValues);
-
     const dataWithoutHeader = updatedValues.slice(1);
-
     const updateResponse = await fetch("/api/updateAttendance", {
   method: "POST",
   headers: {
@@ -182,11 +158,6 @@ const updateAbsenceResponse = await fetch("/api/updateAbsenceDates", {
 });
 
 if (!updateAbsenceResponse.ok) {
-  try {
-    console.error("Error response details:", await updateAbsenceResponse.json());
-  } catch (logErr) {
-    console.error("Error logging response details:", logErr);
-  }
   throw new Error(`Failed to update Google Sheet data: ${updateAbsenceResponse.statusText}`);
 }
 
@@ -194,18 +165,10 @@ if (!updateAbsenceResponse.ok) {
     
 
     if (!updateResponse.ok) {
-
-    try {
-      console.error('Error response details:', await updateResponse.json());
-    } catch (logErr) {
-      console.error('Error logging response details:', logErr);
-    }
     throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
   }
 
   resetState(saveChangesBtn, spinner, overlay); 
-
-  console.log("Attendance updated successfully");
   showCustomAlert();
 
   setTimeout(function () {
@@ -213,9 +176,7 @@ if (!updateAbsenceResponse.ok) {
     resetModalContent();
   }, 2000);
 
-  } catch (error) {
-    console.error("Error updating attendance:", error);
-  }
+  } catch (error) {}
 }
 
 function showCustomAlert() {
