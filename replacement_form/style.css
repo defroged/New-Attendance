@@ -282,6 +282,11 @@ li:hover {
         margin-left: -13px;
     }
 
+    .spinner {
+        height: 100px;
+        width: 100px;
+        left: 20%
+    }
 
 .responsive-header-image {
 	width: 35%;
