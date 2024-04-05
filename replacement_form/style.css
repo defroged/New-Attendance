@@ -359,18 +359,19 @@ li:hover {
         font-size: 15px;
     }
     
-        .remove-replacement-button {
+       .remove-replacement-button {
     box-sizing: border-box;
-    border: none;             
-    border-radius: 92%;       
+    border: none;              
+    border-radius: 92%;        
     width: 24px;
     height: 21px;
-    cursor: pointer;          
-    background-color: #d9534f;
-    color: white;             
-    margin-left: 10px;        
+    cursor: pointer;           
+    background-color: #d9534f; 
+    color: white;              
+    margin-left: 10px;         
     padding: 0;
 }
+
 }
 
 
