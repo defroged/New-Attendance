@@ -131,10 +131,11 @@ async function handleLogin() {
     passwordInput.value = "";
     passwordInput.focus();
   }
-
+hideSpinner();
 }
 
 async function handleStudentNameMatch(studentName) {
+	showSpinner();
   document.getElementById("main-container").style.display = "block";
   document.getElementById("login-section").style.display = "none";
   document.getElementById("step-one").style.display = "none";
@@ -156,10 +157,11 @@ async function handleStudentNameMatch(studentName) {
   }
 
   await handleStudentChange();
-  hideSpinner();
+  
   
   const availableSlots = parseInt(document.getElementById("available-slots").getAttribute("data-count"), 10);
   displayAvailableSlots(availableSlots);
+  hideSpinner();
 }
 
 function displaySubmitSectionIfRequired() {
