@@ -63,6 +63,7 @@ function fetchClassNames() {
 }
   
   function populateClassNames(classNames) {
+	  showSpinner();
     const classSelect = document.getElementById("class-select");
     
     classNames.forEach((className) => {
@@ -71,9 +72,11 @@ function fetchClassNames() {
       option.textContent = className;
       classSelect.appendChild(option);
     });
+	hideSpinner();
   }
   
 function initializeReplacementForm() {
+	showSpinner();
   document.getElementById("main-container").style.display = "none";
   fetchClassNames();
   document.getElementById("password-input").addEventListener("input", handlePasswordInputChange); 
@@ -84,6 +87,7 @@ function initializeReplacementForm() {
   document.getElementById("replacement-select").addEventListener("change", handleReplacementChange);
   document.getElementById("submit-button").addEventListener("click", handleSubmit);
    fetchStructuredColumnData(); 
+   hideSpinner();
 }
 
 function handlePasswordInputChange() {
@@ -165,14 +169,17 @@ async function handleStudentNameMatch(studentName) {
 }
 
 function displaySubmitSectionIfRequired() {
+	showSpinner();
   if (replacements.added.length > 0 || replacements.removed.length > 0) {
     document.getElementById("submit-section").style.display = "block";
   } else {
     document.getElementById("submit-section").style.display = "none";
   }
+  hideSpinner();
 }
 
 async function handleReplacementChange() {
+	showSpinner();
   const replacementSelect = document.getElementById("replacement-select");
   const eventId = replacementSelect.value;
   const selectedOption = replacementSelect.options[replacementSelect.selectedIndex];
@@ -193,9 +200,11 @@ async function handleReplacementChange() {
     document.getElementById("available-slots").setAttribute("data-count", availableSlots);
     displayAvailableSlots(availableSlots);
   }
+  hideSpinner();
 }
   
 async function displayAvailableSlots(availableSlots) {
+	showSpinner();
   const studentSelect = document.getElementById("student-select");
   const studentNameToSearch = studentSelect.value;
 
@@ -215,9 +224,11 @@ async function displayAvailableSlots(availableSlots) {
   } else {
     stepThreeElement.style.display = "none";
   }
+  hideSpinner();
 }
 
 async function fetchStudentNameFromSpreadsheet(studentNameToSearch) {
+	showSpinner();
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
@@ -234,9 +245,11 @@ async function fetchStudentNameFromSpreadsheet(studentNameToSearch) {
     console.error('Error fetching student name from spreadsheet:', error);
     return null;
   }
+  hideSpinner();
 }
 
  async function fetchBookedSlots(studentName) {
+	 showSpinner();
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
@@ -253,6 +266,7 @@ async function fetchStudentNameFromSpreadsheet(studentNameToSearch) {
   }
 
   return [];
+  hideSpinner();
 }
 
 function generateUniqueID() {
@@ -260,6 +274,7 @@ function generateUniqueID() {
 }
 
 function fetchAvailableSlots(studentName) {
+	showSpinner();
   return fetch(apiUrl)
     .then((response) => {
       if (!response.ok) {
@@ -274,9 +289,11 @@ function fetchAvailableSlots(studentName) {
     .catch((error) => {
       console.error('Error fetching available slots:', error);
     });
+	hideSpinner();
 }
 
 async function updateStudentAvailableSlots(studentName) {
+	showSpinner();
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
@@ -319,9 +336,11 @@ async function updateStudentAvailableSlots(studentName) {
   } catch (error) {
     console.error("Error updating student available slots:", error);
   }
+  hideSpinner();
 }
 
 async function incrementStudentAvailableSlots(studentName, count) {
+	showSpinner();
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
@@ -359,6 +378,7 @@ console.log("Starting to increment slots", {
   } catch (error) {
     console.error("Error incrementing student available slots:", error);
   }
+  hideSpinner();
 }
 
 async function handleStudentChange() {
