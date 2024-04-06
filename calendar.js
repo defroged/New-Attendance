@@ -1,3 +1,20 @@
+function scrollToCurrentTime() {
+  const today = new Date();
+  const currentWeekdayIndex = today.getDay();
+
+  const currentDayElement = days[currentWeekdayIndex];
+  if (!currentDayElement) {
+    return;
+  }
+
+  const currentHourIndex = today.getHours();
+  const timeSlot = currentDayElement.querySelector(`.time-slot[data-hour="${currentHourIndex}"]`);
+
+  if (timeSlot) {
+    timeSlot.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
 window.onload = function() {
      const days = document.querySelectorAll('.day');
     const today = new Date();
@@ -187,4 +204,5 @@ function displayEvents(events) {
 	
     updateCalendar(currentWeekStart); 
     fetchEvents(); 
+	scrollToCurrentTime();
 };
