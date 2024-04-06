@@ -113,6 +113,30 @@ button:hover {
 
 @media (max-width: 926px) {
 
+.button-container {
+        position: fixed; /* Make the container fixed at the top */
+        top: 0; /* Align to the top */
+        left: 0; /* Align to the left */
+        width: 100%; /* Span the full width of the viewport */
+        background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+        z-index: 1000; /* Ensure it's above other content */
+        display: flex; /* Use flexbox for button alignment */
+        justify-content: center; /* Center buttons horizontally */
+        padding: 10px 0; /* Add some padding */
+    }
+
+    /* Enhanced button styling for a nicer look */
+    .button-container button {
+        margin: 0 5px; /* Reduce margin between buttons */
+        padding: 10px 15px; /* Adjust padding */
+    }
+
+    /* Push content below fixed buttons */
+    body {
+        padding-top: 60px; /* Adjust this value based on the button container's height */
+    }
+	
 .time-slot {
 
     display: flex;
