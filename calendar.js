@@ -36,7 +36,7 @@ window.onload = function() {
 }
 
 function addEventSlotClickListener() {
-    const eventSlots = document.querySelectorAll('.event.event-active');
+    const eventSlots = document.querySelectorAll('.event');
 
     eventSlots.forEach(slot => {
         slot.addEventListener('click', function (e) {
