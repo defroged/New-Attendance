@@ -24,10 +24,18 @@ function scrollToCurrentTime() {
   }
 
   const currentHourIndex = today.getHours();
+  const timeSlotsContainer = currentDayElement.querySelector('.time-slots');
   const timeSlot = currentDayElement.querySelector(`.time-slot[data-hour="${currentHourIndex}"]`);
 
   if (timeSlot) {
     timeSlot.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // Adjust scroll position horizontally
+    const scrollWidth = timeSlotsContainer.scrollWidth;
+    const containerWidth = timeSlotsContainer.clientWidth;
+    const adjustedScroll = Math.max(0, (scrollWidth / 2) - (containerWidth / 2));
+
+    timeSlotsContainer.scrollLeft = adjustedScroll;
   }
 }
 
