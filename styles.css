@@ -51,8 +51,8 @@ body {
 }
 
 .event-active {
-    background-color: #0097a7; /* Darker shade when tapped */
-    color: white; /* Optional: change text color if needed */
+    background-color: #0097a7; 
+    color: white; 
 }
 
 button {

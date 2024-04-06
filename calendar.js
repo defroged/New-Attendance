@@ -35,6 +35,24 @@ window.onload = function() {
     }
 }
 
+function addEventSlotClickListener() {
+    const eventSlots = document.querySelectorAll('.event.event-active');
+
+    eventSlots.forEach(slot => {
+        slot.addEventListener('click', function (e) {
+            e.stopPropagation();
+            eventSlots.forEach(s => s.style.backgroundColor = '');
+            slot.style.backgroundColor = '#ffcc00';
+        });
+    });
+
+    document.addEventListener('click', function () {
+        eventSlots.forEach(slot => {
+            slot.style.backgroundColor = '';
+        });
+    });
+}
+
     function formatDate(date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -69,7 +87,7 @@ window.onload = function() {
 
 function displayEvents(events) {
   document.querySelectorAll('.time-slot').forEach(slot => {
-    slot.innerHTML = ''; // Clear existing events
+    slot.innerHTML = ''; 
   });
 
   events.forEach(event => {
@@ -101,7 +119,6 @@ function displayEvents(events) {
     summaryElement.innerText = event.summary;
     eventElement.appendChild(summaryElement);
 
-    // Add replacement student info (if available)
     if (event.replacementStudents) {
       const replacementsElement = document.createElement('div');
       replacementsElement.classList.add('replacements');
@@ -120,12 +137,11 @@ function displayEvents(events) {
       if (timeSlot) {
         const clonedEventElement = eventElement.cloneNode(true);
 
-        // Add event listener to cloned event
-        clonedEventElement.addEventListener('click', function () {
-          // Extract the original event date here
-          const eventDateString = eventStart.toISOString().substring(0, 10);
-          fetchClassDetails(event.summary, eventDateString);
-        });
+        clonedEventElement.addEventListener('click', function (e) {
+    e.stopPropagation();
+    const eventDateString = eventStart.toISOString().substring(0, 10);
+    fetchClassDetails(event.summary, eventDateString);
+});
         timeSlot.appendChild(clonedEventElement);
       } else {
         console.error('No time slot found for event:', event);
@@ -144,6 +160,7 @@ function displayEvents(events) {
             fetchClassDetails(event.summary, eventStart.toISOString());
         });
     });
+	addEventSlotClickListener();
 }
 
     document.getElementById('prevWeek').addEventListener('click', function() {
