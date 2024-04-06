@@ -1,3 +1,19 @@
+window.onload = function() {
+     const days = document.querySelectorAll('.day');
+    const today = new Date();
+    let currentWeekStart = new Date(today);
+    currentWeekStart.setDate(today.getDate() - today.getDay());
+	
+	days.forEach(day => {
+        const timeSlotsContainer = day.querySelector('.time-slots');
+        for (let hour = 0; hour < 24; hour++) {
+            const timeSlot = document.createElement('div');
+            timeSlot.classList.add('time-slot');
+            timeSlot.dataset.hour = hour;
+            timeSlotsContainer.appendChild(timeSlot);
+        }
+    });
+
 function scrollToCurrentTime() {
   const today = new Date();
   const currentWeekdayIndex = today.getDay();
@@ -14,22 +30,6 @@ function scrollToCurrentTime() {
     timeSlot.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 }
-
-window.onload = function() {
-     const days = document.querySelectorAll('.day');
-    const today = new Date();
-    let currentWeekStart = new Date(today);
-    currentWeekStart.setDate(today.getDate() - today.getDay());
-	
-	days.forEach(day => {
-        const timeSlotsContainer = day.querySelector('.time-slots');
-        for (let hour = 0; hour < 24; hour++) {
-            const timeSlot = document.createElement('div');
-            timeSlot.classList.add('time-slot');
-            timeSlot.dataset.hour = hour;
-            timeSlotsContainer.appendChild(timeSlot);
-        }
-    });
 
     function updateCalendar(weekStart) {
     const firstDayOfWeek = new Date(weekStart);
