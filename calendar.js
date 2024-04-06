@@ -33,7 +33,7 @@ function scrollToCurrentTime() {
     // Adjust scroll position horizontally
     const scrollWidth = timeSlotsContainer.scrollWidth;
     const containerWidth = timeSlotsContainer.clientWidth;
-    const adjustedScroll = Math.max(0, (scrollWidth / 2) - (containerWidth / 2));
+    const adjustedScroll = Math.max(0, (scrollWidth / 2) - (containerWidth / 2) - 50);
 
     timeSlotsContainer.scrollLeft = adjustedScroll;
   }
