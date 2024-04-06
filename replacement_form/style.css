@@ -1,7 +1,7 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #000;
-    color: #e9e9e9;
+    background-color: #f4f7f6;
+    color: #4a4a4a;
     margin: 0;
     padding: 0;
     display: flex;
@@ -16,7 +16,7 @@ body {
 }
 
 h1 {
-    color: #fff;
+    color: #2c3e50;
     text-align: center;
     font-size: 1.8em;
     margin: 20px 0px; 
@@ -36,13 +36,13 @@ h1 {
     font-size: 13px;
     padding: 0px;
     margin: 8px;
-    background-color: #303030;
-    color: white;
+    background-color: white;
+    color: black;
     list-style: circle
     }
 
 .rules {
-    margin-left: 7px;
+    margin-left: 7px
 }
 .rules li:hover {
     background-color: white;
@@ -82,7 +82,6 @@ h1 {
   box-sizing: border-box; 
   border-radius: 4px; 
   position: fixed;
-  background-color: #9d9d9d;
 }
 
 #login-button {
@@ -118,7 +117,7 @@ h1 {
 
 
 div {
-    background-color: #303030;
+    background-color: #ffffff;
     padding: 39px; 
     margin: 20px;
     border-radius: 8px;
@@ -142,8 +141,7 @@ select {
     border-radius: 8px;
     border: 1px solid #dfe3e8;
     font-size: .9em; 
-    background-color: #303030;
-    color: white;
+    background-color: #f9f9f9;
 }
 
 button {
@@ -276,7 +274,6 @@ li:hover {
 @media (max-width: 768px) {
     body {
         padding: 5px;
-        background-color: #000;
     }
 
     .container, select, button {
@@ -304,8 +301,8 @@ li:hover {
     text-align: left;    
     font-size: 13px;
     padding: 0px; 
-    background-color: #303030;
-    color: #fcf8f8;
+    background-color: white;
+    color: black;
     list-style: circle
     }
     .container {
@@ -359,19 +356,17 @@ li:hover {
         font-size: 15px;
     }
     
-       .remove-replacement-button {
+        .remove-replacement-button {
     box-sizing: border-box;
-    border: none;              
-    border-radius: 92%;        
+    border: none;             
+    border-radius: 92%;       
     width: 24px;
     height: 21px;
-    cursor: pointer;           
-    background-color: #d9534f; 
-    color: white;              
-    margin-left: 10px;         
+    cursor: pointer;          
+    background-color: #d9534f;
+    color: white;             
+    margin-left: 10px;        
     padding: 0;
 }
-
 }
-
 
