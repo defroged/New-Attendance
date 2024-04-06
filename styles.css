@@ -50,6 +50,11 @@ body {
     text-align: center;
 }
 
+.event-active {
+    background-color: #0097a7; /* Darker shade when tapped */
+    color: white; /* Optional: change text color if needed */
+}
+
 button {
     padding: 10px 20px;
     margin: 10px;
@@ -118,18 +123,21 @@ button:hover {
         top: 0; /* Align to the top */
         left: 0; /* Align to the left */
         width: 100%; /* Span the full width of the viewport */
-        background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+        background-color: rgba(255, 255, 255, 0); /* Slightly transparent white background */
+         /* Soft shadow for depth */
         z-index: 1000; /* Ensure it's above other content */
         display: flex; /* Use flexbox for button alignment */
         justify-content: center; /* Center buttons horizontally */
-        padding: 10px 0; /* Add some padding */
+        padding: 5px 0; /* Add some padding */
     }
 
     /* Enhanced button styling for a nicer look */
     .button-container button {
-        margin: 0 5px; /* Reduce margin between buttons */
-        padding: 10px 15px; /* Adjust padding */
+        margin: 0 3px; /* Reduce margin between buttons */
+        padding: 5px 10px; /* Adjust padding */
+        font-size: 0.8em;
+        min-width: 70px;
+        border-radius: 20px;
     }
 
     /* Push content below fixed buttons */
@@ -152,6 +160,7 @@ button:hover {
     overflow: visible;
 }
     
+	
 .calendar {
     display: flex; 
     flex-wrap: nowrap; 

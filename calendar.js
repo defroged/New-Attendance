@@ -146,6 +146,38 @@ function displayEvents(events) {
     });
 }
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Select all event slots
+    const events = document.querySelectorAll('.event');
+
+    // Function to clear all active classes
+    function clearActiveEvents() {
+        events.forEach(event => {
+            event.classList.remove('event-active');
+        });
+    }
+
+    // Add click event listener to each event slot
+    events.forEach(event => {
+        event.addEventListener('click', function(e) {
+            // Prevent the document click listener from firing
+            e.stopPropagation();
+
+            // Clear active classes from other events
+            clearActiveEvents();
+
+            // Add the active class to the clicked event
+            this.classList.add('event-active');
+        });
+    });
+
+    // Add click event listener to the document
+    // Clears the active class when clicking anywhere else
+    document.addEventListener('click', clearActiveEvents);
+});
+
+
     document.getElementById('prevWeek').addEventListener('click', function() {
         currentWeekStart.setDate(currentWeekStart.getDate() - 7);
         updateCalendar(currentWeekStart);
