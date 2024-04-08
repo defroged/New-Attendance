@@ -215,26 +215,25 @@ function displayEvents(events) {
 	scrollToCurrentTime();
 };
 
-async function checkPassword() {
-    const enteredPassword = prompt('Enter password to view the content:', '');
-    
-    if (enteredPassword === null) {
-      // User clicked "Cancel"
-      return;
+window.onload = async function() {
+    let password = prompt("Please enter the admin password:");
+
+    if (password === null) {
+      password = ''; // Treat clicking the "Cancel" button as an incorrect password
     }
 
-    const response = await fetch('/api/validate_password', { 
+    const response = await fetch('/api/validate_password', {
         method: 'POST',
-        body: enteredPassword,
-        headers: { 'Content-Type': 'text/plain' }
+        headers: {
+            'Content-Type': 'text/plain'
+        },
+        body: password
     });
 
     if (response.status === 200) {
-        // Load the protected content here
+        document.getElementById('content').style.display = 'block';
+        // Add any additional code for fetching and displaying data if necessary
     } else {
-        alert('Wrong password. Please try again.');
-        checkPassword();
+        alert('Incorrect password.');
     }
-}
-
-document.addEventListener('DOMContentLoaded', checkPassword);
+};
