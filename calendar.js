@@ -216,12 +216,12 @@ function displayEvents(events) {
 };
 
 async function checkPassword() {
-    const passwordInput = document.getElementById('passwordInput');
-    const passwordError = document.getElementById('passwordError');
-    const passwordOverlay = document.getElementById('passwordOverlay');
-    const content = document.getElementById('content');
-
-    const enteredPassword = passwordInput.value;
+    const enteredPassword = prompt('Enter password to view the content:', '');
+    
+    if (enteredPassword === null) {
+      // User clicked "Cancel"
+      return;
+    }
 
     const response = await fetch('/api/validate_password', { 
         method: 'POST',
@@ -230,16 +230,11 @@ async function checkPassword() {
     });
 
     if (response.status === 200) {
-        passwordOverlay.style.display = 'none';
-        content.style.display = 'block';
+        // Load the protected content here
     } else {
-        passwordError.style.display = 'block';
+        alert('Wrong password. Please try again.');
+        checkPassword();
     }
 }
 
-document.getElementById('passwordSubmit').addEventListener('click', checkPassword);
-
-// Show the passwordOverlay when the page is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('passwordOverlay').style.display = 'flex';
-});
+document.addEventListener('DOMContentLoaded', checkPassword);
