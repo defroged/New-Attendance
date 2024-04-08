@@ -215,12 +215,11 @@ function displayEvents(events) {
 	scrollToCurrentTime();
 };
 
-document.getElementById('passwordSubmit').addEventListener('click', async () => {
+async function checkPassword() {
     const passwordInput = document.getElementById('passwordInput');
     const passwordError = document.getElementById('passwordError');
     const passwordOverlay = document.getElementById('passwordOverlay');
-
-    passwordError.style.display = 'none';
+    const content = document.getElementById('content');
 
     const enteredPassword = passwordInput.value;
 
@@ -232,7 +231,10 @@ document.getElementById('passwordSubmit').addEventListener('click', async () => 
 
     if (response.status === 200) {
         passwordOverlay.style.display = 'none';
+        content.style.display = 'block';
     } else {
         passwordError.style.display = 'block';
     }
-});
+}
+
+document.getElementById('passwordSubmit').addEventListener('click', checkPassword);
