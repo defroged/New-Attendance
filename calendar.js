@@ -29,11 +29,9 @@ function scrollToCurrentTime() {
 
   if (timeSlot) {
     timeSlot.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-    // Adjust scroll position horizontally
     const scrollWidth = timeSlotsContainer.scrollWidth;
     const containerWidth = timeSlotsContainer.clientWidth;
-    const adjustedScroll = Math.max(0, (scrollWidth / 2) - (containerWidth / 2) - 150);
+    const adjustedScroll = Math.max(0, (scrollWidth / 2) - (containerWidth / 2) - 300);
 
     timeSlotsContainer.scrollLeft = adjustedScroll;
   }
@@ -215,7 +213,6 @@ function displayEvents(events) {
 	scrollToCurrentTime();
 };
 
-window.addEventListener('load', async function() {
+(async function() {
   await checkPasswordAndRevealContent();
-  scrollToCurrentTime();
-});
+})();
