@@ -1,7 +1,8 @@
-window.onload = async function() {
+window.addEventListener('load', async function() {
   let password = prompt("Please enter the password to access the page:");
   const response = await fetch('/api/checkPagePassword', {
-    method: 'POST',headers: {
+    method: 'POST',
+    headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ password })
@@ -10,7 +11,7 @@ window.onload = async function() {
   if (response.status === 200) {
     document.getElementById('pageBody').style.display = 'block';
   } else {
-     alert('Incorrect password.');
-     window.location.href = 'index.html';
+    alert('Incorrect password.');
+    window.location.href = 'index.html';
   }
-};
+});
