@@ -214,3 +214,8 @@ function displayEvents(events) {
     fetchEvents(); 
 	scrollToCurrentTime();
 };
+
+window.addEventListener('load', async function() {
+  await checkPasswordAndRevealContent();
+  scrollToCurrentTime();
+});

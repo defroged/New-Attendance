@@ -1,4 +1,4 @@
-window.addEventListener('load', async function() {
+async function checkPasswordAndRevealContent() {
   let password = prompt("Please enter the password to access the page:");
   const response = await fetch('/api/checkPagePassword', {
     method: 'POST',
@@ -10,10 +10,9 @@ window.addEventListener('load', async function() {
 
   if (response.status === 200) {
     document.getElementById('pageBody').style.display = 'block';
-    // Add scrollToCurrentTime() function call here
     scrollToCurrentTime();
   } else {
     alert('Incorrect password.');
     window.location.href = 'index.html';
   }
-});
+}
