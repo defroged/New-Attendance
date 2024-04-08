@@ -214,3 +214,20 @@ function displayEvents(events) {
     fetchEvents(); 
 	scrollToCurrentTime();
 };
+
+document.getElementById('passwordSubmit').addEventListener('click', async () => {
+    const passwordInput = document.getElementById('passwordInput');
+    const passwordError = document.getElementById('passwordError');
+    const passwordOverlay = document.getElementById('passwordOverlay');
+
+    passwordError.style.display = 'none';
+
+    const enteredPassword = passwordInput.value;
+    const correctPassword = await fetch('/api/check_password').then(res => res.text());
+
+    if (enteredPassword === correctPassword) {
+        passwordOverlay.style.display = 'none';
+    } else {
+        passwordError.style.display = 'block';
+    }
+});
