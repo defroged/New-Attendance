@@ -223,9 +223,14 @@ document.getElementById('passwordSubmit').addEventListener('click', async () => 
     passwordError.style.display = 'none';
 
     const enteredPassword = passwordInput.value;
-    const correctPassword = await fetch('/api/check_password').then(res => res.text());
 
-    if (enteredPassword === correctPassword) {
+    const response = await fetch('/api/validate_password', { 
+        method: 'POST',
+        body: enteredPassword,
+        headers: { 'Content-Type': 'text/plain' }
+    });
+
+    if (response.status === 200) {
         passwordOverlay.style.display = 'none';
     } else {
         passwordError.style.display = 'block';
