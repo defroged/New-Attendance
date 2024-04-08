@@ -10,6 +10,8 @@ window.addEventListener('load', async function() {
 
   if (response.status === 200) {
     document.getElementById('pageBody').style.display = 'block';
+    // Add scrollToCurrentTime() function call here
+    scrollToCurrentTime();
   } else {
     alert('Incorrect password.');
     window.location.href = 'index.html';
