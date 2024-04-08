@@ -238,3 +238,8 @@ async function checkPassword() {
 }
 
 document.getElementById('passwordSubmit').addEventListener('click', checkPassword);
+
+// Show the passwordOverlay when the page is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('passwordOverlay').style.display = 'flex';
+});
