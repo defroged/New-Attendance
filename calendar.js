@@ -1,3 +1,5 @@
+window.scrollToCurrentTime = undefined;
+
 window.onload = function() {
      const days = document.querySelectorAll('.day');
     const today = new Date();
@@ -209,7 +211,8 @@ function displayEvents(events) {
 });
 	
     updateCalendar(currentWeekStart); 
-    fetchEvents(); 
+    fetchEvents();
+window.scrollToCurrentTime = scrollToCurrentTime;	
 	scrollToCurrentTime();
 };
 
