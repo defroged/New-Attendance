@@ -64,16 +64,18 @@ function findReplacementStudents(data, date) {
 
 function showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails) {
     const formattedEventDate = eventDate.replace(/-/g, "/");
-	const formattedDescription = eventDetails.description.replace(/\n/g, '<br>'); 
+    // Check if description exists, if not, set a default message or empty string
+    const formattedDescription = eventDetails.description ? eventDetails.description.replace(/\n/g, '<br>') : 'No description available.';
+    
     let modalContent = `<h4>Class: ${className}</h4>
                         <p>${formattedDescription}</p>
                         <p><a href="${eventDetails.location}" target="_blank">Lesson Report</a></p>
                         <ul>`;
-modalContent += '<h5>Attendance:</h5><ul>'; 
-students.forEach(function (student) {
-    modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}">`;
-    modalContent += `<li>${student} <i class="fas fa-check-circle text-success" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
-});
+    modalContent += '<h5>Attendance:</h5><ul>'; 
+    students.forEach(function (student) {
+        modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}">`;
+        modalContent += `<li>${student} <i class="fas fa-check-circle text-success" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
+    });
 
     modalContent += '</ul><h5>Replacement Students:</h5><ul>';
     const replacements = replacementStudents[className] || [];
