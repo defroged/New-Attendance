@@ -65,7 +65,7 @@ function findReplacementStudents(data, date) {
 function showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails) {
     const formattedEventDate = eventDate.replace(/-/g, "/");
 	const formattedDescription = eventDetails.description.replace(/\n/g, '<br>'); 
-    let modalContent = `<h4>${className}</h4>
+    let modalContent = `<h4>Class: ${className}</h4>
                         <p>${formattedDescription}</p>
                         <p><a href="${eventDetails.location}" target="_blank">Lesson Report</a></p>
                         <ul>`;
