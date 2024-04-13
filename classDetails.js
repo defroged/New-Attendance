@@ -1,24 +1,28 @@
 let modalInstance;
 const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 
-function fetchClassDetails(className, eventDate) {
-  fetch(apiUrl)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch Google Sheet data: ${response.statusText}`
-        );
-      }
-      return response.json();
-    })
-    .then((data) => {
-      const students = findStudentsByClassName(className, data.values);
-      const date = new Date(eventDate.replace(/-/g, '/'));
-      const replacementStudents = findReplacementStudents(data.values, date);
+async function fetchClassDetails(className, eventDate, eventId) {
+  const eventDetailsUrl = `https://new-attendance.vercel.app/api/calendar-event-details?id=${eventId}`;
 
-      showModalWithClassDetails(className, students, eventDate, replacementStudents);
-    })
-    .catch((error) => {});
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const students = findStudentsByClassName(className, data.values);
+    const date = new Date(eventDate.replace(/-/g, '/'));
+    const replacementStudents = findReplacementStudents(data.values, date);
+
+    // Fetch calendar event details
+    const eventDetailsResponse = await fetch(eventDetailsUrl);
+    if (!eventDetailsResponse.ok) {
+      throw new Error(`Failed to fetch calendar event details: ${eventDetailsResponse.statusText}`);
+    }
+    const eventDetails = await eventDetailsResponse.json();
+
+    // Combine the information in the modal
+    showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails);
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }
 
 function findStudentsByClassName(className, data) {
@@ -57,27 +61,29 @@ function findReplacementStudents(data, date) {
   return replacementStudents; 
 }
 
-function showModalWithClassDetails(className, students, eventDate, replacementStudents) {
+function showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails) {
   const formattedEventDate = eventDate.replace(/-/g, "/");
-  var modalContent = '<h4>Class: ' + className + '</h4><ul>';
+  let modalContent = `<h4>Class: ${className}</h4>
+                      <p>Location: ${eventDetails.location}</p>
+                      <p>Start: ${eventDetails.start}</p>
+                      <p>End: ${eventDetails.end}</p>
+                      <ul>`;
 
   students.forEach(function (student) {
-    modalContent += '<input type="hidden" id="eventDate" value="' + formattedEventDate + '">';
-    modalContent += '<li>' + student + ' <i class="fas fa-check-circle text-success" data-student="' + student + '" onclick="iconClicked(event)"></i></li>';
+    modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}">`;
+    modalContent += `<li>${student} <i class="fas fa-check-circle text-success" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
   });
 
-  modalContent += '</ul>';
-  modalContent += "<h5>Replacement Students:</h5><ul>";
+  modalContent += '</ul><h5>Replacement Students:</h5><ul>';
   const replacements = replacementStudents[className] || [];
   if (replacements.length) {
     replacements.forEach((replacement) => {
-      modalContent += '<li>' + replacement.studentName + ' <i class="fas fa-check-circle text-success" data-student="' + replacement.studentName + '" onclick="iconClicked(event)"></i></li>';
+      modalContent += `<li>${replacement.studentName} <i class="fas fa-check-circle text-success" data-student="${replacement.studentName}" onclick="iconClicked(event)"></i></li>`;
     });
   } else {
     modalContent += "<li>No replacement students today.</li>";
   }
-  modalContent += '</ul>';
-  modalContent += '<button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
+  modalContent += '</ul><button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
   modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
   document.getElementById('myModalContent').innerHTML = modalContent;
   modalInstance.show();
