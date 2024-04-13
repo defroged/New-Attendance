@@ -2,20 +2,28 @@ let modalInstance;
 const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 
 async function fetchClassDetails(className, eventDate, eventId) {
-  // Fetching class details from the original source
-  const classDetailsResponse = await fetch(apiUrl);
-  const classData = await classDetailsResponse.json();
-  const students = findStudentsByClassName(className, classData.values);
-  const date = new Date(eventDate.replace(/-/g, '/'));
-  const replacementStudents = findReplacementStudents(classData.values, date);
+    const eventDetailsUrl = `https://new-attendance.vercel.app/api/calendar-event-details?id=${eventId}`;
 
-  // Fetching event details which now includes location and description
-  const eventDetailsUrl = `https://your-domain.com/api/calendar-event-details?id=${eventId}`;
-  const eventDetailsResponse = await fetch(eventDetailsUrl);
-  const eventDetails = await eventDetailsResponse.json();
+    try {
+        const classDataResponse = await fetch(apiUrl); // Ensure that apiUrl is defined and accessible in this context
+        if (!classDataResponse.ok) {
+            throw new Error(`Failed to fetch class data: ${classDataResponse.statusText}`);
+        }
+        const classData = await classDataResponse.json();
+        const students = findStudentsByClassName(className, classData.values);
+        const date = new Date(eventDate.replace(/-/g, '/')); 
+        const replacementStudents = findReplacementStudents(classData.values, date);
 
-  // Now passing eventDetails to the showModalWithClassDetails
-  showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails);
+        const eventDetailsResponse = await fetch(eventDetailsUrl);
+        if (!eventDetailsResponse.ok) {
+            throw new Error(`Failed to fetch calendar event details: ${eventDetailsResponse.statusText}`);
+        }
+        const eventDetails = await eventDetailsResponse.json();
+
+        showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails);
+    } catch (error) {
+        console.error('Error in fetchClassDetails:', error);
+    }
 }
 
 function findStudentsByClassName(className, data) {
@@ -55,30 +63,30 @@ function findReplacementStudents(data, date) {
 }
 
 function showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails) {
-  const formattedEventDate = eventDate.replace(/-/g, "/");
-  var modalContent = `<h4>Class: ${className}</h4>
-                      <p>Description: ${eventDetails.description}</p>
-                      <p>Location: <a href="${eventDetails.location}" target="_blank">${eventDetails.location}</a></p>
-                      <ul>`;
+    const formattedEventDate = eventDate.replace(/-/g, "/");
+    let modalContent = `<h4>Class: ${className}</h4>
+                        <p>Description: ${eventDetails.description}</p>
+                        <p>Location: <a href="${eventDetails.location}" target="_blank">Click here to access location</a></p>
+                        <ul>`;
 
-  students.forEach(function (student) {
-    modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}">`;
-    modalContent += `<li>${student} <i class="fas fa-check-circle text-success" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
-  });
-
-  modalContent += '</ul><h5>Replacement Students:</h5><ul>';
-  const replacements = replacementStudents[className] || [];
-  if (replacements.length) {
-    replacements.forEach((replacement) => {
-      modalContent += `<li>${replacement.studentName} <i class="fas fa-check-circle text-success" data-student="${replacement.studentName}" onclick="iconClicked(event)"></i></li>`;
+    students.forEach(function (student) {
+        modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}">`;
+        modalContent += `<li>${student} <i class="fas fa-check-circle text-success" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
     });
-  } else {
-    modalContent += "<li>No replacement students today.</li>";
-  }
-  modalContent += '</ul><button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
-  modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
-  document.getElementById('myModalContent').innerHTML = modalContent;
-  modalInstance.show();
+
+    modalContent += '</ul><h5>Replacement Students:</h5><ul>';
+    const replacements = replacementStudents[className] || [];
+    if (replacements.length) {
+        replacements.forEach((replacement) => {
+            modalContent += `<li>${replacement.studentName} <i class="fas fa-check-circle text-success" data-student="${replacement.studentName}" onclick="iconClicked(event)"></i></li>`;
+        });
+    } else {
+        modalContent += "<li>No replacement students today.</li>";
+    }
+    modalContent += '</ul><button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
+    modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
+    document.getElementById('myModalContent').innerHTML = modalContent;
+    modalInstance.show();
 }
 
 function iconClicked(event) {
