@@ -2,32 +2,20 @@ let modalInstance;
 const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 
 async function fetchClassDetails(className, eventDate, eventId) {
-  // URL for fetching class details from your existing data source
-  const eventDetailsUrl = `https://new-attendance.vercel.app/api/calendar-event-details?id=${eventId}`;
+  // Fetching class details from the original source
+  const classDetailsResponse = await fetch(apiUrl);
+  const classData = await classDetailsResponse.json();
+  const students = findStudentsByClassName(className, classData.values);
+  const date = new Date(eventDate.replace(/-/g, '/'));
+  const replacementStudents = findReplacementStudents(classData.values, date);
 
-  try {
-    // Fetching general class data
-    const response = await fetch(apiUrl);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch class data: ${response.statusText}`);
-    }
-    const data = await response.json();
-    const students = findStudentsByClassName(className, data.values);
-    const date = new Date(eventDate.replace(/-/g, '/')); // Transform event date string into date object
-    const replacementStudents = findReplacementStudents(data.values, date);
+  // Fetching event details which now includes location and description
+  const eventDetailsUrl = `https://your-domain.com/api/calendar-event-details?id=${eventId}`;
+  const eventDetailsResponse = await fetch(eventDetailsUrl);
+  const eventDetails = await eventDetailsResponse.json();
 
-    // Fetching specific calendar event details
-    const eventDetailsResponse = await fetch(eventDetailsUrl);
-    if (!eventDetailsResponse.ok) {
-      throw new Error(`Failed to fetch calendar event details: ${eventDetailsResponse.statusText}`);
-    }
-    const eventDetails = await eventDetailsResponse.json();
-
-    // Displaying all the data in a modal window
-    showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails);
-  } catch (error) {
-    console.error('Error in fetchClassDetails:', error);
-  }
+  // Now passing eventDetails to the showModalWithClassDetails
+  showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails);
 }
 
 function findStudentsByClassName(className, data) {
@@ -68,10 +56,9 @@ function findReplacementStudents(data, date) {
 
 function showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails) {
   const formattedEventDate = eventDate.replace(/-/g, "/");
-  let modalContent = `<h4>Class: ${className}</h4>
-                      <p>Location: ${eventDetails.location}</p>
-                      <p>Start: ${eventDetails.start}</p>
-                      <p>End: ${eventDetails.end}</p>
+  var modalContent = `<h4>Class: ${className}</h4>
+                      <p>Description: ${eventDetails.description}</p>
+                      <p>Location: <a href="${eventDetails.location}" target="_blank">${eventDetails.location}</a></p>
                       <ul>`;
 
   students.forEach(function (student) {
