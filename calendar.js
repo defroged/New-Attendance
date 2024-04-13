@@ -116,6 +116,7 @@ function displayEvents(events) {
   });
 
   events.forEach(event => {
+	   console.log(event); 
     const eventElement = document.createElement('div');
     eventElement.classList.add('event');
 
@@ -182,8 +183,9 @@ function displayEvents(events) {
     eventStart.setHours(0, 0, 0, 0);
 }
 		eventElement.addEventListener('click', function () {
-            fetchClassDetails(event.summary, eventStart.toISOString());
-        });
+    const eventDateString = eventStart.toISOString().substring(0, 10); // Ensure correct formatting if needed
+    fetchClassDetails(event.summary, eventDateString, event.id); // Now passing event.id
+});
     });
 	addEventSlotClickListener();
 }

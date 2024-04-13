@@ -2,26 +2,31 @@ let modalInstance;
 const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 
 async function fetchClassDetails(className, eventDate, eventId) {
+  // URL for fetching class details from your existing data source
   const eventDetailsUrl = `https://new-attendance.vercel.app/api/calendar-event-details?id=${eventId}`;
 
   try {
+    // Fetching general class data
     const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch class data: ${response.statusText}`);
+    }
     const data = await response.json();
     const students = findStudentsByClassName(className, data.values);
-    const date = new Date(eventDate.replace(/-/g, '/'));
+    const date = new Date(eventDate.replace(/-/g, '/')); // Transform event date string into date object
     const replacementStudents = findReplacementStudents(data.values, date);
 
-    // Fetch calendar event details
+    // Fetching specific calendar event details
     const eventDetailsResponse = await fetch(eventDetailsUrl);
     if (!eventDetailsResponse.ok) {
       throw new Error(`Failed to fetch calendar event details: ${eventDetailsResponse.statusText}`);
     }
     const eventDetails = await eventDetailsResponse.json();
 
-    // Combine the information in the modal
+    // Displaying all the data in a modal window
     showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails);
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error in fetchClassDetails:', error);
   }
 }
 
