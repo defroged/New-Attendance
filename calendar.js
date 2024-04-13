@@ -111,83 +111,79 @@ function addEventSlotClickListener() {
 }
 
 function displayEvents(events) {
-  document.querySelectorAll('.time-slot').forEach(slot => {
-    slot.innerHTML = ''; 
-  });
-
-  events.forEach(event => {
-	   console.log(event); 
-    const eventElement = document.createElement('div');
-    eventElement.classList.add('event');
-
-    const timeElement = document.createElement('div');
-    timeElement.classList.add('event-time');
-
-    const eventStart = new Date(event.start.dateTime || event.start.date);
-    const eventEnd = new Date(event.end.dateTime || event.end.date);
-
-    const startTime = eventStart.toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    });
-    const endTime = eventEnd.toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
+    document.querySelectorAll('.time-slot').forEach(slot => {
+        slot.innerHTML = '';
     });
 
-    timeElement.innerText = `${startTime}-${endTime}`;
-    eventElement.appendChild(timeElement);
+    events.forEach(event => {
+        console.log(event); // Logging to verify the event structure
+        const eventElement = document.createElement('div');
+        eventElement.classList.add('event');
 
-    const summaryElement = document.createElement('div');
-    summaryElement.classList.add('event-summary');
-    summaryElement.innerText = event.summary;
-    eventElement.appendChild(summaryElement);
+        const timeElement = document.createElement('div');
+        timeElement.classList.add('event-time');
 
-    if (event.replacementStudents) {
-      const replacementsElement = document.createElement('div');
-      replacementsElement.classList.add('replacements');
-      replacementsElement.innerText = 'Replacements: ' + event.replacementStudents.join(', ');
-      eventElement.appendChild(replacementsElement);
-    }
+        const eventStart = new Date(event.start.dateTime || event.start.date);
+        const eventEnd = new Date(event.end.dateTime || event.end.date);
 
-    function displayEventForDay(eventStart, eventEnd, eventElement) {
-      const startHour = eventStart.getHours();
-      const eventDay = eventStart.getDay();
-      const dayElement = days[eventDay];
-      const timeSlot = dayElement.querySelector(
-        `.time-slot[data-hour="${startHour}"]`
-      );
+        const startTime = eventStart.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        const endTime = eventEnd.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 
-      if (timeSlot) {
-        const clonedEventElement = eventElement.cloneNode(true);
+        // Display event time range
+        timeElement.innerText = `${startTime}-${endTime}`;
+        eventElement.appendChild(timeElement);
 
-        clonedEventElement.addEventListener('click', function (e) {
-    e.stopPropagation();
-    const eventDateString = eventStart.toISOString().substring(0, 10);
-    fetchClassDetails(event.summary, eventDateString);
-});
-        timeSlot.appendChild(clonedEventElement);
-      } else {
-        console.error('No time slot found for event:', event);
-      }
-    } 
+        // Display event summary
+        const summaryElement = document.createElement('div');
+        summaryElement.classList.add('event-summary');
+        summaryElement.innerText = event.summary;
+        eventElement.appendChild(summaryElement);
 
+        // Handle replacement students if any
+        if (event.replacementStudents) {
+            const replacementsElement = document.createElement('div');
+            replacementsElement.classList.add('replacements');
+            replacementsElement.innerText = 'Replacements: ' + event.replacementStudents.join(', ');
+            eventElement.appendChild(replacementsElement);
+        }
+
+        function displayEventForDay(eventStart, eventEnd, eventElement) {
+            const startHour = eventStart.getHours();
+            const eventDay = eventStart.getDay();
+            const dayElement = days[eventDay];
+            const timeSlot = dayElement.querySelector(`.time-slot[data-hour="${startHour}"]`);
+
+            if (timeSlot) {
+                const clonedEventElement = eventElement.cloneNode(true);
+                clonedEventElement.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const eventDateString = eventStart.toISOString().substring(0, 10);
+                    fetchClassDetails(event.summary, eventDateString, event.id, event.location, event.description);
+                });
+                timeSlot.appendChild(clonedEventElement);
+            } else {
+                console.error('No time slot found for event:', event);
+            }
+        } 
+
+        // Display the event on its respective days
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
         while (eventStart < eventEnd) {
-    displayEventForDay(eventStart, eventEnd, eventElement);
-    eventStart.setDate(eventStart.getDate() + 1);
-    eventStart.setHours(0, 0, 0, 0);
-}
-		eventElement.addEventListener('click', function () {
-    const eventDateString = eventStart.toISOString().substring(0, 10); // Ensure correct formatting if needed
-    fetchClassDetails(event.summary, eventDateString, event.id); // Now passing event.id
-});
+            displayEventForDay(eventStart, eventEnd, eventElement);
+            eventStart.setDate(eventStart.getDate() + 1);
+            eventStart.setHours(0, 0, 0, 0);
+        }
+
+        // Add listener to the overall eventElement, passing location and description
+        eventElement.addEventListener('click', function () {
+            const eventDateString = eventStart.toISOString();
+            fetchClassDetails(event.summary, eventDateString, event.id, event.location, event.description);
+        });
     });
-	addEventSlotClickListener();
+
+    addEventSlotClickListener(); // Assume this function adds listeners to some slots related to events displayed.
 }
 
     document.getElementById('prevWeek').addEventListener('click', function() {

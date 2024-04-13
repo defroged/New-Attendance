@@ -1,29 +1,29 @@
 let modalInstance;
 const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
 
-async function fetchClassDetails(className, eventDate, eventId) {
-    const eventDetailsUrl = `https://new-attendance.vercel.app/api/calendar-event-details?id=${eventId}`;
-
-    try {
-        const classDataResponse = await fetch(apiUrl); // Ensure that apiUrl is defined and accessible in this context
-        if (!classDataResponse.ok) {
-            throw new Error(`Failed to fetch class data: ${classDataResponse.statusText}`);
+function fetchClassDetails(className, eventDate, eventId, eventLocation, eventDescription) {
+  fetch(apiUrl)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Failed to fetch Google Sheet data: ${response.statusText}`);
         }
-        const classData = await classDataResponse.json();
-        const students = findStudentsByClassName(className, classData.values);
-        const date = new Date(eventDate.replace(/-/g, '/')); 
-        const replacementStudents = findReplacementStudents(classData.values, date);
+        return response.json();
+    })
+    .then(data => {
+        const students = findStudentsByClassName(className, data.values);
+        const date = new Date(eventDate.replace(/-/g, '/'));
+        const replacementStudents = findReplacementStudents(data.values, date);
 
-        const eventDetailsResponse = await fetch(eventDetailsUrl);
-        if (!eventDetailsResponse.ok) {
-            throw new Error(`Failed to fetch calendar event details: ${eventDetailsResponse.statusText}`);
-        }
-        const eventDetails = await eventDetailsResponse.json();
+        const eventDetails = {
+            location: eventLocation,
+            description: eventDescription
+        };
 
         showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails);
-    } catch (error) {
-        console.error('Error in fetchClassDetails:', error);
-    }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
 function findStudentsByClassName(className, data) {
@@ -81,9 +81,9 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
             modalContent += `<li>${replacement.studentName} <i class="fas fa-check-circle text-success" data-student="${replacement.studentName}" onclick="iconClicked(event)"></i></li>`;
         });
     } else {
-        modalContent += "<li>No replacement students today.</li>";
+        modalContent += '<li>No replacement students today.</li>';
     }
-    modalContent += '</ul><button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>';
+    modalContent += `</ul><button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>`;
     modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
     document.getElementById('myModalContent').innerHTML = modalContent;
     modalInstance.show();
