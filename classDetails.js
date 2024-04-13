@@ -64,15 +64,15 @@ function findReplacementStudents(data, date) {
 
 function showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails) {
     const formattedEventDate = eventDate.replace(/-/g, "/");
-	const formattedDescription = eventDetails.description.replace(/\n/g, '<br><br>'); 
-    let modalContent = `<h4>Class: ${className}</h4>
-                        <p>Description: ${formattedDescription}</p>
+	const formattedDescription = eventDetails.description.replace(/\n/g, '<br>'); 
+    let modalContent = `<h4>${className}</h4>
+                        <p>${formattedDescription}</p>
                         <p><a href="${eventDetails.location}" target="_blank">Lesson Report</a></p>
                         <ul>`;
 
     students.forEach(function (student) {
         modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}">`;
-        modalContent += `<li>${student} <i class="fas fa-check-circle text-success" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
+        modalContent += `<li>Attendance:<br>${student} <i class="fas fa-check-circle text-success" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
     });
 
     modalContent += '</ul><h5>Replacement Students:</h5><ul>';
