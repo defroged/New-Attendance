@@ -65,7 +65,7 @@ function findReplacementStudents(data, date) {
 function showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails) {
     const formattedEventDate = eventDate.replace(/-/g, "/");
     // Check if description exists, if not, set a default message or empty string
-    const formattedDescription = eventDetails.description ? eventDetails.description.replace(/\n/g, '<br>') : 'No description available.';
+    const formattedDescription = eventDetails.description ? eventDetails.description.replace(/\n/g, '<br>') : 'No extra details';
     
     let modalContent = `<h4>Class: ${className}</h4>
                         <p>${formattedDescription}</p>
