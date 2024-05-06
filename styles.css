@@ -30,7 +30,8 @@ body {
 .time-slot[data-hour="19"], .time-slot[data-hour="21"],
 .time-slot[data-hour="22"],.time-slot[data-hour="23"] 
 {
-    display: none;
+    visibility: hidden;
+    height: 10px;
 }
 
 .day {
