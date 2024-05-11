@@ -210,8 +210,9 @@ window.scrollToCurrentTime = scrollToCurrentTime;
 	scrollToCurrentTime();
 };
 
-document.addEventListener("DOMContentLoaded", () => {
+/*document.addEventListener("DOMContentLoaded", () => {
   (async function() {
     await checkPasswordAndRevealContent();
   })();
 });
+*/
