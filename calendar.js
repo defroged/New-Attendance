@@ -209,7 +209,3 @@ function displayEvents(events) {
 window.scrollToCurrentTime = scrollToCurrentTime;	
 	scrollToCurrentTime();
 };
-
-(async function() {
-  await checkPasswordAndRevealContent();
-})();

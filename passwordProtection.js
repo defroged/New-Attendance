@@ -17,9 +17,9 @@ async function checkPasswordAndRevealContent(password) {
   }
 }
 
-function handleSubmit(event) {
+async function handleSubmit(event) {
   event.preventDefault();
   const passwordInput = document.getElementById('passwordInput');
   const password = passwordInput.value;
-  checkPasswordAndRevealContent(password);
+  await checkPasswordAndRevealContent(password);
 }
