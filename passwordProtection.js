@@ -1,6 +1,5 @@
 async function checkPasswordAndRevealContent(password) {
   if (!password) {
-    document.getElementById('passwordPrompt').style.display = 'block';
     return;
   }
 

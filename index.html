@@ -11,13 +11,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
-<body id="pageBody" style="display: none;">
-<div id="passwordPrompt">
-  <form onsubmit="handleSubmit(event)">
-    <input type="number" id="passwordInput" placeholder="Enter password" required>
-    <button type="submit">Submit</button>
-  </form>
-</div>
+<body>
+  <div id="passwordPrompt">
+    <form onsubmit="handleSubmit(event)">
+      <input type="number" id="passwordInput" placeholder="Enter password" required>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+    <div id="pageBody" style="display: none;">
 <div class="calendar-container">
 <div class="button-container">
     <button id="prevWeek">Previous</button>
@@ -80,6 +81,7 @@
 <div id="customAlert" class="alert alert-success alert-dismissible fade d-none" role="alert" style="position: fixed; z-index: 1000; top: 20px; right: 20px;">
   Attendance updated successfully
 </div>
+ </div>
 <script src="classDetails.js"></script>
 <script src="passwordProtection.js"></script>
 <script src="calendar.js"></script>
