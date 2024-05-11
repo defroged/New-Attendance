@@ -6,6 +6,10 @@ body {
     color: #333;
 }
 
+#passwordPrompt {
+  display: none;
+}
+
 .calendar {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
