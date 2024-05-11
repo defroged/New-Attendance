@@ -1,4 +1,5 @@
 async function checkPasswordAndRevealContent() {
+  document.getElementById("pageBody").style.display = "none";
   let passwordModal = createPasswordModal();
   let passwordInput = passwordModal.querySelector("#passwordInput");
   let submitPassword = passwordModal.querySelector("#submitPassword");
