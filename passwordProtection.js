@@ -1,5 +1,4 @@
-async function checkPasswordAndRevealContent() {
-  let password = prompt("Please enter the password to access the page:");
+async function checkPasswordAndRevealContent(password) {
   const response = await fetch('/api/checkPagePassword', {
     method: 'POST',
     headers: {
@@ -10,9 +9,17 @@ async function checkPasswordAndRevealContent() {
 
   if (response.status === 200) {
     document.getElementById('pageBody').style.display = 'block';
+    document.getElementById('passwordPrompt').style.display = 'none';
     scrollToCurrentTime();
   } else {
     alert('Incorrect password.');
     window.location.href = 'index.html';
   }
+}
+
+function handleSubmit(event) {
+  event.preventDefault();
+  const passwordInput = document.getElementById('passwordInput');
+  const password = passwordInput.value;
+  checkPasswordAndRevealContent(password);
 }
