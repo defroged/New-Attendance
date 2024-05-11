@@ -11,7 +11,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
-<body id="pageBody">
+<body id="pageBody" style="display: none;">
+<div id="passwordModal" class="pass-modal">
+    <div class="pass-modal-content">
+      <h2>Please enter the password to access the page:</h2>
+      <input id="passwordInput" type="text" pattern="\d*" />
+      <button id="submitButton" type="button">Submit</button>
+    </div>
+  </div>
 <div class="calendar-container">
 <div class="button-container">
     <button id="prevWeek">Previous</button>
