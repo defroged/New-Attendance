@@ -116,7 +116,7 @@ function displayEvents(events) {
     });
 
     events.forEach(event => {
-        console.log(event); // Logging to verify the event structure
+        console.log(event); 
         const eventElement = document.createElement('div');
         eventElement.classList.add('event');
 
@@ -133,13 +133,11 @@ function displayEvents(events) {
         timeElement.innerText = `${startTime}-${endTime}`;
         eventElement.appendChild(timeElement);
 
-        // Display event summary
         const summaryElement = document.createElement('div');
         summaryElement.classList.add('event-summary');
         summaryElement.innerText = event.summary;
         eventElement.appendChild(summaryElement);
 
-        // Handle replacement students if any
         if (event.replacementStudents) {
             const replacementsElement = document.createElement('div');
             replacementsElement.classList.add('replacements');
@@ -166,7 +164,6 @@ function displayEvents(events) {
             }
         } 
 
-        // Display the event on its respective days
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
@@ -176,14 +173,13 @@ function displayEvents(events) {
             eventStart.setHours(0, 0, 0, 0);
         }
 
-        // Add listener to the overall eventElement, passing location and description
         eventElement.addEventListener('click', function () {
             const eventDateString = eventStart.toISOString();
             fetchClassDetails(event.summary, eventDateString, event.id, event.location, event.description);
         });
     });
 
-    addEventSlotClickListener(); // Assume this function adds listeners to some slots related to events displayed.
+    addEventSlotClickListener(); 
 }
 
     document.getElementById('prevWeek').addEventListener('click', function() {
@@ -214,6 +210,8 @@ window.scrollToCurrentTime = scrollToCurrentTime;
 	scrollToCurrentTime();
 };
 
-(async function() {
-  await checkPasswordAndRevealContent();
-})();
+document.addEventListener("DOMContentLoaded", () => {
+  (async function() {
+    await checkPasswordAndRevealContent();
+  })();
+});
