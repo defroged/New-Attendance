@@ -210,8 +210,6 @@ window.scrollToCurrentTime = scrollToCurrentTime;
 	scrollToCurrentTime();
 };
 
-(async function initPage() {
-  document.getElementById("passwordPrompt").style.display = "block";
-  document.getElementById("pageBody").style.display = "none";
+(async function() {
   await checkPasswordAndRevealContent();
 })();
