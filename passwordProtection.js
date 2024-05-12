@@ -1,3 +1,10 @@
+window.handleSubmit = async function handleSubmit(event) {
+  event.preventDefault();
+  const passwordInput = document.getElementById('passwordInput');
+  const password = passwordInput.value;
+  await checkPasswordAndRevealContent(password);
+}
+
 async function checkPasswordAndRevealContent(password) {
   if (!password) {
     return;
