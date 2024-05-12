@@ -20,3 +20,10 @@ async function checkPasswordAndRevealContent(password) {
     window.location.href = 'index.html';
   }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  const passwordForm = document.getElementById('passwordForm');
+  if (passwordForm) {
+    passwordForm.onsubmit = handleSubmit;
+  }
+});
