@@ -10,6 +10,15 @@ body {
   display: none;
 }
 
+#passwordForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+    
+}
+
 .calendar {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
