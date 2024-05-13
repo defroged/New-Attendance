@@ -208,6 +208,15 @@ function displayEvents(events) {
     fetchEvents();
 window.scrollToCurrentTime = scrollToCurrentTime;	
 	scrollToCurrentTime();
+	document.getElementById('closeModalButton').addEventListener('click', function () {
+        // Close the modal
+        const eventSlots = document.querySelectorAll('.event');
+        eventSlots.forEach(slot => {
+            slot.style.backgroundColor = '';
+        });
+    });
+
+
 };
 
 (async function initPage() {
