@@ -209,12 +209,6 @@ function displayEvents(events) {
 window.scrollToCurrentTime = scrollToCurrentTime;	
 	scrollToCurrentTime();
 	
-	document.getElementById('closeModalButton').addEventListener('click', function () {
-        // Close the modal using Bootstrap 4 method
-        $('#myModal').modal('hide');
-    });
-
-
 };
 
 (async function initPage() {
