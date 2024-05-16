@@ -68,14 +68,14 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
     const formattedDescription = eventDetails.description ? eventDetails.description.replace(/\n/g, '<br>') : 'No extra details';
     
     let modalContent = `<h4>Class: ${className}</h4>
-                        <p>Notes:<br>${formattedDescription}</p>
-                        <p><a href="${eventDetails.location}" target="_blank">View Lesson Report</a></p>
-                        <ul>`;
-    modalContent += '<h5>Attendance:</h5><ul>'; 
-    students.forEach(function (student) {
-        modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}">`;
-        modalContent += `<li>${student} <i class="fas fa-check-circle text-success" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
-    });
+                    <p>Notes:<br>${formattedDescription}</p>
+                    <p><a href="${eventDetails.location}" target="_blank">View Lesson Report</a></p>`;
+modalContent += '<h5>Attendance:</h5><ul>'; 
+students.forEach(function (student) {
+    modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}">`;
+    modalContent += `<li>${student} <i class="fas fa-check-circle text-success" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
+});
+
 
     modalContent += '</ul><h5>Replacement Students:</h5><ul>';
     const replacements = replacementStudents[className] || [];
