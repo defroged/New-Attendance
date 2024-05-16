@@ -70,11 +70,13 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
     let modalContent = `<h4>Class: ${className}</h4>
                     <p>Notes:<br>${formattedDescription}</p>
                     <p><a href="${eventDetails.location}" target="_blank">View Lesson Report</a></p>`;
-modalContent += '<h5>Attendance:</h5><ul>'; 
+modalContent += '<h5>Attendance:</h5><ol>'; 
 students.forEach(function (student) {
     modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}">`;
     modalContent += `<li>${student} <i class="fas fa-check-circle text-success" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
 });
+modalContent += '</ol>';
+
 
 
     modalContent += '</ul><h5>Replacement Students:</h5><ul>';
