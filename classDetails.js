@@ -67,9 +67,9 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
     // Check if description exists, if not, set a default message or empty string
     const formattedDescription = eventDetails.description ? eventDetails.description.replace(/\n/g, '<br>') : 'No extra details';
     
-    let modalContent = `<h4>Class: ${className}</h4>
-                        <p>${formattedDescription}</p>
-                        <p><a href="${eventDetails.location}" target="_blank">Lesson Report</a></p>
+    let modalContent = `<h4>${className}</h4>
+                        <p>Notes:<br>${formattedDescription}</p>
+                        <p><a href="${eventDetails.location}" target="_blank">View Lesson Report</a></p>
                         <ul>`;
     modalContent += '<h5>Attendance:</h5><ul>'; 
     students.forEach(function (student) {
