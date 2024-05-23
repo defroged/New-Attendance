@@ -68,7 +68,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
     const formattedDescription = eventDetails.description ? eventDetails.description.replace(/\n/g, '<br>') : 'No extra details';
 
-
+console.log(`Clicked event date (formatted): ${formattedEventDate}`);
 
     let modalContent = `<h4>Class: ${className}</h4>
 
