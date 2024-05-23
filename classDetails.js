@@ -72,9 +72,9 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
     let modalContent = `<h4>Class: ${className}</h4>
 
-                    <p>Notes:<br>${formattedDescription}</p>
+                        <p>Notes:<br>${formattedDescription}</p>
 
-                    <p><a href="${eventDetails.location}" target="_blank">View Lesson Report</a></p>`;
+                        <p><a href="${eventDetails.location}" target="_blank">View Lesson Report</a></p>`;
 
     modalContent += '<h5>Attendance:</h5><ol>';
 
@@ -122,7 +122,27 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
     // Fetching data for absence records
 
-    fetch(apiUrl + "?sheetName=absence")  // Assume this sheetName parameter will fetch required data
+    fetch(apiUrl, {
+
+        method: "POST",
+
+        headers: {
+
+            "Content-Type": "application/json",
+
+        },
+
+        body: JSON.stringify({
+
+            spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
+
+            sheetId: 759358030,
+
+            sheetName: "absence"
+
+        }),
+
+    })
 
         .then(response => response.json())
 
