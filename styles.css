@@ -17,6 +17,15 @@ body {
   height: 100vh;
 }
 
+.button-container {
+    background-color: #1d1d1d;
+}
+
+.time-slot {
+background-color: #1d1d1d;;
+}
+
+
 .calendar {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -33,6 +42,7 @@ body {
 .day-of-week {
     font-size: 1.5em; 
     text-align: center;
+    color: white;
 }
 
 .time-slot[data-hour="0"], .time-slot[data-hour="1"], .time-slot[data-hour="2"], 
@@ -43,11 +53,13 @@ body {
 .time-slot[data-hour="22"],.time-slot[data-hour="23"] 
 {
     display: none;
+    /*! color: black; */
 }
 
 .day {
     border-right: 1px solid #e0e0e0;
     padding: 10px;
+    background-color: #1d1d1d;
 }
 
 
@@ -60,6 +72,7 @@ body {
     margin-bottom: 10px;
 	font-size: 1em; 
     text-align: center;
+    color: white;
 }
 
 .event-active {
@@ -131,6 +144,7 @@ button:hover {
 @media (max-width: 926px) {
 
 .button-container {
+        background-color: #1d1d1d;
         position: fixed; 
         top: 0; 
         left: 0; 
@@ -154,12 +168,14 @@ button:hover {
         padding-top: 60px; 
     }
 	
+    
 .time-slot {
 
     display: flex;
     flex-direction: column; 
     gap: 10px; 
     height: 150px;
+    background-color: #1d1d1d;
 }
     .event {
 
@@ -167,6 +183,7 @@ button:hover {
     width: calc(100% - 8px); 
     height: 115%;
     overflow: visible;
+        
 }
     
 	
@@ -187,6 +204,7 @@ button:hover {
 
 .calendar {
     scroll-behavior: smooth;
+    background-color: #1d1d1d;
 }
 
 @media screen and (orientation: portrait) {
@@ -196,12 +214,18 @@ button:hover {
         padding: 0; 
     }
 
+    .button-container {
+        background-color: #1d1d1d;
+    }
+    
     .day-of-week, .date, .event, .event-time, .event-summary {
         font-size: 1.2em; 
         margin-bottom: 34px;
         padding: 0px 30px 0px 30px;
         text-align: center;
         margin-bottom: -10px;
+        color: white;
+        background-color: #1d1d1d00;
     }
 
     .landscape-message {
