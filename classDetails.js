@@ -93,7 +93,8 @@ console.log(`Clicked event date (formatted): ${formattedEventDate}`);
                                 console.log(`Student ${student} record: ${absenceData[i][j]}`);  
                                 let [absenceClassName, absenceDate] = absenceData[i][j].split(" - ");
                                 absenceClassName = absenceClassName.trim();
-                                if (absenceDate === formattedEventDate) {
+                                let formattedAbsenceDate = absenceDate.replace(/-/g, "/");
+                                if (formattedAbsenceDate === formattedEventDate) {
                                     console.log(`Absent student - ${student}`);
                                     break;
                                 }
@@ -105,7 +106,6 @@ console.log(`Clicked event date (formatted): ${formattedEventDate}`);
         })
         .catch(error => console.error('Error fetching absence data:', error));
 }
-
 function iconClicked(event) {
   const iconElement = event.target;
   if (iconElement.classList.contains("fa-check-circle")) {
