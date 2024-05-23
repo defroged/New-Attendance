@@ -70,7 +70,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
 
 
-    let modalContent = `<h4>Class: ${className}</h4>
+    let modalContent = `<h4>Class: ${className} - ${formattedEventDate}</h4>`;
 
                         <p>Notes:<br>${formattedDescription}</p>
 
