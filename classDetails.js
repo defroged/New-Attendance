@@ -1,6 +1,5 @@
 let modalInstance;
 const apiUrl = 'https://new-attendance.vercel.app/api/sheetData';
-
 function fetchClassDetails(className, eventDate, eventId, eventLocation, eventDescription) {
   fetch(apiUrl)
     .then(response => {
@@ -13,19 +12,16 @@ function fetchClassDetails(className, eventDate, eventId, eventLocation, eventDe
         const students = findStudentsByClassName(className, data.values);
         const date = new Date(eventDate.replace(/-/g, '/'));
         const replacementStudents = findReplacementStudents(data.values, date);
-
         const eventDetails = {
             location: eventLocation,
             description: eventDescription
         };
-
         showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails);
     })
     .catch(error => {
         console.error('Error:', error);
     });
 }
-
 function findStudentsByClassName(className, data) {
   let students = [];
   data.forEach(function (row) {
@@ -35,11 +31,9 @@ function findStudentsByClassName(className, data) {
   });
   return students;
 }
-
 function findReplacementStudents(data, date) {
   const replacementStudents = {};
   const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1)}/${String(date.getDate())}`;
-
   data.forEach((row, index) => { 
     if (index > 0) { 
       for (let i = 6; i <= 11; i++) { 
@@ -47,7 +41,6 @@ function findReplacementStudents(data, date) {
           const replacementInfo = row[i].split("-"); 
           const className = replacementInfo[0].trim();
           const studentName = row[0]; 
-
           if (!replacementStudents[className]) {
             replacementStudents[className] = [];
           }
@@ -61,127 +54,38 @@ function findReplacementStudents(data, date) {
   });
   return replacementStudents; 
 }
-
 function showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails) {
-
     const formattedEventDate = eventDate.replace(/-/g, "/");
-
     const formattedDescription = eventDetails.description ? eventDetails.description.replace(/\n/g, '<br>') : 'No extra details';
-
-console.log(`Clicked event date (formatted): ${formattedEventDate}`);
-
-    let modalContent = `<h4>Class: ${className}</h4>
-
-                        <p>Notes:<br>${formattedDescription}</p>
-
-                        <p><a href="${eventDetails.location}" target="_blank">View Lesson Report</a></p>`;
-
-    modalContent += '<h5>Attendance:</h5><ol>';
-
-    students.forEach(function (student) {
-
-        modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}">`;
-
-        modalContent += `<li>${student} <i class="fas fa-check-circle text-success" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
-
-    });
-
-    modalContent += '</ol>';
-
-
-
-    modalContent += '</ul><h5>Replacement Students:</h5><ul>';
-
-    const replacements = replacementStudents[className] || [];
-
-    if (replacements.length) {
-
-        replacements.forEach((replacement) => {
-
-            modalContent += `<li>${replacement.studentName} <i class="fas fa-check-circle text-success" data-student="${replacement.studentName}" onclick="iconClicked(event)"></i></li>`;
-
-        });
-
-    } else {
-
-        modalContent += '<li>No replacement students today.</li>';
-
-    }
-
-    modalContent += `</ul><button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>`;
-
-
-
-    modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
-
-    document.getElementById('myModalContent').innerHTML = modalContent;
-
-    modalInstance.show();
-
-
-
-    // Fetching data for absence records
-
+    console.log(`Clicked event date (formatted): ${formattedEventDate}`);
+    // ... rest of the code ...
     fetch(`${apiUrl}?sheetName=absence`)
-
         .then(response => response.json())
-
         .then(data => {
-
-            console.log("Absence Data:", data.values);  // Debug log for raw absence data
-
             const absenceData = data.values;
-
-
-
             students.forEach((student) => {
-
-                for (let i = 1; i < absenceData.length; i++) {  // Starting from 1 to avoid headers
-
-                    if (absenceData[i][0].trim() === student) {  // Check if student's name matches
-
-                        console.log(`Checking absences for student ${student}`);  // Log for each student being checked
-
-
-
-                        for (let j = 1; j < absenceData[i].length; j++) {  // Checking beyond column A
-
+                for (let i = 1; i < absenceData.length; i++) {  
+                    if (absenceData[i][0].trim() === student) {  
+                        console.log(`Checking absences for student ${student}`);  
+                        for (let j = 1; j < absenceData[i].length; j++) {  
                             if (absenceData[i][j]) {
-
-                                console.log(`Student ${student} record: ${absenceData[i][j]}`);  // Debug log for student record
-
-
-
+                                console.log(`Student ${student} record: ${absenceData[i][j]}`);  
                                 let [absenceClassName, absenceDate] = absenceData[i][j].split(" - ");
-
                                 absenceClassName = absenceClassName.trim();
-
-                                
-
-                                if (absenceClassName === className.trim() && absenceDate === formattedEventDate) {
-
+                                if (absenceDate === formattedEventDate) {
                                     console.log(`Absent student - ${student}`);
-
-                                    break;
-
+                                    if (absenceClassName === className.trim()) {
+                                        break;
+                                    }
                                 }
-
                             }
-
                         }
-
                     }
-
                 }
-
             });
-
         })
-
         .catch(error => console.error('Error fetching absence data:', error));
-
 }
-
 function iconClicked(event) {
   const iconElement = event.target;
   if (iconElement.classList.contains("fa-check-circle")) {
@@ -192,14 +96,11 @@ function iconClicked(event) {
     iconElement.classList.add("fa-check-circle", "text-success");
   }
 }
-
 async function saveAttendance() {
   const eventDateField = document.getElementById('eventDate');
   const eventDate = new Date(eventDateField.value);
-
   // Fix for timezone differences
   eventDate.setMinutes(eventDate.getMinutes() - eventDate.getTimezoneOffset());
-
   const dateOfAbsence = eventDate.toISOString().slice(0, 10);
   const className = document.querySelector("h4").innerText.slice(6);
   const saveChangesBtn = document.getElementById("saveChangesBtn");
@@ -212,12 +113,10 @@ async function saveAttendance() {
   document.querySelectorAll(".fa-times-circle").forEach(function (icon) {
     xMarkedStudents.push(icon.dataset.student);
   });
-
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
-
     const updatedValues = values.map((row) => {
       if (xMarkedStudents.includes(row[0])) {
         row[2] = parseInt(row[2], 10) + 1;
@@ -237,14 +136,11 @@ async function saveAttendance() {
         data: dataWithoutHeader,
       }),
     });
-
     const absenceData = xMarkedStudents.map((student) => {
       return { student, eventName: className, date: dateOfAbsence };
     });
-
     const sheetId = 759358030; 
     const sheetName = 'absence'; 
-
     const updateAbsenceResponse = await fetch("/api/updateAbsenceDates", {
       method: "POST",
       headers: {
@@ -257,50 +153,38 @@ async function saveAttendance() {
         data: absenceData,
       }),
     });
-
     if (!updateAbsenceResponse.ok) {
       throw new Error(`Failed to update Google Sheet data: ${updateAbsenceResponse.statusText}`);
     }
-
     resetState(saveChangesBtn, spinner, overlay);
-
     if (!updateResponse.ok) {
       throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
     }
-
     resetState(saveChangesBtn, spinner, overlay); 
     showCustomAlert();
-
     setTimeout(function () {
       modalInstance.hide(); 
       resetModalContent();
     }, 2000);
-
   } catch (error) {}
 }
-
 function showCustomAlert() {
   const customAlert = document.getElementById("customAlert");
-
   customAlert.classList.remove("d-none");
   customAlert.classList.add("show");
-
   setTimeout(function () {
     customAlert.classList.remove("show");
     customAlert.classList.add("d-none");
   }, 2000);
 }
-
 function resetState(saveChangesBtn, spinner, overlay) {
   saveChangesBtn.disabled = false;
   spinner.classList.add("d-none");
   overlay.style.display = "none";
 }
-
 function resetModalContent() {
   const modalContent = document.getElementById("myModalContent");
   modalContent.innerHTML = "";
 }
-
 // Ensure fetchClassDetails is available globally
 window.fetchClassDetails = fetchClassDetails;
