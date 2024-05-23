@@ -122,13 +122,13 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
     // Fetching data for absence records
 
-    fetch(apiUrl)
+    fetch(apiUrl + "?sheetName=absence")  // Assume this sheetName parameter will fetch required data
 
         .then(response => response.json())
 
         .then(data => {
 
-            console.log("Absence Data:", data.values); // Debug log for raw absence data
+            console.log("Absence Data:", data.values);  // Debug log for raw absence data
 
             const absenceData = data.values;
 
@@ -138,19 +138,19 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
                 let found = false;
 
-                for (let i = 1; i < absenceData.length; i++) { // Starting from 1 to avoid headers
+                for (let i = 1; i < absenceData.length; i++) {  // Starting from 1 to avoid headers
 
-                    if (absenceData[i][0] === student) { // Check if student's name matches
+                    if (absenceData[i][0].trim() === student) {  // Check if student's name matches
 
-                        console.log(`Checking absences for student ${student}`); // Log for each student being checked
+                        console.log(`Checking absences for student ${student}`);  // Log for each student being checked
 
 
 
-                        for (let j = 1; j < absenceData[i].length; j++) { // Checking beyond column A
+                        for (let j = 1; j < absenceData[i].length; j++) {  // Checking beyond column A
 
                             if (absenceData[i][j]) {
 
-                                console.log(`Student ${student} record: ${absenceData[i][j]}`); // Debug log for student record
+                                console.log(`Student ${student} record: ${absenceData[i][j]}`);  // Debug log for student record
 
 
 
