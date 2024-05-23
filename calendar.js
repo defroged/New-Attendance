@@ -115,8 +115,7 @@ function displayEvents(events) {
         slot.innerHTML = '';
     });
 
-    events.forEach(event => {
-        console.log(event); 
+    events.forEach(event => { 
         const eventElement = document.createElement('div');
         eventElement.classList.add('event');
 
