@@ -87,10 +87,8 @@ console.log(`Clicked event date (formatted): ${formattedEventDate}`);
             students.forEach((student) => {
                 for (let i = 1; i < absenceData.length; i++) {  
                     if (absenceData[i][0].trim() === student) {  
-                        console.log(`Checking absences for student ${student}`);  
                         for (let j = 1; j < absenceData[i].length; j++) {  
                             if (absenceData[i][j]) {
-                                console.log(`Student ${student} record: ${absenceData[i][j]}`);  
                                 let [absenceClassName, absenceDate] = absenceData[i][j].split(" - ");
                                 absenceClassName = absenceClassName.trim();
                                 let formattedAbsenceDate = absenceDate.replace(/-/g, "/");
