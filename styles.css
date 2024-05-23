@@ -4,10 +4,16 @@ body {
     margin: 0;
     padding: 10px;
     color: #333;
+    background-color: #001621;
 }
 
 #passwordPrompt {
   display: none;
+}
+
+input {
+    background-color: #001621;
+    color: white;
 }
 
 #passwordForm {
@@ -15,6 +21,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: #1d1d1d;
 }
 
 .button-container {
@@ -25,6 +32,10 @@ body {
 background-color: #1d1d1d;;
 }
 
+.time-slots {
+    /*! background-color: black; */
+   
+}
 
 .calendar {
     display: grid;
@@ -65,7 +76,7 @@ background-color: #1d1d1d;;
 
 .current-day {
     border-left: 4px solid #00bcd4;
-    background-color: #e0f7fa;
+    background-color: #3a3a3a;
 }
 
 .date {
@@ -83,7 +94,7 @@ background-color: #1d1d1d;;
 button {
     padding: 10px 20px;
     margin: 10px;
-    background-color: #00bcd4;
+    background-color: #001621;
     color: white;
     border: none;
     border-radius: 4px;
