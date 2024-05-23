@@ -63,35 +63,113 @@ function findReplacementStudents(data, date) {
 }
 
 function showModalWithClassDetails(className, students, eventDate, replacementStudents, eventDetails) {
+
     const formattedEventDate = eventDate.replace(/-/g, "/");
-    // Check if description exists, if not, set a default message or empty string
+
     const formattedDescription = eventDetails.description ? eventDetails.description.replace(/\n/g, '<br>') : 'No extra details';
-    
+
+
+
     let modalContent = `<h4>Class: ${className}</h4>
+
                     <p>Notes:<br>${formattedDescription}</p>
+
                     <p><a href="${eventDetails.location}" target="_blank">View Lesson Report</a></p>`;
-modalContent += '<h5>Attendance:</h5><ol>'; 
-students.forEach(function (student) {
-    modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}">`;
-    modalContent += `<li>${student} <i class="fas fa-check-circle text-success" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
-});
-modalContent += '</ol>';
+
+    modalContent += '<h5>Attendance:</h5><ol>';
+
+    students.forEach(function (student) {
+
+        modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}">`;
+
+        modalContent += `<li>${student} <i class="fas fa-check-circle text-success" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
+
+    });
+
+    modalContent += '</ol>';
 
 
 
     modalContent += '</ul><h5>Replacement Students:</h5><ul>';
+
     const replacements = replacementStudents[className] || [];
+
     if (replacements.length) {
+
         replacements.forEach((replacement) => {
+
             modalContent += `<li>${replacement.studentName} <i class="fas fa-check-circle text-success" data-student="${replacement.studentName}" onclick="iconClicked(event)"></i></li>`;
+
         });
+
     } else {
+
         modalContent += '<li>No replacement students today.</li>';
+
     }
+
     modalContent += `</ul><button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>`;
+
+
+
     modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
+
     document.getElementById('myModalContent').innerHTML = modalContent;
+
     modalInstance.show();
+
+
+
+    // Fetching data for absence records
+
+    fetch(apiUrl)
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            const absenceData = data.values;
+
+            students.forEach((student) => {
+
+                let found = false;
+
+                for (let i = 1; i < absenceData.length; i++) { // Starting from 1 to avoid headers
+
+                    if (absenceData[i][0] === student) { // Check if student's name matches
+
+                        for (let j = 1; j < absenceData[i].length; j++) { // Checking beyond column A
+
+                            if (absenceData[i][j]) {
+
+                                let [absenceClassName, absenceDate] = absenceData[i][j].split(" - ");
+
+                                if (absenceClassName.trim() === className.trim() && absenceDate === formattedEventDate) {
+
+                                    console.log(`Student ${student} has an absence record for ${className} on ${eventDate}`);
+
+                                    found = true;
+
+                                    break;
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                    if (found) break;
+
+                }
+
+            });
+
+        })
+
+        .catch(error => console.error('Error fetching absence data:', error));
+
 }
 
 function iconClicked(event) {
