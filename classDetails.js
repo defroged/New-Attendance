@@ -128,15 +128,23 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
         .then(data => {
 
+            console.log("Absence Data:", data.values);  // Debug log for raw absence data
+
             const absenceData = data.values;
 
 
 
             students.forEach((student) => {
 
+                let found = false;
+
                 for (let i = 1; i < absenceData.length; i++) {  // Starting from 1 to avoid headers
 
                     if (absenceData[i][0].trim() === student) {  // Check if student's name matches
+
+                        console.log(`Checking absences for student ${student}`);  // Log for each student being checked
+
+
 
                         for (let j = 1; j < absenceData[i].length; j++) {  // Checking beyond column A
 
@@ -146,11 +154,13 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
                                 absenceClassName = absenceClassName.trim();
 
-                                
 
-                                if (absenceClassName === className.trim() && absenceDate === formattedEventDate) {
 
-                                    console.log(`Absent student - ${student}`);
+                                if (absenceDate === formattedEventDate) {
+
+                                    console.log(`Student ${student} record: ${absenceClassName} - ${absenceDate}`);
+
+                                    found = true;
 
                                     break;
 
@@ -161,6 +171,8 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
                         }
 
                     }
+
+                    if (found) break;
 
                 }
 
