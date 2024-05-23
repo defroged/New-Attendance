@@ -88,7 +88,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
                           
       modalContent += '<h5>Attendance:</h5><ol>';
       students.forEach(function (student) {
-        modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}">`;
+  modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}" data-absent-students="${absentStudents}">`;
         const iconClass = getIconClass(student, absentStudents);
         modalContent += `<li>${student} <i class="fas ${iconClass}" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
       });
@@ -109,7 +109,6 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
     })
     .catch((error) => console.error('Error fetching absence data:', error));
 }
-
 function iconClicked(event) {
   const iconElement = event.target;
   if (iconElement.classList.contains("fa-check-circle")) {
@@ -123,7 +122,6 @@ function iconClicked(event) {
 async function saveAttendance() {
   const eventDateField = document.getElementById('eventDate');
   const eventDate = new Date(eventDateField.value);
-  // Fix for timezone differences
   eventDate.setMinutes(eventDate.getMinutes() - eventDate.getTimezoneOffset());
   const dateOfAbsence = eventDate.toISOString().slice(0, 10);
   const className = document.querySelector("h4").innerText.slice(6);
@@ -133,21 +131,24 @@ async function saveAttendance() {
   spinner.classList.remove("d-none");
   const overlay = document.getElementById("overlay");
   overlay.style.display = "block";
-  let xMarkedStudents = [];
+  const absentStudents = eventDateField.dataset.absentStudents.split(',');
+  let newAbsences = [];
   document.querySelectorAll(".fa-times-circle").forEach(function (icon) {
-    xMarkedStudents.push(icon.dataset.student);
+    const student = icon.dataset.student;
+    if (!absentStudents.includes(student)) {
+      newAbsences.push(student);
+    }
   });
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
     const values = data.values;
     const updatedValues = values.map((row) => {
-      if (xMarkedStudents.includes(row[0])) {
+      if (newAbsences.includes(row[0])) {
         row[2] = parseInt(row[2], 10) + 1;
       }
       return row.slice(0, 3);
     });
-    
     const dataWithoutHeader = updatedValues.slice(1);
     const updateResponse = await fetch("/api/updateAttendance", {
       method: "POST",
@@ -156,15 +157,15 @@ async function saveAttendance() {
       },
       body: JSON.stringify({
         spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-        range: "Sheet1!A2:C", 
+        range: "Sheet1!A2:C",
         data: dataWithoutHeader,
       }),
     });
-    const absenceData = xMarkedStudents.map((student) => {
+    const absenceData = newAbsences.map((student) => {
       return { student, eventName: className, date: dateOfAbsence };
     });
-    const sheetId = 759358030; 
-    const sheetName = 'absence'; 
+    const sheetId = 759358030;
+    const sheetName = 'absence';
     const updateAbsenceResponse = await fetch("/api/updateAbsenceDates", {
       method: "POST",
       headers: {
@@ -172,8 +173,8 @@ async function saveAttendance() {
       },
       body: JSON.stringify({
         spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-        sheetId: 759358030, 
-        sheetName: "absence", 
+        sheetId: 759358030,
+        sheetName: "absence",
         data: absenceData,
       }),
     });
@@ -184,10 +185,10 @@ async function saveAttendance() {
     if (!updateResponse.ok) {
       throw new Error(`Failed to update Google Sheet data: ${updateResponse.statusText}`);
     }
-    resetState(saveChangesBtn, spinner, overlay); 
+    resetState(saveChangesBtn, spinner, overlay);
     showCustomAlert();
     setTimeout(function () {
-      modalInstance.hide(); 
+      modalInstance.hide();
       resetModalContent();
     }, 2000);
   } catch (error) {}
