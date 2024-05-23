@@ -136,8 +136,6 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
             students.forEach((student) => {
 
-                let found = false;
-
                 for (let i = 1; i < absenceData.length; i++) {  // Starting from 1 to avoid headers
 
                     if (absenceData[i][0].trim() === student) {  // Check if student's name matches
@@ -162,9 +160,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
                                 if (absenceClassName === className.trim() && absenceDate === formattedEventDate) {
 
-                                    console.log(`Student ${student} has an absence record: ${absenceClassName} on ${absenceDate}`);
-
-                                    found = true;
+                                    console.log(`Absent student - ${student}`);
 
                                     break;
 
@@ -175,8 +171,6 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
                         }
 
                     }
-
-                    if (found) break;
 
                 }
 
