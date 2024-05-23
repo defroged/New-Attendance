@@ -122,27 +122,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
 
     // Fetching data for absence records
 
-    fetch(apiUrl, {
-
-        method: "POST",
-
-        headers: {
-
-            "Content-Type": "application/json",
-
-        },
-
-        body: JSON.stringify({
-
-            spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-
-            sheetId: 759358030,
-
-            sheetName: "absence"
-
-        }),
-
-    })
+    fetch(`${apiUrl}?sheetName=absence`)
 
         .then(response => response.json())
 
