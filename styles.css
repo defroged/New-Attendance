@@ -150,7 +150,7 @@ button:hover {
 }
 
 .modal-content {
-    background-color: #4a4848;
+    background-color: #464646;
 }
 
 .modal-header {
@@ -166,7 +166,7 @@ ol {
     color: #fdfdfd;
 }
 
-@media (max-width: 926px) {
+02@media (max-width: 926px) {
 
 .button-container {
         background-color: #1d1d1d;
