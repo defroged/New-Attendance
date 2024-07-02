@@ -41,8 +41,8 @@ function findReplacementStudents(data, date) {
         if (row[i]) {
           const bookingDates = row[i].split(',').map(date => date.trim());
           bookingDates.forEach(bookingDate => {
-            if (dateFormat === bookingDate) {
-              const replacementInfo = row[i].split("-");
+            if (bookingDate.includes(dateFormat)) {
+              const replacementInfo = bookingDate.split("-");
               const className = replacementInfo[0].trim();
               const studentName = row[0];
 
@@ -52,7 +52,7 @@ function findReplacementStudents(data, date) {
 
               replacementStudents[className].push({
                 studentName: studentName,
-                replacementDate: bookingDate
+                replacementDate: bookingDate.substr(bookingDate.indexOf("(") + 1, 10)
               });
             }
           });
