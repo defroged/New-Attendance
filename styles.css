@@ -150,23 +150,32 @@ button:hover {
 }
 
 .modal-content {
-    background-color: #464646;
+    background-color: #464646 !important;
 }
 
 .modal-header {
-    color: #cacaca;
+    color: #cacaca !important;
 }
 
 h4 {
-    color: #c7c7c7;
-    font-weight: bold;
+    color: #c7c7c7 !important;
+    font-weight: bold !important;
 }
 
 ol {
-    color: #fdfdfd;
+    color: #fdfdfd !important;
 }
 
-02@media (max-width: 926px) {
+p {
+    color: white !important;    
+}
+
+li {
+    color: white !important;
+    padding: 6px !important;
+}
+
+@media (max-width: 926px) {
 
 .button-container {
         background-color: #1d1d1d;
