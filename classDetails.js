@@ -94,14 +94,16 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
       });
       modalContent += '</ol>';
       modalContent += '</ul><h5>Replacement Students:</h5><ul>';
-      const replacements = replacementStudents[className] || [];
-      if (replacements.length) {
-          replacements.forEach((replacement) => {
-              modalContent += `<li>${replacement.studentName} <i class="fas fa-check-circle text-success" data-student="${replacement.studentName}" onclick="iconClicked(event)"></i></li>`;
-          });
-      } else {
-          modalContent += '<li>No replacement students today.</li>';
-      }
+let replacements = replacementStudents[className] || [];
+replacements = replacements.filter(replacement => replacement.replacementDate === formattedEventDate);
+
+if (replacements.length) {
+    replacements.forEach((replacement) => {
+        modalContent += `<li>${replacement.studentName} <i class="fas fa-check-circle text-success" data-student="${replacement.studentName}" onclick="iconClicked(event)"></i></li>`;
+    });
+} else {
+    modalContent += '<li>No replacement students today.</li>';
+}
       modalContent += `</ul><button id="saveChangesBtn" class="btn btn-primary mt-3" onclick="saveAttendance()">Save Changes <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span></button>`;
       modalInstance = new bootstrap.Modal(document.getElementById('myModal'));
       document.getElementById('myModalContent').innerHTML = modalContent;
