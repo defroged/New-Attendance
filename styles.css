@@ -4,12 +4,34 @@ body {
     margin: 0;
     padding: 10px;
     color: #333;
-    background-color: #000;
+    background-color: #000 !important;
 }
 
 #pageBody {
     background-color: black;
 }
+
+#passwordInput {
+    border-radius: 30px;
+    padding: 10px;
+    margin: 20px;
+}
+/* Remove spinners in Chrome, Safari, Edge, Opera */
+#passwordInput::-webkit-outer-spin-button,
+#passwordInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove spinners in Firefox */
+#passwordInput[type=number] {
+  -moz-appearance: textfield;
+}
+
+#passwordInput::placeholder {
+    text-align: center;
+}
+
 #passwordPrompt {
   display: none;
 }
