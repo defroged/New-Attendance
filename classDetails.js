@@ -31,6 +31,7 @@ function findStudentsByClassName(className, data) {
   });
   return students;
 }
+
 function findReplacementStudents(data, date) {
   const replacementStudents = {};
   const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
@@ -39,10 +40,11 @@ function findReplacementStudents(data, date) {
     if (index > 0) {
       for (let i = 6; i <= 11; i++) {
         if (row[i]) {
-          const bookingDates = row[i].split(',').map(date => date.trim());
-          bookingDates.forEach(bookingDate => {
-            if (bookingDate.includes(dateFormat)) {
-              const replacementInfo = bookingDate.split("-");
+          const bookingEntries = row[i].split(',').map(entry => entry.trim());
+          bookingEntries.forEach(bookingEntry => {
+            const match = bookingEntry.match(/(\d{4}\/\d{2}\/\d{2})/);
+            if (match && match[1] === dateFormat) {
+              const replacementInfo = bookingEntry.split("-");
               const className = replacementInfo[0].trim();
               const studentName = row[0];
 
@@ -52,7 +54,7 @@ function findReplacementStudents(data, date) {
 
               replacementStudents[className].push({
                 studentName: studentName,
-                replacementDate: bookingDate.substr(bookingDate.indexOf("(") + 1, 10)
+                replacementDate: match[1]
               });
             }
           });
