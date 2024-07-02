@@ -36,24 +36,21 @@ function findReplacementStudents(data, date) {
   const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1)}/${String(date.getDate())}`;
   data.forEach((row, index) => { 
     if (index > 0) { 
-      for (let i = 6; i <= 11; i++) {
-  if (row[i]) {
-    const dateString = row[i].substring(row[i].indexOf("(") + 1, row[i].indexOf(")"));
-    if (dateString === dateFormat) { // Use strict equality instead of 'includes' method
-      const replacementInfo = row[i].split("-");
-      const className = replacementInfo[0].trim();
-      const studentName = row[0];
-      if (!replacementStudents[className]) {
-        replacementStudents[className] = [];
+      for (let i = 6; i <= 11; i++) { 
+        if (row[i] && row[i].includes(dateFormat)) {
+          const replacementInfo = row[i].split("-"); 
+          const className = replacementInfo[0].trim();
+          const studentName = row[0]; 
+          if (!replacementStudents[className]) {
+            replacementStudents[className] = [];
+          }
+          replacementStudents[className].push({
+            studentName: studentName,
+            replacementDate: row[i].substr(row[i].indexOf("(") + 1, 10) 
+          }); 
+        }
       }
-      replacementStudents[className].push({
-        studentName: studentName,
-        replacementDate: dateString,
-      });
     }
-  }
-}
-	}
   });
   return replacementStudents; 
 }
@@ -90,11 +87,12 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
                           <p><a href="${eventDetails.location}" target="_blank">View Lesson Report</a></p>`;
                           
       modalContent += '<h5>Attendance:</h5><ol>';
-students.forEach(function (student) {
-const iconClass = getIconClass(student, absentStudents);
-modalContent += `<li>${student} <i class="fas ${iconClass}" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
-});
-modalContent += `</ol><input type="hidden" id="eventDate" value="${formattedEventDate}" data-absent-students="${absentStudents}">`;
+      students.forEach(function (student) {
+  modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}" data-absent-students="${absentStudents}">`;
+        const iconClass = getIconClass(student, absentStudents);
+        modalContent += `<li>${student} <i class="fas ${iconClass}" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
+      });
+      modalContent += '</ol>';
       modalContent += '</ul><h5>Replacement Students:</h5><ul>';
       const replacements = replacementStudents[className] || [];
       if (replacements.length) {
