@@ -87,12 +87,11 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
                           <p><a href="${eventDetails.location}" target="_blank">View Lesson Report</a></p>`;
                           
       modalContent += '<h5>Attendance:</h5><ol>';
-      students.forEach(function (student) {
-  modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}" data-absent-students="${absentStudents}">`;
-        const iconClass = getIconClass(student, absentStudents);
-        modalContent += `<li>${student} <i class="fas ${iconClass}" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
-      });
-      modalContent += '</ol>';
+students.forEach(function (student) {
+const iconClass = getIconClass(student, absentStudents);
+modalContent += `<li>${student} <i class="fas ${iconClass}" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
+});
+modalContent += `</ol><input type="hidden" id="eventDate" value="${formattedEventDate}" data-absent-students="${absentStudents}">`;
       modalContent += '</ul><h5>Replacement Students:</h5><ul>';
       const replacements = replacementStudents[className] || [];
       if (replacements.length) {
