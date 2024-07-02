@@ -88,7 +88,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
                           
       modalContent += '<h5>Attendance:</h5><ol>';
       students.forEach(function (student) {
-  modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}" data-absent-students="${absentStudents}">`;
+  modalContent += `<input type="hidden" id="eventDate" value="${formattedEventDate}" data-absent-students="${absentStudents}" data-class-name="${className}">`;
         const iconClass = getIconClass(student, absentStudents);
         modalContent += `<li>${student} <i class="fas ${iconClass}" data-student="${student}" onclick="iconClicked(event)"></i></li>`;
       });
@@ -124,7 +124,7 @@ async function saveAttendance() {
   const eventDate = new Date(eventDateField.value);
   eventDate.setMinutes(eventDate.getMinutes() - eventDate.getTimezoneOffset());
   const dateOfAbsence = eventDate.toISOString().slice(0, 10);
-  const className = document.querySelector("h4").innerText.slice(6);
+  const className = document.getElementById('eventDate').dataset.className;
   const saveChangesBtn = document.getElementById("saveChangesBtn");
   saveChangesBtn.disabled = true;
   const spinner = document.getElementById("spinner");
