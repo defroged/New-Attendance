@@ -36,21 +36,23 @@ function findReplacementStudents(data, date) {
   const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1)}/${String(date.getDate())}`;
   data.forEach((row, index) => { 
     if (index > 0) { 
-      for (let i = 6; i <= 11; i++) { 
-        if (row[i] && row[i].includes(dateFormat)) {
-          const replacementInfo = row[i].split("-"); 
-          const className = replacementInfo[0].trim();
-          const studentName = row[0]; 
-          if (!replacementStudents[className]) {
-            replacementStudents[className] = [];
-          }
-          replacementStudents[className].push({
-            studentName: studentName,
-            replacementDate: row[i].substring(row[i].indexOf("(") + 1, row[i].indexOf(")")) 
-          }); 
-        }
+      for (let i = 6; i <= 11; i++) {
+  if (row[i]) {
+    const dateString = row[i].substring(row[i].indexOf("(") + 1, row[i].indexOf(")"));
+    if (dateString === dateFormat) { // Use strict equality instead of 'includes' method
+      const replacementInfo = row[i].split("-");
+      const className = replacementInfo[0].trim();
+      const studentName = row[0];
+      if (!replacementStudents[className]) {
+        replacementStudents[className] = [];
       }
+      replacementStudents[className].push({
+        studentName: studentName,
+        replacementDate: dateString,
+      });
     }
+  }
+}
   });
   return replacementStudents; 
 }
