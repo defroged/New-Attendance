@@ -53,6 +53,7 @@ function findReplacementStudents(data, date) {
     }
   }
 }
+	}
   });
   return replacementStudents; 
 }
