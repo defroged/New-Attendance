@@ -67,7 +67,7 @@ function addEventSlotClickListener() {
         slot.addEventListener('click', function (e) {
             e.stopPropagation();
             eventSlots.forEach(s => s.style.backgroundColor = '');
-            slot.style.backgroundColor = '#ffcc00';
+            slot.style.backgroundColor = '#626aa8';
         });
     });
 
