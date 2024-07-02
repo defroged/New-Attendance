@@ -33,27 +33,38 @@ function findStudentsByClassName(className, data) {
 }
 function findReplacementStudents(data, date) {
   const replacementStudents = {};
-  const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1)}/${String(date.getDate())}`;
-  data.forEach((row, index) => { 
-    if (index > 0) { 
-      for (let i = 6; i <= 11; i++) { 
-        if (row[i] && row[i].includes(dateFormat)) {
-          const replacementInfo = row[i].split("-"); 
-          const className = replacementInfo[0].trim();
-          const studentName = row[0]; 
-          if (!replacementStudents[className]) {
-            replacementStudents[className] = [];
-          }
-          replacementStudents[className].push({
-            studentName: studentName,
-            replacementDate: row[i].substr(row[i].indexOf("(") + 1, 10) 
-          }); 
+  const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+
+  data.forEach((row, index) => {
+    if (index > 0) {
+      for (let i = 6; i <= 11; i++) {
+        if (row[i]) {
+          const bookingDates = row[i].split(',').map(date => date.trim());
+          bookingDates.forEach(bookingDate => {
+            if (dateFormat === bookingDate) {
+              const replacementInfo = row[i].split("-");
+              const className = replacementInfo[0].trim();
+              const studentName = row[0];
+
+              if (!replacementStudents[className]) {
+                replacementStudents[className] = [];
+              }
+
+              replacementStudents[className].push({
+                studentName: studentName,
+                replacementDate: bookingDate
+              });
+            }
+          });
         }
       }
     }
   });
-  return replacementStudents; 
+
+  return replacementStudents;
 }
+
+
 function getIconClass(student, absentStudents) {
   return absentStudents.includes(student) ? 'fa-times-circle text-danger' : 'fa-check-circle text-success';
 }
