@@ -31,23 +31,29 @@ function findStudentsByClassName(className, data) {
   });
   return students;
 }
-function findReplacementStudents(data, date) {
+function findReplacementStudents(data, eventDate) {
   const replacementStudents = {};
-  const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1)}/${String(date.getDate())}`;
+  const dateFormat = eventDate;
   data.forEach((row, index) => { 
-    if (index > 0) { 
+    if (index > 0) {
       for (let i = 6; i <= 11; i++) { 
-        if (row[i] && row[i].includes(dateFormat)) {
-          const replacementInfo = row[i].split("-"); 
-          const className = replacementInfo[0].trim();
-          const studentName = row[0]; 
-          if (!replacementStudents[className]) {
-            replacementStudents[className] = [];
+        if (row[i]) {
+          const dateMatch = row[i].match(/\((\d{4})\/(\d{1,2})\/(\d{1,2})\)/);
+          if (dateMatch) {
+            const replacementDate = `${dateMatch[1]}/${dateMatch[2].padStart(2, '0')}/${dateMatch[3].padStart(2, '0')}`;
+            if (replacementDate === dateFormat) {
+              const replacementInfo = row[i].split("-");
+              const className = replacementInfo[0].trim();
+              const studentName = row[0];
+              if (!replacementStudents[className]) {
+                replacementStudents[className] = [];
+              }
+              replacementStudents[className].push({
+                studentName: studentName,
+                replacementDate: replacementDate
+              });
+            }
           }
-          replacementStudents[className].push({
-            studentName: studentName,
-            replacementDate: row[i].substr(row[i].indexOf("(") + 1, 10).replace(/-/g, "/") 
-          }); 
         }
       }
     }
