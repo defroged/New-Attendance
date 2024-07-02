@@ -34,36 +34,31 @@ function findStudentsByClassName(className, data) {
 
 function findReplacementStudents(data, date) {
   const replacementStudents = {};
-  const dateFormat = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
-  
-  console.log('Date Format:', dateFormat); // Log the date format
+  const eventDate = date.toISOString().slice(0, 10);
+
   data.forEach((row, index) => {
     if (index > 0) {
       for (let i = 6; i <= 11; i++) {
         if (row[i]) {
-          console.log('Row:', row[i]); // Log the row data
           const bookingEntries = row[i].split(',').map(entry => entry.trim());
-          console.log('Booking Entries:', bookingEntries); // Log the booking entries
-
           bookingEntries.forEach(bookingEntry => {
             const match = bookingEntry.match(/(\d{4}\/\d{1,2}\/\d{1,2})/);
             if (match) {
-              console.log('Booking Date:', match[1]); // Log each booking date
-            }
-            if (match && match[1] === dateFormat) {
-              console.log('Match Found:', match[1], bookingEntry);
-              const replacementInfo = bookingEntry.split("-").map(s => s.trim());
-              const className = replacementInfo[0];
-              const studentName = row[0];
+              const bookingDate = new Date(match[1]).toISOString().slice(0, 10);
+              if (eventDate === bookingDate) {
+                const replacementInfo = bookingEntry.split("-");
+                const className = replacementInfo[0].trim();
+                const studentName = row[0];
 
-              if (!replacementStudents[className]) {
-                replacementStudents[className] = [];
+                if (!replacementStudents[className]) {
+                  replacementStudents[className] = [];
+                }
+
+                replacementStudents[className].push({
+                  studentName: studentName,
+                  replacementDate: bookingDate
+                });
               }
-
-              replacementStudents[className].push({
-                studentName: studentName,
-                replacementDate: match[1]
-              });
             }
           });
         }
