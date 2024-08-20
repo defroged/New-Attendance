@@ -505,6 +505,7 @@ function fetchCalendarEventsForClasses(classes) {
     })
     .then((data) => {
       const events = filterEventsByClassNames(data.items, classes);
+	  console.log("Events being passed to populateReplacementClassDropdown:", events);
       populateReplacementClassDropdown(events);
     })
     .catch((error) => {
