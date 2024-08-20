@@ -515,6 +515,8 @@ function fetchCalendarEventsForClasses(classes) {
 async function populateReplacementClassDropdown(events) {
   const replacementSelect = document.getElementById("replacement-select");
   const structuredColumnData = await fetchStructuredColumnData();
+  
+    console.log("Structured Column Data:", structuredColumnData); // Log the structured data fetched
 
   replacementSelect.innerHTML = '<option value="">選択してください</option>';
 
@@ -544,16 +546,29 @@ async function populateReplacementClassDropdown(events) {
 
     option.textContent = `${eventName} - ${formattedDate} (${dayOfWeekKanji}) ${eventTime}`;
 
+ // Log each event before any filtering
+    console.log("Processing Event:", {
+      eventName,
+      formattedDate,
+      eventTime,
+      optionText: option.textContent,
+    });
+
+
     if (!eventName.startsWith("Ladybug")) {
         if (structuredColumnData.includes(option.textContent)) {
             option.disabled = true;
             option.style.color = "#898989";
             option.textContent += " 満";
+			            console.log(`Event "${option.textContent}" disabled because it exists in structuredColumnData.`);
         }
     }
 
-    if (eventDate > currentDate) {
+if (eventDate > currentDate) {
       replacementSelect.appendChild(option);
+      console.log(`Event "${option.textContent}" added to dropdown.`);
+    } else {
+      console.log(`Event "${option.textContent}" not added because it is not a future event.`);
     }
   });
 }
