@@ -100,7 +100,7 @@ function showModalWithClassDetails(className, students, eventDate, replacementSt
       });
       let modalContent = `<h4>Class: ${className}</h4>
                           <p>Notes:<br>${formattedDescription}</p>
-                          <p><a href="https://lesson-report.vercel.app" target="_blank">View Lesson Report</a></p>
+                          <p><a href="${eventDetails.location}" target="_blank">View Lesson Report</a></p>`;
                           
       modalContent += '<h5>Attendance:</h5><ol>';
       students.forEach(function (student) {
