@@ -633,81 +633,79 @@ async function removeReplacement(eventId) {
 
 async function handleSubmit() {
   try {
-	  showSpinner();
+    showSpinner();
     const studentSelect = document.getElementById("student-select");
     const studentName = studentSelect.value;
 
-    const newAddedReplacements = replacements.added.filter((addedEvent) => !(
-      replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id)
-    ));
+    if (!studentName) {
+        alert("生徒を選択してください。"); // Please select a student.
+        hideSpinner();
+        return;
+    }
 
-    const previouslyBookedSlots = await fetchBookedSlots(studentName);
-    const finalAddedReplacements = newAddedReplacements.filter(
-      (replacement) => !previouslyBookedSlots.includes(replacement.name)
+    // --- Calculate net changes for THIS session ---
+    // Slots added in this session and not immediately removed during the session
+    const finalAddedReplacements = replacements.added.filter((addedEvent) =>
+      !replacements.removed.some((removedEvent) => removedEvent.id === addedEvent.id)
     );
 
-    const newRemovedReplacements = replacements.removed.filter((removedEvent) => !(
-      newAddedReplacements.some((addedEvent) => addedEvent.id === removedEvent.id)
-    ));
+    // Slots that were removed during this session (could be previously booked or added earlier in session)
+    const finalRemovedReplacements = replacements.removed.filter((removedEvent) =>
+      !replacements.added.some((addedEvent) => addedEvent.id === removedEvent.id)
+    );
 
-    await updateReplacements(studentName, finalAddedReplacements);
+    console.log("Submitting Replacements:", { studentName, finalAddedReplacements, finalRemovedReplacements });
 
-    const decrementCount = replacements.added.length - newRemovedReplacements.length;
-    await updateStudentAvailableSlots(studentName);
+    // --- Call the new dedicated backend endpoint ---
+    const processResponse = await fetch("/api/processReplacementBooking", { // NEW ENDPOINT
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        studentName: studentName,
+        addedReplacements: finalAddedReplacements, // Send details of slots to add {id, name}
+        removedReplacements: finalRemovedReplacements, // Send details of slots to remove {id, name}
+      }),
+    });
 
-    replacements.added = [];
+    // Check if the backend request was successful
+    if (!processResponse.ok) {
+        // Attempt to get error message from backend response body
+        let errorMsg = `振り替えレッスンの予約処理に失敗しました: ${processResponse.statusText}`; // Failed to process replacement booking
+        try {
+            const errorData = await processResponse.json();
+            errorMsg = errorData.message || errorMsg; // Use backend message if available
+        } catch (e) {
+            // Ignore if response body is not JSON or empty
+        }
+        throw new Error(errorMsg); // Throw an error to be caught below
+    }
+
+    // --- Backend handled the update, now reset frontend state ---
+    const resultData = await processResponse.json();
+    console.log("Backend processing result:", resultData);
+
+    replacements.added = []; // Clear local tracking arrays
     replacements.removed = [];
+
+    // Clear the displayed list of selected/booked replacements
+    const replacementDatesList = document.getElementById("replacement-dates");
+    replacementDatesList.innerHTML = '';
+
+    // Hide form sections and show success message
+    document.getElementById("submit-section").style.display = "none";
     document.getElementById("main-container").style.display = "none";
-    document.getElementById("success-message").style.display = "block";
-	hideSpinner();
+    document.getElementById("success-message").style.display = "block"; // Show confirmation
+
   } catch (error) {
-    console.error("Error in handleSubmit()", error);
+    // Catch errors from fetch or thrown above
+    console.error("Error in handleSubmit:", error);
+    alert(`エラーが発生しました: ${error.message}`); // An error occurred: [message]
+    // Consider leaving the submit button enabled or offering a retry option here
+  } finally {
+       hideSpinner(); // Ensure spinner is always hidden afterwards
   }
-}
-
-async function updateReplacements(studentName, finalAddedReplacements) {
-  const response = await fetch(apiUrl);
-  const data = await response.json();
-  const values = data.values;
-  const rowIndex = values.findIndex((row) => row[0] === studentName);
-
-  if (rowIndex < 0) {
-    console.error("Student not found");
-    return;
-  }
-
-replacements.removed.forEach((replacement) => {
-  const columnIndex = values[rowIndex].findIndex((cell) => cell === replacement.name);
-  if (columnIndex >= 0) {
-    values[rowIndex][columnIndex] = "";
-  }
-});
-
-  finalAddedReplacements.forEach((replacement) => {
-  const columnIndex = findNextEmptyColumnIndex(values, rowIndex);
-  values[rowIndex][columnIndex] = replacement.name;
-});
-
-  const dataWithoutHeader = values.slice(1);
-
-  const updateResponse = await fetch("/api/updateAttendance", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-      range: "Sheet1!A2:Z",
-      data: dataWithoutHeader,
-    }),
-  });
-
-  if (!updateResponse.ok) {
-    throw new Error(
-      `Failed to update Google Sheet data for added replacements: ${updateResponse.statusText}`
-    );
-  }
-  console.log("Successfully updated Google Sheet data for added replacements");
 }
 
 function findNextEmptyColumnIndex(values, rowIndex) {
@@ -717,88 +715,6 @@ function findNextEmptyColumnIndex(values, rowIndex) {
     }
   }
   return Math.max(6, values[rowIndex].length);
-}
-
-async function updateRemovedReplacements(studentName, removedReplacement) {
-  const response = await fetch(apiUrl);
-  const data = await response.json();
-  const values = data.values;
-
-  const rowIndex = values.findIndex((row) => row[0] === studentName);
-
-  if (rowIndex < 0) {
-    console.error("Student not found");
-    return;
-  }
-
-  const columnIndex = values[rowIndex].findIndex((cell) => cell === removedReplacement.name);
-  if (columnIndex < 0) {
-    console.error("Event not found");
-    return;
-  }
-
-  values[rowIndex][columnIndex] = "";
-
-  const dataWithoutHeader = values.slice(1);
-
-  const updateResponse = await fetch("/api/updateAttendance", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-      range: "Sheet1!A2:Z",
-      data: dataWithoutHeader,
-    }),
-  });
-
-  if (!updateResponse.ok) {
-    throw new Error(
-      `Failed to update Google Sheet data for removed replacements: ${updateResponse.statusText}`
-    );
-  }
-
-  console.log("Successfully updated Google Sheet data for removed replacements");
-}
-
-
-async function updateAddedReplacements(studentName, addedReplacements) {
-  const response = await fetch(apiUrl);
-  const data = await response.json();
-  const values = data.values;
-  const rowIndex = values.findIndex((row) => row[0] === studentName);
-
-  if (rowIndex < 0) {
-    console.error("Student not found");
-    return;
-  }
-
-  addedReplacements.forEach((replacement) => {
-    const columnIndex = findNextEmptyColumnIndex(values, rowIndex);
-    values[rowIndex][columnIndex] = replacement.name;
-  });
-
-  const dataWithoutHeader = values.slice(1);
-
-  const updateResponse = await fetch("/api/updateAttendance", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      spreadsheetId: "1ax9LCCUn1sT6ogfZ4sv9Qj9Nx6tdAB-lQ3JYxdHIF7U",
-      range: "Sheet1!A2:Z",
-      data: dataWithoutHeader,
-    }),
-  });
-
-  if (!updateResponse.ok) {
-    throw new Error(
-      `Failed to update Google Sheet data for added replacements: ${updateResponse.statusText}`
-    );
-  }
-  console.log("Successfully updated Google Sheet data for added replacements");
 }
 
 window.initializeReplacementForm = initializeReplacementForm;
