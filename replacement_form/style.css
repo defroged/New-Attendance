@@ -370,3 +370,6 @@ li:hover {
 }
 }
 
+#success-message {
+    z-index: 50;
+}

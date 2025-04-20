@@ -71,28 +71,65 @@ module.exports = async (req, res) => {
         let netCountChange = 0;
         let absenceColumnsToClear = new Set(); // 0-based indices
 
-        // --- 3a. Process Removals ---
+        // --- 3a. Process Removals (Clear slot in Sheet1 G:L, Increment Count) ---
         let effectiveRemovals = 0;
         console.log("API ProcessReplacementBooking: Processing removals...");
+        // Log the relevant part of the fetched row data BEFORE processing removals
+        const slotsToCheck = mainSheetRowData.slice(6, 12); // Adjust range if needed (G:L)
+        console.log(`API ProcessReplacementBooking: Current slots in Sheet G:L for ${studentName}:`, JSON.stringify(slotsToCheck));
+
         for (const removal of removedReplacements) {
-            const slotNameToRemove = removal.name;
-             let colIndexToRemove = -1;
-             // Check columns G to L (indices 6 to 11)
+            const slotNameToRemove = removal.name; // Name sent from frontend
+             let colIndexToRemove = -1; // 0-based index
+
+             // Log the string we are trying to find
+             console.log(`API ProcessReplacementBooking: Attempting to find removal slot: [${slotNameToRemove}]`); // Brackets help see whitespace
+
+             // Check columns G to L (indices 6 to 11) - Adjust range if necessary
              for (let k = 6; k < Math.min(12, mainSheetRowData.length); k++) {
-                 if (mainSheetRowData[k] === slotNameToRemove) { colIndexToRemove = k; break; }
+                 const sheetCellValue = mainSheetRowData[k];
+                 // Log the cell value being compared
+                 // console.log(`API ProcessReplacementBooking: Comparing with cell[${k}] value: [${sheetCellValue}]`); // Verbose: Uncomment if needed
+
+                 // Trim both strings before comparison to handle potential whitespace issues
+                 if (sheetCellValue && typeof sheetCellValue === 'string' && typeof slotNameToRemove === 'string' &&
+                     sheetCellValue.trim() === slotNameToRemove.trim())
+                 {
+                     colIndexToRemove = k;
+                     console.log(`API ProcessReplacementBooking: Found match (using trim) for [${slotNameToRemove}] at column index ${k} (Sheet Col ${String.fromCharCode(65 + k)})`);
+                     break;
+                 }
              }
+
             if (colIndexToRemove !== -1) {
-                console.log(`API ProcessReplacementBooking: Marking slot for removal: "${slotNameToRemove}" at Col ${colIndexToRemove + 1}`);
-                requests.push({ updateCells: { range: { sheetId: mainSheetId, startRowIndex: studentRowIndexMain - 1, endRowIndex: studentRowIndexMain, startColumnIndex: colIndexToRemove, endColumnIndex: colIndexToRemove + 1 }, rows: [{ values: [{ userEnteredValue: { stringValue: "" } }] }], fields: "userEnteredValue" } });
-                netCountChange += 1; // Removing slot INCREASES available count
+                console.log(`API ProcessReplacementBooking: Adding request to clear cell at Col ${colIndexToRemove + 1}`);
+                requests.push({
+                    updateCells: {
+                        range: { // Range uses 0-based indices
+                            sheetId: mainSheetId,
+                            startRowIndex: studentRowIndexMain - 1, // API uses 0-based row index
+                            endRowIndex: studentRowIndexMain,
+                            startColumnIndex: colIndexToRemove,
+                            endColumnIndex: colIndexToRemove + 1,
+                        },
+                        rows: [{ values: [{ userEnteredValue: { stringValue: "" } }] }], // Set empty string
+                        fields: "userEnteredValue",
+                    },
+                });
+                // Assumption: Removing a booked replacement INCREASES the available count
+                netCountChange += 1;
                 effectiveRemovals++;
-                mainSheetRowData[colIndexToRemove] = ""; // Update local copy
+                // Update local copy so subsequent additions see this slot as free
+                mainSheetRowData[colIndexToRemove] = "";
             } else {
-                 console.warn(`API ProcessReplacementBooking: Slot to remove not found: "${slotNameToRemove}"`);
+                 // Log clearly when no match is found
+                 console.warn(`API ProcessReplacementBooking: Match NOT found for removal slot [${slotNameToRemove}].`);
+                 // Log the data again for easier comparison in logs
+                 console.warn(`API ProcessReplacementBooking: Searched within: ${JSON.stringify(slotsToCheck)}`);
             }
         }
-         console.log(`API ProcessReplacementBooking: Removals processed. Net count change: ${netCountChange}`);
-
+        console.log(`API ProcessReplacementBooking: Removals processed. Found: ${effectiveRemovals}. Net count change: ${netCountChange}`);
+		
         // --- 3b. Process Additions ---
         let effectiveAdditions = 0;
         console.log("API ProcessReplacementBooking: Processing additions...");
