@@ -584,18 +584,41 @@ function filterEventsByClassNames(events, classNames) {
 }
 
 async function populateBookedSlots(studentName) {
-  const bookedSlots = await fetchBookedSlots(studentName);
+  console.log("Populating booked slots for:", studentName);
+  // Clear the existing list before populating (important if student changes)
+  const replacementDatesList = document.getElementById("replacement-dates");
+  replacementDatesList.innerHTML = ''; // Clear previous student's list
 
-  const newBookedSlots = bookedSlots.filter(
-    (slot) => !replacements.added.some((addedEvent) => addedEvent.name === slot)
-  );
+  // Also reset the session tracking arrays when student changes or data reloads
+  // This ensures actions for a previous student don't affect the current one.
+  // NOTE: Resetting here might clear selections if user changes student then back again without submitting.
+  // Consider if this reset is desired or if state should persist differently. For now, let's reset.
+  console.log("Resetting local replacement tracking arrays.");
+  replacements.added = [];
+  replacements.removed = [];
+  // Hide submit button initially when populating
+  document.getElementById("submit-section").style.display = "none";
 
-  newBookedSlots.forEach((slot) => {
-    const eventId = generateUniqueID(); 
-    const eventData = { id: eventId, name: slot };
-    replacements.added.push(eventData);
-    addReplacementToDatesList(eventData);
+
+  const bookedSlots = await fetchBookedSlots(studentName); // Fetch currently booked slots from Sheet1 G:L
+  console.log("Fetched booked slots:", bookedSlots);
+
+  // Directly iterate over the fetched booked slots and display them.
+  // Do NOT add them to replacements.added.
+  bookedSlots.forEach((slot) => {
+    if (slot && typeof slot === 'string') { // Ensure slot is valid before processing
+        const eventId = generateUniqueID(); // Generate an ID for UI interaction tracking
+        const eventData = { id: eventId, name: slot };
+        // This function just adds the item to the visual list with an 'X' button
+        addReplacementToDatesList(eventData);
+        console.log(`Displayed booked slot: "${slot}" with UI ID: ${eventId}`);
+    } else {
+        console.warn("Skipping invalid/empty booked slot value:", slot);
+    }
   });
+
+  // Initial state: no submit button needed unless user interacts
+  // displaySubmitSectionIfRequired(); // Might not be needed here anymore if reset above
 }
 
 function addReplacementToDatesList(eventData) {
