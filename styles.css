@@ -80,11 +80,11 @@ background-color: #1d1d1d;;
 .time-slot[data-hour="3"], .time-slot[data-hour="4"], .time-slot[data-hour="5"],
 .time-slot[data-hour="6"], .time-slot[data-hour="7"], .time-slot[data-hour="8"],
 .time-slot[data-hour="12"],
-.time-slot[data-hour="19"], .time-slot[data-hour="21"],
+/*.time-slot[data-hour="19"], .time-slot[data-hour="21"],*/
 .time-slot[data-hour="22"],.time-slot[data-hour="23"] 
 {
     display: none;
-    /*! color: black; */
+    color: black;
 }
 
 .day {
