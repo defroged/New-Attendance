@@ -162,19 +162,35 @@ module.exports = async (req, res) => {
                  for(let k = 6; k < 12; k++) { if (mainSheetRowData[k] === undefined || mainSheetRowData[k] === "") { emptyColIndexToAdd = k; mainSheetRowData[k] = slotNameToAdd; break; } }
 
                  // Decision logic
-                 if (oldestAbsenceColIndex !== -1 && emptyColIndexToAdd !== -1) { // Found both
-                     console.log(`API ProcessReplacementBooking: Pairing add "${slotNameToAdd}" (Col ${emptyColIndexToAdd+1}) with oldest absence (Col ${oldestAbsenceColIndex+1})`);
+                 if (oldestAbsenceColIndex !== -1 && emptyColIndexToAdd !== -1) {
+                     // Found both a specific absence to consume AND an empty slot for the booking
+                     console.log(`API ProcessReplacementBooking: Pairing add "${slotNameToAdd}" (Sheet1 Col Index ${emptyColIndexToAdd}) with oldest absence from 'absence' sheet (Col Index ${oldestAbsenceColIndex})`);
+                     
+                     // Add request to write the new booking into Sheet1 G:L
+                     requests.push({
+                        updateCells: {
+                            range: { sheetId: mainSheetId, startRowIndex: studentRowIndexMain - 1, endRowIndex: studentRowIndexMain, startColumnIndex: emptyColIndexToAdd, endColumnIndex: emptyColIndexToAdd + 1 },
+                            rows: [{ values: [{ userEnteredValue: { stringValue: slotNameToAdd } }] }],
+                            fields: "userEnteredValue"
+                        }
+                     });
+
+                     // Mark the consumed absence in 'absence' sheet for clearing
                      absenceColumnsToClear.add(oldestAbsenceColIndex);
-                     requests.push({ updateCells: { range: { sheetId: mainSheetId, startRowIndex: studentRowIndexMain - 1, endRowIndex: studentRowIndexMain, startColumnIndex: emptyColIndexToAdd, endColumnIndex: emptyColIndexToAdd + 1 }, rows: [{ values: [{ userEnteredValue: { stringValue: slotNameToAdd } }] }], fields: "userEnteredValue" } });
-                     netCountChange -= 1; // Booking DECREASES available count
+                     
+                     netCountChange -= 1; // Booking consumes an absence credit, so DECREASES available count
                      effectiveAdditions++;
-                 } else if (emptyColIndexToAdd === -1) { // No slot
-                      console.error(`API ProcessReplacementBooking: No empty slot (G:L) for "${slotNameToAdd}". Skipping.`);
-                 } else { // Slot found, but no absence record (oldestAbsenceColIndex === -1)
-                     console.warn(`API ProcessReplacementBooking: No absence record found for count>0 & slot found. Adding "${slotNameToAdd}" (Col ${emptyColIndexToAdd+1}) & decrementing count.`);
-                     requests.push({ updateCells: { range: { sheetId: mainSheetId, startRowIndex: studentRowIndexMain - 1, endRowIndex: studentRowIndexMain, startColumnIndex: emptyColIndexToAdd, endColumnIndex: emptyColIndexToAdd + 1 }, rows: [{ values: [{ userEnteredValue: { stringValue: slotNameToAdd } }] }], fields: "userEnteredValue" } });
-                     netCountChange -= 1; // Still decrement count if available
-                     effectiveAdditions++;
+                 } else if (emptyColIndexToAdd === -1) {
+                     // No empty slot in Sheet1 G:L to record the booking
+                     console.error(`API ProcessReplacementBooking: No empty slot (G:L) found for student ${studentName} to book "${slotNameToAdd}". Skipping this booking.`);
+                     // Optionally, you might want to return an error to the client here if this is the only addition
+                 } else { // oldestAbsenceColIndex === -1
+                     // An empty slot in G:L was found, but NO specific dated absence record was found in the 'absence' sheet to consume.
+                     // This booking should NOT proceed if it requires consuming a specific dated absence.
+                     console.warn(`API ProcessReplacementBooking: Student ${studentName} has an available slot in G:L for "${slotNameToAdd}", but no specific usable absence record was found in the 'absence' sheet. Booking cannot be completed by consuming a specific absence. Count remains unchanged for this attempt.`);
+                     // DO NOT add the booking to G:L here if it's tied to consuming an absence.
+                     // DO NOT change netCountChange.
+                     // Depending on strictness, you might treat this as a failed booking attempt for this student.
                  }
              } else { // countBeforeThisAdd <= 0
                  console.warn(`API ProcessReplacementBooking: Cannot add "${slotNameToAdd}", count is ${countBeforeThisAdd}.`);
